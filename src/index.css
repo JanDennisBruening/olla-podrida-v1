@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@layer base {
+  :root {
+    --e-global-color-primary: #6EC1E4;
+    --e-global-color-secondary: #F5F5DC;
+    --e-global-color-text: #F5F5DC;
+    --e-global-color-accent: #DAA520;
+    --e-global-color-44edc3c: #0A0707;
+    --color-gold: #DAA520;
+    --color-dark-bg: #070202;
+    --color-parchment: #F5F5DC;
+  }
+
+  html {
+    font-size: clamp(1rem, calc(0.9167rem + 0.2778vw), 1.5rem);
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #F5F5DC transparent;
+    background-color: #070202;
+  }
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.5625rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-style: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #F5F5DC;
+    border-radius: 1rem;
+  }
+
+  ::selection {
+    background: #DAA520;
+    color: #F5F5DC;
+    text-shadow: none;
+  }
+}
+
+.font-macondo {
+  font-family: 'Macondo Swash Caps', cursive, serif;
+}
+
+.font-slab {
+  font-family: 'Roboto Slab', serif;
+}
+
+.font-roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-custom {
+  animation: spin 1s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+
+/* Tooltipster-like tooltip styling matching live site */
+.tooltip-custom {
+  background: #070202;
+  border: 1px solid #DAA520;
+  color: #F5F5DC;
+  font-family: 'Macondo Swash Caps', cursive;
+  font-size: 1.1rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.7);
+}

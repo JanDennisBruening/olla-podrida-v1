@@ -1,0 +1,6 @@
+{
+  "name": "Ensemble Olla Podrida",
+  "description": "Klangvielfalt aus Mittelalter und Renaissance | Landkreis Osnabrück - So lebendig wie damals - voller Kraft mit Krummhörner, Sackpfeifen und Trommeln, aber auch verspielt und anrührend mit Harfe, Psalter und Laute.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
