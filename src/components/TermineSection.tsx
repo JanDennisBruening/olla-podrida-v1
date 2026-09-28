@@ -82,7 +82,7 @@ export const TermineSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="termine"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-4 sm:pt-6 md:pt-8 pb-16 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-10 sm:pt-14 md:pt-20 lg:pt-28 pb-16 select-none"
     >
       <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
         
@@ -114,7 +114,7 @@ export const TermineSection: React.FC = () => {
               <div
                 key={event.id}
                 onClick={() => toggleEvent(event.id)}
-                className={`relative flex flex-col md:flex-row-reverse bg-[#1A1A18] rounded-[0.625rem] p-6 md:p-8 transition-all duration-300 hover:bg-[#1e1c1b] hover:shadow-[0_0.5rem_1.875rem_rgba(218,165,32,0.2)] group overflow-hidden border cursor-pointer ${
+                className={`relative flex flex-col sm:flex-row-reverse items-start bg-[#1A1A18] rounded-[0.625rem] p-6 md:p-8 transition-all duration-300 hover:bg-[#1e1c1b] hover:shadow-[0_0.5rem_1.875rem_rgba(218,165,32,0.2)] group overflow-hidden border cursor-pointer ${
                   isExpanded ? 'border-[#DAA520] shadow-[0_0_1.5625rem_rgba(218,165,32,0.22)]' : 'border-[#2a2825] hover:border-[#DAA520]/60'
                 }`}
                 style={{
@@ -135,8 +135,8 @@ export const TermineSection: React.FC = () => {
                   }}
                 />
 
-                {/* Image Column (.uc_post_list_image, 25% on desktop, height 18rem) */}
-                <div className="w-full md:w-[28%] lg:w-[25%] h-56 md:h-[18rem] shrink-0 rounded-[0.9375rem] overflow-hidden relative z-10 shadow-lg">
+                {/* Image Column (.uc_post_list_image - strictly square, top-right orientation on all viewports) */}
+                <div className="w-full max-w-[16rem] sm:max-w-none ml-auto sm:ml-0 sm:w-52 md:w-60 lg:w-68 xl:w-72 aspect-square shrink-0 rounded-[0.9375rem] overflow-hidden relative z-10 shadow-lg self-start">
                   <img
                     src={event.imageSrc}
                     alt={event.title}
@@ -145,8 +145,8 @@ export const TermineSection: React.FC = () => {
                   />
                 </div>
 
-                {/* Content Column (.uc_post_list_content, left side on desktop) */}
-                <div className="flex-1 md:pr-8 pt-6 md:pt-0 flex flex-col justify-center text-left relative z-10">
+                {/* Content Column (.uc_post_list_content, left side on desktop & tablet) */}
+                <div className="flex-1 w-full sm:pr-6 md:pr-8 pt-4 sm:pt-0 flex flex-col justify-start text-left relative z-10">
                   {/* Category Badge matching .ue-grid-item-category a */}
                   <div className="mb-2">
                     <span className="inline-block bg-[#CD895B] group-hover:bg-[#DAA520] transition-colors duration-300 text-white font-roboto text-[0.7rem] font-semibold uppercase px-2.5 py-0.5 rounded-[0.2rem] tracking-wide shadow-sm">

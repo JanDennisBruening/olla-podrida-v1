@@ -45,30 +45,30 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
       id="kontakt"
       className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-8 md:pt-10 pb-4 md:pb-6 select-none"
     >
-      <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
+      <div className="max-w-[61rem] mx-auto px-[4%] sm:px-[5%] relative z-10">
 
-        {/* Section Heading - reduced gap to text below */}
+        {/* Section Heading - compact width matching content */}
         <div
-          className={`text-left mb-2 md:mb-3 max-w-6xl mx-auto transition-all duration-700 ease-out ${
+          className={`text-left mb-2 md:mb-3 transition-all duration-700 ease-out ${
             isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[3.8rem] text-[#F5F5DC] font-normal tracking-wide text-left">
+          <h2 className="font-macondo text-[2.15rem] sm:text-[2.65rem] md:text-[3.4rem] text-[#F5F5DC] font-normal tracking-wide text-left">
             Kontakt &amp; Anfragen
           </h2>
         </div>
 
-        {/* Two-Column Layout (.elementor-element-29fca19) */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
+        {/* Two-Column Layout (.elementor-element-29fca19) - tightened gap and compact width */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center">
           
           {/* Left Column (.elementor-element-2641b3e): Intro text + Susanne with flute */}
           <div
-            className={`md:col-span-5 flex flex-col items-center md:items-start text-left space-y-6 transition-all duration-700 delay-150 ease-out ${
+            className={`md:col-span-5 flex flex-row md:flex-col items-center md:items-start text-left gap-3 sm:gap-4 md:space-y-5 transition-all duration-700 delay-150 ease-out ${
               isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            {/* Text editor .elementor-element-79de16e using authentic font-macondo */}
-            <div className="w-full space-y-4 font-macondo text-base sm:text-lg md:text-[1.25rem] font-semibold text-[#F5F5DC] leading-relaxed md:leading-[1.8rem] text-left">
+            {/* Text editor on left on mobile, full width on desktop */}
+            <div className="w-[62%] md:w-full space-y-2 sm:space-y-3 font-macondo text-[0.88rem] sm:text-[1.05rem] md:text-[1.18rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.7rem] text-left">
               <p>
                 Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.
               </p>
@@ -76,16 +76,16 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                 Kontaktieren Sie uns über unser Formular oder per E-Mail:{' '}
                 <a
                   href="mailto:info@olla-podrida.de"
-                  className="font-macondo text-[1.3rem] text-[#DAA520] hover:underline"
+                  className="font-macondo text-[0.98rem] sm:text-[1.15rem] md:text-[1.2rem] text-[#DAA520] hover:underline break-words"
                 >
                   info(at)olla-podrida.de
                 </a>
               </p>
             </div>
 
-            {/* Susanne Cutout Illustration .elementor-element-aa9541e - Scaled up for majestic presence */}
-            <div className="w-full flex justify-center md:justify-start items-center pt-2 md:pt-4">
-              <div className="w-48 sm:w-56 md:w-64 lg:w-72 transition-transform duration-500 hover:scale-105">
+            {/* Susanne on right on mobile, below text on desktop */}
+            <div className="w-[38%] md:w-full flex justify-center md:justify-start items-center shrink-0 pt-0 md:pt-2">
+              <div className="w-28 sm:w-36 md:w-56 lg:w-60 transition-transform duration-500 hover:scale-105">
                 <img
                   src="https://olla-podrida.de/wp-content/uploads/2024/07/Susanne_klein.webp"
                   alt="Susanne spielt vergnügt auf der Flöte"
@@ -103,7 +103,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             }`}
           >
             {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned higher up overlapping top */}
-            <div className="hidden md:block absolute -top-20 sm:-top-28 md:-top-32 right-[-0.5rem] md:right-[-1.5rem] lg:right-[-2.5rem] pointer-events-none z-20 w-[22rem] sm:w-[26rem] lg:w-[30rem]">
+            <div className="hidden md:block absolute -top-16 sm:-top-22 md:-top-28 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[25rem]">
               <img
                 src="https://olla-podrida.de/wp-content/uploads/2024/07/2024_07_22_Elemente_Olla-Podrida_Zeichenflaeche-1-1024x611.png"
                 alt="Musiknoten Pergament"
@@ -113,7 +113,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </div>
 
             <div
-              className="relative w-full max-w-[42rem] min-h-[38rem] md:min-h-[44rem] px-8 sm:px-14 md:px-20 lg:px-24 xl:px-28 py-8 sm:py-12 md:py-14 lg:py-16 flex flex-col justify-center transition-all duration-300 z-10"
+              className="relative w-full max-w-[39rem] min-h-[36rem] md:min-h-[40rem] px-8 sm:px-13 md:px-17 lg:px-21 py-8 sm:py-10 md:py-12 flex flex-col justify-center transition-all duration-300 z-10"
               style={{
                 backgroundImage: `url("https://olla-podrida.de/wp-content/uploads/2024/07/hintergrundbild2.png")`,
                 backgroundPosition: 'center center',
@@ -121,8 +121,8 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                 backgroundSize: 'contain'
               }}
             >
-              {/* Contact Form 7 container (.ue_contact_form_7) with generous edge margins on desktop */}
-              <form onSubmit={handleSubmit} className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto space-y-3.5">
+              {/* Contact Form 7 container (.ue_contact_form_7) with calibrated edge margins on mobile & desktop */}
+              <form onSubmit={handleSubmit} className="w-full max-w-[17rem] sm:max-w-xs md:max-w-sm lg:max-w-md mx-auto space-y-3 sm:space-y-3.5">
                 
                 {/* Name */}
                 <div>

@@ -11,12 +11,13 @@ interface StageFigure {
   image: string;
   alt: string;
   entranceDelay: number;
-  desktop: { left: string; top: string; width: string; zIndex: number };
+  desktopXl: { left: string; top: string; width: string; zIndex: number };
+  desktopLg: { left: string; top: string; width: string; zIndex: number };
   tablet: { left: string; top: string; width: string; zIndex: number };
   mobile: { left: string; top: string; width: string; zIndex: number };
 }
 
-// 7 Ensemble figures - strictly centered on 50% across Desktop, Tablet, and Mobile
+// 7 Ensemble figures - strictly centered on 50% across Desktop XL, Desktop LG, Tablet, and Mobile
 // Susanne and Ruth lower bodies intentionally overlap and step behind the parchment ribbon (no empty voids!)
 // Sandra on the right is placed with plenty of breathing space from Lutz so all faces are completely unobstructed
 const STAGE_FIGURES: StageFigure[] = [
@@ -26,7 +27,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Simone.webp',
     alt: 'Simone',
     entranceDelay: 80,
-    desktop: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
+    desktopXl: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
+    desktopLg: { left: '25%', top: '8%', width: '20rem', zIndex: 4 }, // 1% further left on LG
     tablet: { left: '25%', top: '6%', width: '24vw', zIndex: 4 },
     mobile: { left: '16%', top: '4%', width: '33vw', zIndex: 4 }
   },
@@ -36,7 +38,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Klemens.webp',
     alt: 'Klemens',
     entranceDelay: 160,
-    desktop: { left: '45%', top: '7%', width: '19rem', zIndex: 5 },
+    desktopXl: { left: '44%', top: '7%', width: '19rem', zIndex: 5 }, // 1% left
+    desktopLg: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
     tablet: { left: '46%', top: '5%', width: '22vw', zIndex: 5 },
     mobile: { left: '45%', top: '3%', width: '32vw', zIndex: 5 }
   },
@@ -46,7 +49,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Silke.webp',
     alt: 'Silke',
     entranceDelay: 260,
-    desktop: { left: '14%', top: '16%', width: '22rem', zIndex: 7 },
+    desktopXl: { left: '12%', top: '16%', width: '22rem', zIndex: 7 }, // 3% left
+    desktopLg: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },  // 3% left
     tablet: { left: '12%', top: '13%', width: '26vw', zIndex: 7 },
     mobile: { left: '3%', top: '11%', width: '36vw', zIndex: 7 }
   },
@@ -56,7 +60,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/10/2024_Sandra_Olla-Podrida_web_2.webp',
     alt: 'Sandra',
     entranceDelay: 360,
-    desktop: { left: '58%', top: '15%', width: '23rem', zIndex: 9 },
+    desktopXl: { left: '57%', top: '15%', width: '23rem', zIndex: 9 }, // 1% left
+    desktopLg: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
     tablet: { left: '59%', top: '13%', width: '26vw', zIndex: 9 },
     mobile: { left: '59%', top: '11%', width: '38vw', zIndex: 9 }
   },
@@ -66,7 +71,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Lutz.webp',
     alt: 'Lutz',
     entranceDelay: 460,
-    desktop: { left: '37%', top: '15%', width: '25rem', zIndex: 8 },
+    desktopXl: { left: '36%', top: '15%', width: '25rem', zIndex: 8 }, // 1% left
+    desktopLg: { left: '36%', top: '15%', width: '25rem', zIndex: 8 },
     tablet: { left: '37%', top: '13%', width: '27vw', zIndex: 8 },
     mobile: { left: '29%', top: '11%', width: '44vw', zIndex: 8 }
   },
@@ -76,7 +82,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Susanne-1.webp',
     alt: 'Susanne spielt vergnügt auf der Flöte',
     entranceDelay: 580,
-    desktop: { left: '26%', top: '24%', width: '33rem', zIndex: 10 },
+    desktopXl: { left: '23%', top: '24%', width: '33rem', zIndex: 10 }, // 2% left
+    desktopLg: { left: '21%', top: '24%', width: '33rem', zIndex: 10 }, // 2% left
     tablet: { left: '26%', top: '21%', width: '36vw', zIndex: 10 },
     mobile: { left: '17%', top: '17%', width: '52vw', zIndex: 10 }
   },
@@ -86,7 +93,8 @@ const STAGE_FIGURES: StageFigure[] = [
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Ruth_web_5.webp',
     alt: 'Ruth',
     entranceDelay: 680,
-    desktop: { left: '45%', top: '34%', width: '23rem', zIndex: 9 },
+    desktopXl: { left: '45%', top: '34%', width: '23rem', zIndex: 9 },
+    desktopLg: { left: '45%', top: '34%', width: '23rem', zIndex: 9 },
     tablet: { left: '45%', top: '28%', width: '28vw', zIndex: 9 },
     mobile: { left: '42%', top: '24%', width: '42vw', zIndex: 9 }
   }
@@ -94,18 +102,20 @@ const STAGE_FIGURES: StageFigure[] = [
 
 export const HeroStage: React.FC<HeroStageProps> = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [viewportMode, setViewportMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const [viewportMode, setViewportMode] = useState<'mobile' | 'tablet' | 'desktopLg' | 'desktopXl'>('desktopXl');
 
-  // Dynamically track viewport mode for seamless scaling across smartphone, tablet, and desktop
+  // Dynamically track viewport mode: mobile (<= 550px), tablet (551px to 1024px), desktop LG, and desktop XL
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w < 768) {
+      if (w <= 550) {
         setViewportMode('mobile');
-      } else if (w < 1140) {
+      } else if (w <= 1024) {
         setViewportMode('tablet');
+      } else if (w < 1280) {
+        setViewportMode('desktopLg');
       } else {
-        setViewportMode('desktop');
+        setViewportMode('desktopXl');
       }
     };
     handleResize();
@@ -160,7 +170,9 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
             ? member.mobile
             : viewportMode === 'tablet'
             ? member.tablet
-            : member.desktop;
+            : viewportMode === 'desktopLg'
+            ? member.desktopLg
+            : member.desktopXl;
 
           return (
             <div

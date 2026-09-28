@@ -57,29 +57,29 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
           />
         </div>
 
-        {/* Footer Navigation Buttons in Macondo Swash Caps - Authentic size matching original */}
-        <div className="flex flex-wrap justify-center items-center gap-5 sm:gap-8 md:gap-10 mb-6 font-macondo text-base sm:text-lg md:text-[1.3rem] font-semibold text-[#F5F5DC]">
+        {/* Footer Navigation Buttons: 2 rows of 3 columns on mobile, row on tablet/desktop */}
+        <div className="w-full max-w-[20rem] sm:max-w-none grid grid-cols-3 gap-y-3.5 gap-x-2 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-10 mb-6 font-macondo text-base sm:text-lg md:text-[1.3rem] font-semibold text-[#F5F5DC] text-center">
           <button
             onClick={() => scrollTo('ensemble')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer"
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
           >
             Ensemble
           </button>
           <button
             onClick={() => scrollTo('termine')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer"
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
           >
             Termine
           </button>
           <button
             onClick={() => scrollTo('kontakt')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer"
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
           >
             Kontakt
           </button>
 
           {/* Cookies button with Premium Tooltip */}
-          <div className="relative inline-block">
+          <div className="relative inline-block py-1">
             <button
               onClick={onOpenCookies}
               onMouseEnter={() => setCookieTooltip(true)}
@@ -98,13 +98,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
 
           <button
             onClick={() => onOpenLegal('datenschutz')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer"
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
           >
             Datenschutz
           </button>
           <button
             onClick={() => onOpenLegal('impressum')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer"
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
           >
             Impressum
           </button>

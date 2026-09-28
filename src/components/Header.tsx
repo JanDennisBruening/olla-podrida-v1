@@ -51,8 +51,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
             backgroundSize: 'contain'
           }}
         >
-          {/* Left Navigation Container (.elementor-element-709406c2) - shifted closer to center logo and positioned vertically center/top */}
-          <div className="w-[38%] h-full flex items-center justify-end space-x-6 sm:space-x-8 lg:space-x-12 pr-4 sm:pr-8 md:pr-10 lg:pr-14 pt-0 sm:pt-1 md:pt-1 lg:pt-2">
+          {/* Left Navigation Container (.elementor-element-709406c2) - optically centered vertically on parchment banner */}
+          <div className="w-[38%] h-full flex items-center justify-end space-x-6 sm:space-x-8 lg:space-x-12 pr-4 sm:pr-8 md:pr-10 lg:pr-14 -translate-y-1 sm:-translate-y-1.5 md:-translate-y-2.5 lg:-translate-y-3">
             <button
               onClick={() => scrollToSection('Start')}
               className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
@@ -88,8 +88,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
             </button>
           </div>
 
-          {/* Right Navigation Container (.elementor-element-4236051d) - shifted closer to center logo and positioned vertically center/top */}
-          <div className="w-[38%] h-full flex items-center justify-start space-x-6 sm:space-x-8 lg:space-x-12 pl-4 sm:pr-8 md:pl-10 lg:pl-14 pt-0 sm:pt-1 md:pt-1 lg:pt-2">
+          {/* Right Navigation Container (.elementor-element-4236051d) - optically centered vertically on parchment banner */}
+          <div className="w-[38%] h-full flex items-center justify-start space-x-6 sm:space-x-8 lg:space-x-12 pl-4 sm:pl-8 md:pl-10 lg:pl-14 -translate-y-1 sm:-translate-y-1.5 md:-translate-y-2.5 lg:-translate-y-3">
             <button
               onClick={() => scrollToSection('termine')}
               className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
 
         {/* Mobile Header Ribbon (.elementor-element-6cf3c0da mobile) */}
         <div
-          className="pointer-events-auto relative md:hidden flex items-center justify-between w-full h-[30vw] min-h-[5.5rem] px-5"
+          className="pointer-events-auto relative md:hidden flex items-start justify-between w-full h-[24vw] min-h-[5.5rem] max-h-[7rem] px-5 pt-1.5 sm:pt-2"
           style={{
             backgroundImage: `url(${ASSETS.menuBackgroundMobile})`,
             backgroundPosition: 'top center',
@@ -115,13 +115,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
             backgroundSize: '140vw auto'
           }}
         >
-          {/* Logo center */}
+          {/* Logo pinned to top edge, larger size */}
           <button
             onClick={() => scrollToSection('Start')}
-            className="flex items-center -mt-1 translate-y-1.5 transition-transform duration-200 active:scale-95"
+            className="flex items-center -mt-1 sm:-mt-2 transition-transform duration-200 active:scale-95 cursor-pointer z-30"
           >
             <div
-              className="w-18 h-18 sm:w-22 sm:h-22 flex items-center justify-center p-1"
+              className="w-22 h-22 sm:w-26 sm:h-26 flex items-center justify-center p-1 filter drop-shadow-xl"
               style={{
                 backgroundImage: `url(${ASSETS.logoBackground})`,
                 backgroundPosition: 'center center',
@@ -131,114 +131,123 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
             >
               <img
                 src={ASSETS.navLogo}
-                alt="Logo"
-                className="w-16 h-16 sm:w-18 sm:h-18 object-contain drop-shadow"
+                alt="Ensemble Olla Podrida Logo"
+                className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow -mt-1"
               />
             </div>
           </button>
 
-          {/* Hamburger toggle button (.icon-bars) */}
+          {/* Hamburger toggle button positioned high up in header ribbon with high contrast */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="p-3 text-[#0B0A0AE3] focus:outline-none cursor-pointer flex flex-col space-y-1.5 justify-center items-center"
+            className="mt-2.5 sm:mt-3 p-2.5 rounded-full bg-[#070202]/90 border border-[#DAA520]/70 text-[#DAA520] hover:text-[#F5F5DC] hover:border-[#DAA520] focus:outline-none cursor-pointer flex flex-col space-y-1 justify-center items-center shadow-lg transition-transform active:scale-90 z-30"
             aria-label="Menü öffnen"
           >
-            <span className="block w-6 h-[0.15625rem] bg-[#0B0A0AE3] rounded-sm" />
-            <span className="block w-6 h-[0.15625rem] bg-[#0B0A0AE3] rounded-sm" />
-            <span className="block w-6 h-[0.15625rem] bg-[#0B0A0AE3] rounded-sm" />
+            <span className="block w-5 h-[2px] bg-current rounded-full" />
+            <span className="block w-5 h-[2px] bg-current rounded-full" />
+            <span className="block w-4 h-[2px] bg-current rounded-full self-start" />
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay matching mobile-background-menu4.png */}
+      {/* Modern Medieval Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-[9999] flex flex-col justify-center items-center px-6 text-center select-none"
-          style={{
-            backgroundImage: `url("https://olla-podrida.de/wp-content/uploads/2024/07/mobile-background-menu4.png")`,
-            backgroundPosition: 'top center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover'
-          }}
-        >
-          {/* Close button */}
-          <button
-            onClick={() => setMobileMenuOpen(false)}
-            className="absolute top-6 right-6 p-2 text-[#0A0707] hover:text-[#DAA520] transition-colors cursor-pointer"
-            aria-label="Menü schließen"
-          >
-            <X size={36} />
-          </button>
+        <div className="fixed inset-0 z-[9999] flex flex-col justify-center items-center p-5 bg-[#070202]/95 backdrop-blur-md select-none transition-all duration-300">
+          
+          {/* Menu Card Container with antique golden border */}
+          <div className="relative w-full max-w-sm mx-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_10px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(218,165,32,0.18)]">
+            
+            {/* Close button */}
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute top-3.5 right-3.5 p-2 rounded-full bg-[#070202] border border-[#DAA520]/50 text-[#F5F5DC] hover:text-[#DAA520] hover:scale-110 active:scale-95 transition-all cursor-pointer"
+              aria-label="Menü schließen"
+            >
+              <X size={26} />
+            </button>
 
-          {/* Logo in Mobile Menu */}
-          <div className="mb-6 -mt-8">
-            <img
-              src={ASSETS.logo}
-              alt="Logo"
-              className="w-24 h-24 mx-auto object-contain drop-shadow-md"
-            />
-            <h2 className="font-macondo text-3xl text-[#0A0707] font-bold mt-2">
-              Olla Podrida
-            </h2>
-          </div>
+            {/* Logo in Mobile Menu */}
+            <div className="flex flex-col items-center mb-5 mt-1">
+              <img
+                src={ASSETS.logo}
+                alt="Olla Podrida"
+                className="w-20 h-20 object-contain drop-shadow-md"
+              />
+              <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520] font-normal mt-2 tracking-wide">
+                Ensemble Olla Podrida
+              </h2>
+              <p className="font-macondo text-xs text-[#F5F5DC]/70 italic mt-0.5">
+                Klangvielfalt aus Mittelalter &amp; Renaissance
+              </p>
+            </div>
 
-          {/* Menu items in Macondo Swash Caps */}
-          <div className="flex flex-col space-y-4 text-3xl font-macondo font-semibold text-[#0A0707]">
-            <button
-              onClick={() => scrollToSection('Start')}
-              className="py-1 hover:text-[#DAA520] transition-colors cursor-pointer"
-            >
-              Start
-            </button>
-            <button
-              onClick={() => scrollToSection('ensemble')}
-              className="py-1 hover:text-[#DAA520] transition-colors cursor-pointer"
-            >
-              Ensemble
-            </button>
-            <button
-              onClick={() => scrollToSection('termine')}
-              className="py-1 hover:text-[#DAA520] transition-colors cursor-pointer"
-            >
-              Termine
-            </button>
-            <button
-              onClick={() => scrollToSection('kontakt')}
-              className="py-1 hover:text-[#DAA520] transition-colors cursor-pointer"
-            >
-              Kontakt
-            </button>
-          </div>
+            {/* Divider */}
+            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/40 to-transparent mb-4" />
 
-          {/* Footer links in mobile menu */}
-          <div className="mt-8 pt-4 border-t border-[#0A0707]/30 flex flex-wrap justify-center gap-4 text-xs font-sans text-[#0A0707]">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenTermineArchive();
-              }}
-              className="hover:underline font-semibold"
-            >
-              Konzertchronik
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenLegal('impressum');
-              }}
-              className="hover:underline font-semibold"
-            >
-              Impressum
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenLegal('datenschutz');
-              }}
-              className="hover:underline font-semibold"
-            >
-              Datenschutz
-            </button>
+            {/* Main Navigation Links */}
+            <div className="w-full flex flex-col space-y-2 text-center font-macondo">
+              <button
+                onClick={() => scrollToSection('Start')}
+                className="w-full py-2 px-4 rounded-lg text-2xl text-[#F5F5DC] hover:text-[#0A0707] hover:bg-[#DAA520] transition-colors duration-150 cursor-pointer active:scale-98"
+              >
+                Start
+              </button>
+              <button
+                onClick={() => scrollToSection('ensemble')}
+                className="w-full py-2 px-4 rounded-lg text-2xl text-[#F5F5DC] hover:text-[#0A0707] hover:bg-[#DAA520] transition-colors duration-150 cursor-pointer active:scale-98"
+              >
+                Ensemble
+              </button>
+              <button
+                onClick={() => scrollToSection('termine')}
+                className="w-full py-2 px-4 rounded-lg text-2xl text-[#F5F5DC] hover:text-[#0A0707] hover:bg-[#DAA520] transition-colors duration-150 cursor-pointer active:scale-98"
+              >
+                Termine
+              </button>
+              <button
+                onClick={() => scrollToSection('kontakt')}
+                className="w-full py-2 px-4 rounded-lg text-2xl text-[#F5F5DC] hover:text-[#0A0707] hover:bg-[#DAA520] transition-colors duration-150 cursor-pointer active:scale-98"
+              >
+                Kontakt
+              </button>
+            </div>
+
+            {/* Secondary links divider */}
+            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/30 to-transparent my-4" />
+
+            {/* Footer links in mobile menu */}
+            <div className="flex flex-wrap justify-center gap-3 text-xs font-sans text-[#F5F5DC]/80">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenTermineArchive();
+                }}
+                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+              >
+                Konzertchronik
+              </button>
+              <span className="text-[#DAA520]/40">•</span>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenLegal('impressum');
+                }}
+                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+              >
+                Impressum
+              </button>
+              <span className="text-[#DAA520]/40">•</span>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenLegal('datenschutz');
+                }}
+                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+              >
+                Datenschutz
+              </button>
+            </div>
+
           </div>
         </div>
       )}
