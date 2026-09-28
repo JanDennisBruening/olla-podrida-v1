@@ -75,7 +75,7 @@ export default function App() {
         <div className="relative w-full overflow-hidden bg-[#070202]">
           {/* Continuous Stone Hall Backdrop spanning from header down behind EnsembleSection */}
           <div
-            className="hidden md:block absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
+            className="hidden lg:block absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
             style={{
               backgroundImage: `url(${ASSETS.heroBackgroundDesktop})`,
               backgroundPosition: 'center top',
@@ -83,11 +83,11 @@ export default function App() {
             }}
           />
           <div
-            className="md:hidden absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
+            className="lg:hidden absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
             style={{
               backgroundImage: `url(${ASSETS.heroBackgroundMobile})`,
               backgroundPosition: 'center top',
-              backgroundSize: '100% auto'
+              backgroundSize: 'cover'
             }}
           />
 

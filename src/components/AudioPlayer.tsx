@@ -72,14 +72,19 @@ export const AudioPlayer: React.FC = () => {
         aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
         title={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
       >
-        {/* Ambient Dark Backdrop behind the badge for 100% legibility */}
-        <div className="absolute inset-1 rounded-full bg-[#070202]/80 backdrop-blur-sm border border-[#DAA520]/30 shadow-[0_4px_16px_rgba(0,0,0,0.8)] pointer-events-none" />
-
-        {/* Circular Curved SVG Text "MUSIK AN / AUS" */}
-        <svg
-          className={`absolute inset-0 w-full h-full pointer-events-none transition-transform duration-1000 ${
-            isPlaying ? 'animate-spin-slow' : ''
+        {/* Ambient Dark Backdrop behind the badge with golden glow loop when playing */}
+        <div
+          className={`absolute inset-1 rounded-full bg-[#070202]/85 backdrop-blur-sm border transition-all duration-500 shadow-[0_4px_16px_rgba(0,0,0,0.8)] pointer-events-none ${
+            isPlaying ? 'border-[#DAA520] animate-gold-glow-loop' : 'border-[#DAA520]/30'
           }`}
+        />
+
+        {/* Circular Curved SVG Text "MUSIK AN / AUS" - Rotates continuously to signal interactivity, spins with energy when playing */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none origin-center"
+          style={{
+            animation: isPlaying ? 'spin 12s linear infinite' : 'spin 24s linear infinite'
+          }}
           viewBox="0 0 120 120"
         >
           <defs>
@@ -90,9 +95,11 @@ export const AudioPlayer: React.FC = () => {
           </defs>
           <text
             className="font-macondo font-bold text-[9.5px] md:text-[10px] tracking-[0.22em] uppercase transition-colors duration-300"
-            fill={isPlaying ? '#DAA520' : '#C5A059'}
+            fill={isPlaying ? '#FFD700' : '#DAA520'}
             style={{
-              filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.95))'
+              filter: isPlaying
+                ? 'drop-shadow(0 0 4px rgba(218,165,32,0.8))'
+                : 'drop-shadow(0 1px 2px rgba(0,0,0,0.95))'
             }}
           >
             <textPath
@@ -106,7 +113,7 @@ export const AudioPlayer: React.FC = () => {
           </text>
         </svg>
 
-        {/* Inner Round Button with musical note */}
+        {/* Inner Round Button with musical note and golden loop glow */}
         <button
           id="play-pause-button"
           type="button"
@@ -116,14 +123,16 @@ export const AudioPlayer: React.FC = () => {
           }}
           className={`relative z-10 w-11 h-11 md:w-13 md:h-13 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
             isPlaying
-              ? 'bg-[#1e1713] text-[#DAA520] border border-[#DAA520] shadow-[0_0_12px_rgba(218,165,32,0.4)]'
-              : 'bg-[#151210] text-gray-300 hover:text-[#DAA520] border border-[#DAA520]/40'
+              ? 'bg-[#221812] text-[#FFD700] border border-[#DAA520] animate-gold-glow-loop'
+              : 'bg-[#151210] text-[#DAA520]/80 hover:text-[#DAA520] border border-[#DAA520]/40'
           }`}
           aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
         >
           <span
             className={`text-xl md:text-2xl transition-transform duration-300 ${
-              isPlaying ? 'scale-110 drop-shadow-[0_0_6px_rgba(218,165,32,0.8)]' : 'group-hover:scale-110'
+              isPlaying
+                ? 'scale-110 drop-shadow-[0_0_8px_rgba(218,165,32,0.9)] animate-pulse text-[#FFD700]'
+                : 'group-hover:scale-110 text-[#DAA520]'
             }`}
           >
             ♫

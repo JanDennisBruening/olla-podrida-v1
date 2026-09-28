@@ -74,6 +74,10 @@
   font-family: 'Roboto', sans-serif;
 }
 
+.font-dosis {
+  font-family: 'Dosis', sans-serif;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -84,12 +88,50 @@
   100% { transform: rotate(360deg); }
 }
 
+@keyframes goldGlowPulseLoop {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.45), 0 0 20px rgba(218, 165, 32, 0.25), inset 0 0 6px rgba(218, 165, 32, 0.2);
+    border-color: rgba(218, 165, 32, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(218, 165, 32, 0.95), 0 0 45px rgba(218, 165, 32, 0.6), inset 0 0 14px rgba(218, 165, 32, 0.45);
+    border-color: rgba(245, 245, 220, 1);
+  }
+}
+
 .animate-spin-custom {
   animation: spin 1s linear infinite;
 }
 
 .animate-spin-slow {
   animation: spin-slow 22s linear infinite;
+}
+
+.animate-gold-glow-loop {
+  animation: goldGlowPulseLoop 2.2s ease-in-out infinite;
+}
+
+@keyframes potFlicker {
+  0%, 100% {
+    filter: drop-shadow(0 6px 14px rgba(218, 165, 32, 0.35)) brightness(1);
+    transform: translateY(0px) scale(1);
+  }
+  25% {
+    filter: drop-shadow(0 8px 18px rgba(230, 81, 0, 0.45)) brightness(1.03);
+    transform: translateY(-2px) scale(1.008);
+  }
+  50% {
+    filter: drop-shadow(0 5px 12px rgba(218, 165, 32, 0.3)) brightness(0.99);
+    transform: translateY(0px) scale(1);
+  }
+  75% {
+    filter: drop-shadow(0 9px 20px rgba(255, 111, 0, 0.5)) brightness(1.04);
+    transform: translateY(-2.5px) scale(1.012);
+  }
+}
+
+.animate-pot-alive {
+  animation: potFlicker 3.2s ease-in-out infinite;
 }
 
 /* Tooltipster-like tooltip styling matching live site */

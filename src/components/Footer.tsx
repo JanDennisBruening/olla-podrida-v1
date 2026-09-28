@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
   return (
     <footer
       ref={footerRef}
-      className="relative w-full bg-[#070202] pt-14 pb-12 text-[#F5F5DC] overflow-hidden select-none"
+      className="relative w-full bg-[#070202] pt-6 md:pt-8 pb-8 text-[#F5F5DC] overflow-hidden select-none"
     >
       {/* Smoke & Fog Atmosphere attached to the very bottom with smooth transition into black */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -42,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
       </div>
 
       <div
-        className={`relative z-10 max-w-[80rem] mx-auto px-4 sm:px-6 flex flex-col items-center transition-all duration-700 ease-out ${
+        className={`relative z-10 max-w-[80rem] mx-auto px-[5.5%] flex flex-col items-center transition-all duration-700 ease-out ${
           isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
         }`}
       >
@@ -124,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
           <p className="font-macondo text-lg sm:text-xl md:text-2xl text-[#F5F5DC] tracking-wide">
             {new Date().getFullYear()} © Olla Podrida
           </p>
-          <p className="text-xs text-[#F5F5DC]/60 font-sans">
+          <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
             Design und Entwicklung: Jan Dennis Brüning ·{' '}
             <a
               href="https://www.janbruening.de"

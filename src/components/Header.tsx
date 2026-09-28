@@ -38,12 +38,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
         }`}
         style={{
           background: 'radial-gradient(at top center, rgba(7, 2, 2, 0.39) 35%, rgba(242, 41, 91, 0) 62%)',
-          minHeight: '9rem'
+          minHeight: 'min(11.8vw, 9.3rem)'
         }}
       >
-        {/* Desktop Ribbon Bar (.elementor-element-6cf3c0da) */}
+        {/* Desktop & Tablet Ribbon Bar (.elementor-element-6cf3c0da) - strictly maintains un-squished aspect ratio */}
         <div
-          className="pointer-events-auto relative hidden md:flex items-start justify-center w-[80rem] max-w-full h-[9.3rem] transition-all duration-300"
+          className="pointer-events-auto relative hidden md:flex items-center justify-center w-full max-w-[80rem] aspect-[2048/238] transition-all duration-300"
           style={{
             backgroundImage: `url(${ASSETS.menuBackgroundDesktop})`,
             backgroundPosition: 'top center',
@@ -51,27 +51,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
             backgroundSize: 'contain'
           }}
         >
-          {/* Left Navigation Container (.elementor-element-709406c2) */}
-          <div className="w-[30%] mt-12 flex items-center justify-end space-x-12 pr-6">
+          {/* Left Navigation Container (.elementor-element-709406c2) - shifted closer to center logo and positioned vertically center/top */}
+          <div className="w-[38%] h-full flex items-center justify-end space-x-6 sm:space-x-8 lg:space-x-12 pr-4 sm:pr-8 md:pr-10 lg:pr-14 pt-0 sm:pt-1 md:pt-1 lg:pt-2">
             <button
               onClick={() => scrollToSection('Start')}
-              className="font-macondo text-[1.7rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs"
+              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Start
             </button>
             <button
               onClick={() => scrollToSection('ensemble')}
-              className="font-macondo text-[1.7rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs"
+              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Ensemble
             </button>
           </div>
 
           {/* Center Logo Container (.elementor-element-7c6f51bd & 4897424a) - hangs over navigation */}
-          <div className="w-[20%] lg:w-[22%] -mt-3 flex justify-center items-start z-30">
+          <div className="w-[18%] -mt-1 lg:-mt-2 flex justify-center items-start z-30">
             <button
               onClick={() => scrollToSection('Start')}
-              className="relative w-40 h-40 lg:w-48 lg:h-48 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer translate-y-3 lg:translate-y-4 filter drop-shadow-xl"
+              className="relative w-22 h-22 sm:w-26 sm:h-26 md:w-30 md:h-30 lg:w-40 lg:h-40 xl:w-46 xl:h-46 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer translate-y-1 md:translate-y-2 lg:translate-y-3 filter drop-shadow-xl"
               style={{
                 backgroundImage: `url(${ASSETS.logoBackground})`,
                 backgroundPosition: 'center center',
@@ -83,22 +83,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
               <img
                 src={ASSETS.navLogo}
                 alt="Ensemble Olla Podrida Logo"
-                className="w-32 h-32 lg:w-38 lg:h-38 object-contain -mt-3 drop-shadow-md"
+                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-38 xl:h-38 object-contain -mt-2 lg:-mt-3 drop-shadow-md"
               />
             </button>
           </div>
 
-          {/* Right Navigation Container (.elementor-element-4236051d) */}
-          <div className="w-[30%] mt-12 flex items-center justify-start space-x-12 pl-6">
+          {/* Right Navigation Container (.elementor-element-4236051d) - shifted closer to center logo and positioned vertically center/top */}
+          <div className="w-[38%] h-full flex items-center justify-start space-x-6 sm:space-x-8 lg:space-x-12 pl-4 sm:pr-8 md:pl-10 lg:pl-14 pt-0 sm:pt-1 md:pt-1 lg:pt-2">
             <button
               onClick={() => scrollToSection('termine')}
-              className="font-macondo text-[1.7rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs"
+              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Termine
             </button>
             <button
               onClick={() => scrollToSection('kontakt')}
-              className="font-macondo text-[1.7rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs"
+              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Kontakt
             </button>

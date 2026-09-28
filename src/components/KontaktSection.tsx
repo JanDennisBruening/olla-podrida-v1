@@ -43,32 +43,32 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     <section
       ref={sectionRef}
       id="kontakt"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-12 pb-20 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-8 md:pt-10 pb-4 md:pb-6 select-none"
     >
-      <div className="max-w-[80rem] mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
 
-        {/* Section Heading - left-aligned as requested with entrance animation */}
+        {/* Section Heading - reduced gap to text below */}
         <div
-          className={`text-left mb-10 md:mb-12 max-w-6xl mx-auto transition-all duration-700 ease-out ${
+          className={`text-left mb-2 md:mb-3 max-w-6xl mx-auto transition-all duration-700 ease-out ${
             isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <h2 className="font-macondo text-4xl sm:text-5xl md:text-[4rem] text-[#F5F5DC] font-normal tracking-wide text-left">
+          <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[3.8rem] text-[#F5F5DC] font-normal tracking-wide text-left">
             Kontakt &amp; Anfragen
           </h2>
         </div>
 
         {/* Two-Column Layout (.elementor-element-29fca19) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
           
           {/* Left Column (.elementor-element-2641b3e): Intro text + Susanne with flute */}
           <div
-            className={`lg:col-span-5 flex flex-col items-center lg:items-start text-left space-y-8 transition-all duration-700 delay-150 ease-out ${
+            className={`md:col-span-5 flex flex-col items-center md:items-start text-left space-y-6 transition-all duration-700 delay-150 ease-out ${
               isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
             {/* Text editor .elementor-element-79de16e using authentic font-macondo */}
-            <div className="w-full space-y-4 font-macondo text-base sm:text-lg md:text-[1.3rem] font-semibold text-[#F5F5DC] leading-relaxed md:leading-[1.85rem] text-left">
+            <div className="w-full space-y-4 font-macondo text-base sm:text-lg md:text-[1.25rem] font-semibold text-[#F5F5DC] leading-relaxed md:leading-[1.8rem] text-left">
               <p>
                 Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.
               </p>
@@ -76,20 +76,20 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                 Kontaktieren Sie uns über unser Formular oder per E-Mail:{' '}
                 <a
                   href="mailto:info@olla-podrida.de"
-                  className="font-macondo text-[1.35rem] text-[#DAA520] hover:underline"
+                  className="font-macondo text-[1.3rem] text-[#DAA520] hover:underline"
                 >
                   info(at)olla-podrida.de
                 </a>
               </p>
             </div>
 
-            {/* Susanne Cutout Illustration .elementor-element-aa9541e - Centered underneath the text */}
-            <div className="w-full flex justify-center items-center pt-2 md:pt-4">
-              <div className="w-56 sm:w-64 md:w-72">
+            {/* Susanne Cutout Illustration .elementor-element-aa9541e - Scaled up for majestic presence */}
+            <div className="w-full flex justify-center md:justify-start items-center pt-2 md:pt-4">
+              <div className="w-48 sm:w-56 md:w-64 lg:w-72 transition-transform duration-500 hover:scale-105">
                 <img
                   src="https://olla-podrida.de/wp-content/uploads/2024/07/Susanne_klein.webp"
                   alt="Susanne spielt vergnügt auf der Flöte"
-                  className="w-full h-auto object-contain drop-shadow-md transition-transform duration-500 hover:scale-105"
+                  className="w-full h-auto object-contain drop-shadow-md"
                   loading="lazy"
                 />
               </div>
@@ -98,12 +98,12 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
 
           {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
-            className={`lg:col-span-7 flex justify-center relative transition-all duration-700 delay-250 ease-out ${
+            className={`md:col-span-7 flex justify-center relative transition-all duration-700 delay-250 ease-out ${
               isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
             }`}
           >
             {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned higher up overlapping top */}
-            <div className="hidden md:block absolute -top-28 sm:-top-36 md:-top-44 right-[-1rem] md:right-[-2.5rem] lg:right-[-4rem] pointer-events-none z-[9300] w-[26rem] sm:w-[30rem] lg:w-[34rem]">
+            <div className="hidden md:block absolute -top-20 sm:-top-28 md:-top-32 right-[-0.5rem] md:right-[-1.5rem] lg:right-[-2.5rem] pointer-events-none z-20 w-[22rem] sm:w-[26rem] lg:w-[30rem]">
               <img
                 src="https://olla-podrida.de/wp-content/uploads/2024/07/2024_07_22_Elemente_Olla-Podrida_Zeichenflaeche-1-1024x611.png"
                 alt="Musiknoten Pergament"
@@ -113,7 +113,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </div>
 
             <div
-              className="relative w-full max-w-[42rem] min-h-[42rem] md:min-h-[45rem] p-8 sm:p-14 md:p-16 flex flex-col justify-center transition-all duration-300 z-10"
+              className="relative w-full max-w-[42rem] min-h-[38rem] md:min-h-[44rem] px-8 sm:px-14 md:px-20 lg:px-24 xl:px-28 py-8 sm:py-12 md:py-14 lg:py-16 flex flex-col justify-center transition-all duration-300 z-10"
               style={{
                 backgroundImage: `url("https://olla-podrida.de/wp-content/uploads/2024/07/hintergrundbild2.png")`,
                 backgroundPosition: 'center center',
@@ -121,8 +121,8 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                 backgroundSize: 'contain'
               }}
             >
-              {/* Contact Form 7 container (.ue_contact_form_7) */}
-              <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-4">
+              {/* Contact Form 7 container (.ue_contact_form_7) with generous edge margins on desktop */}
+              <form onSubmit={handleSubmit} className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto space-y-3.5">
                 
                 {/* Name */}
                 <div>

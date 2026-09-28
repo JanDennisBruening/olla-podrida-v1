@@ -11,152 +11,174 @@ interface StageFigure {
   image: string;
   alt: string;
   entranceDelay: number;
-  depthRatio: number;
   desktop: { left: string; top: string; width: string; zIndex: number };
+  tablet: { left: string; top: string; width: string; zIndex: number };
   mobile: { left: string; top: string; width: string; zIndex: number };
 }
 
-// Ordered strictly foreground-first for entrance sequence:
-// 1. Susanne (furthest foreground, z:10)
-// 2. Ruth (z:9)
-// 3. Lutz (z:8)
-// 4. Sandra (z:7)
-// 5. Silke (z:7)
-// 6. Klemens (z:5)
-// 7. Simone (z:4)
+// 7 Ensemble figures - strictly centered on 50% across Desktop, Tablet, and Mobile
+// Susanne and Ruth lower bodies intentionally overlap and step behind the parchment ribbon (no empty voids!)
+// Sandra on the right is placed with plenty of breathing space from Lutz so all faces are completely unobstructed
 const STAGE_FIGURES: StageFigure[] = [
   {
-    id: 'susanne',
-    name: 'Susanne',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Susanne-1.webp',
-    alt: 'Susanne spielt vergnügt auf der Flöte',
+    id: 'simone',
+    name: 'Simone',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Simone.webp',
+    alt: 'Simone',
     entranceDelay: 80,
-    depthRatio: 0.04,
-    desktop: { left: '30%', top: '27%', width: '31rem', zIndex: 10 },
-    mobile: { left: '8%', top: '26%', width: '62vw', zIndex: 10 }
-  },
-  {
-    id: 'ruth',
-    name: 'Ruth',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Ruth_web_5.webp',
-    alt: 'Ruth',
-    entranceDelay: 220,
-    depthRatio: 0.05,
-    desktop: { left: '47%', top: '41%', width: '22rem', zIndex: 9 },
-    mobile: { left: '42%', top: '37%', width: '47vw', zIndex: 9 }
-  },
-  {
-    id: 'lutz',
-    name: 'Lutz',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Lutz.webp',
-    alt: 'Lutz',
-    entranceDelay: 360,
-    depthRatio: 0.07,
-    desktop: { left: '39%', top: '20%', width: '24rem', zIndex: 8 },
-    mobile: { left: '26%', top: '20%', width: '48vw', zIndex: 8 }
-  },
-  {
-    id: 'sandra',
-    name: 'Sandra',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/10/2024_Sandra_Olla-Podrida_web_2.webp',
-    alt: 'Sandra',
-    entranceDelay: 500,
-    depthRatio: 0.09,
-    desktop: { left: '54%', top: '19%', width: '22rem', zIndex: 7 },
-    mobile: { left: '50%', top: '19%', width: '45vw', zIndex: 7 }
-  },
-  {
-    id: 'silke',
-    name: 'Silke',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Silke.webp',
-    alt: 'Silke',
-    entranceDelay: 640,
-    depthRatio: 0.09,
-    desktop: { left: '23.5%', top: '18%', width: '21rem', zIndex: 7 },
-    mobile: { left: '1.5%', top: '17%', width: '43vw', zIndex: 7 }
+    desktop: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
+    tablet: { left: '25%', top: '6%', width: '24vw', zIndex: 4 },
+    mobile: { left: '16%', top: '4%', width: '33vw', zIndex: 4 }
   },
   {
     id: 'klemens',
     name: 'Klemens',
     image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Klemens.webp',
     alt: 'Klemens',
-    entranceDelay: 780,
-    depthRatio: 0.13,
-    desktop: { left: '44%', top: '13%', width: '19rem', zIndex: 5 },
-    mobile: { left: '40%', top: '12%', width: '38vw', zIndex: 5 }
+    entranceDelay: 160,
+    desktop: { left: '45%', top: '7%', width: '19rem', zIndex: 5 },
+    tablet: { left: '46%', top: '5%', width: '22vw', zIndex: 5 },
+    mobile: { left: '45%', top: '3%', width: '32vw', zIndex: 5 }
   },
   {
-    id: 'simone',
-    name: 'Simone',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Simone.webp',
-    alt: 'Simone',
-    entranceDelay: 920,
-    depthRatio: 0.15,
-    desktop: { left: '34%', top: '14%', width: '20rem', zIndex: 4 },
-    mobile: { left: '16%', top: '13%', width: '40vw', zIndex: 4 }
+    id: 'silke',
+    name: 'Silke',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Silke.webp',
+    alt: 'Silke',
+    entranceDelay: 260,
+    desktop: { left: '14%', top: '16%', width: '22rem', zIndex: 7 },
+    tablet: { left: '12%', top: '13%', width: '26vw', zIndex: 7 },
+    mobile: { left: '3%', top: '11%', width: '36vw', zIndex: 7 }
+  },
+  {
+    id: 'sandra',
+    name: 'Sandra',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/10/2024_Sandra_Olla-Podrida_web_2.webp',
+    alt: 'Sandra',
+    entranceDelay: 360,
+    desktop: { left: '58%', top: '15%', width: '23rem', zIndex: 9 },
+    tablet: { left: '59%', top: '13%', width: '26vw', zIndex: 9 },
+    mobile: { left: '59%', top: '11%', width: '38vw', zIndex: 9 }
+  },
+  {
+    id: 'lutz',
+    name: 'Lutz',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Lutz.webp',
+    alt: 'Lutz',
+    entranceDelay: 460,
+    desktop: { left: '37%', top: '15%', width: '25rem', zIndex: 8 },
+    tablet: { left: '37%', top: '13%', width: '27vw', zIndex: 8 },
+    mobile: { left: '29%', top: '11%', width: '44vw', zIndex: 8 }
+  },
+  {
+    id: 'susanne',
+    name: 'Susanne',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Susanne-1.webp',
+    alt: 'Susanne spielt vergnügt auf der Flöte',
+    entranceDelay: 580,
+    desktop: { left: '26%', top: '24%', width: '33rem', zIndex: 10 },
+    tablet: { left: '26%', top: '21%', width: '36vw', zIndex: 10 },
+    mobile: { left: '17%', top: '17%', width: '52vw', zIndex: 10 }
+  },
+  {
+    id: 'ruth',
+    name: 'Ruth',
+    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Ruth_web_5.webp',
+    alt: 'Ruth',
+    entranceDelay: 680,
+    desktop: { left: '45%', top: '34%', width: '23rem', zIndex: 9 },
+    tablet: { left: '45%', top: '28%', width: '28vw', zIndex: 9 },
+    mobile: { left: '42%', top: '24%', width: '42vw', zIndex: 9 }
   }
 ];
 
 export const HeroStage: React.FC<HeroStageProps> = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [viewportMode, setViewportMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
 
-  // Trigger entrance sequence shortly after mount
+  // Dynamically track viewport mode for seamless scaling across smartphone, tablet, and desktop
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 80);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Parallax scroll handler
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-        ticking = true;
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 768) {
+        setViewportMode('mobile');
+      } else if (w < 1140) {
+        setViewportMode('tablet');
+      } else {
+        setViewportMode('desktop');
       }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Trigger entrance sequence once on initial mount (no scroll-based re-triggering)
+  useEffect(() => {
+    let triggered = false;
+    const triggerEntrance = () => {
+      if (!triggered) {
+        triggered = true;
+        setIsLoaded(true);
+      }
+    };
+
+    window.addEventListener('preloader-finish', triggerEntrance);
+    const timer = setTimeout(triggerEntrance, 1000);
+
+    return () => {
+      window.removeEventListener('preloader-finish', triggerEntrance);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
     <section
       id="Start"
-      className="relative w-full select-none bg-transparent flex flex-col justify-end pt-16 md:pt-20 z-10"
+      className="relative w-full select-none bg-transparent flex flex-col justify-end pt-12 sm:pt-14 md:pt-16 lg:pt-20 z-10 overflow-visible"
       style={{
-        // Dynamically adapts height to viewport: in portrait mode avoids huge bottom voids, in landscape preserves stage presence
-        minHeight: 'min(94svh, 60rem)'
+        // Compact height so the lower robes dip directly behind the parchment ribbon without a giant empty space
+        minHeight: viewportMode === 'mobile'
+          ? 'min(68svh, 36rem)'
+          : viewportMode === 'tablet'
+          ? 'min(72svh, 42rem)'
+          : 'min(78svh, 48rem)'
       }}
     >
-      {/* Desktop Stage Layer (.elementor-element-26804e5b: width 100rem centered) */}
-      <div className="hidden md:block relative w-full max-w-[100rem] mx-auto h-[88svh] min-h-[46rem] max-h-[60rem]">
+      {/* Harmonized Stage Layer across Mobile, Tablet, and Desktop */}
+      <div
+        className={`relative w-full mx-auto overflow-visible ${
+          viewportMode === 'mobile'
+            ? 'h-[64svh] min-h-[28rem] max-h-[36rem]'
+            : viewportMode === 'tablet'
+            ? 'h-[70svh] min-h-[34rem] max-h-[42rem]'
+            : 'w-full h-[76svh] min-h-[38rem] max-h-[48rem]'
+        }`}
+      >
         {STAGE_FIGURES.map((member) => {
-          const parallaxOffset = Math.min(scrollY * member.depthRatio, 50);
+          const cfg = viewportMode === 'mobile'
+            ? member.mobile
+            : viewportMode === 'tablet'
+            ? member.tablet
+            : member.desktop;
 
           return (
             <div
               key={member.id}
               className="absolute cursor-default select-none pointer-events-none"
               style={{
-                left: member.desktop.left,
-                top: member.desktop.top,
-                width: member.desktop.width,
-                zIndex: member.desktop.zIndex,
-                transition: 'transform 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 650ms ease-out',
+                left: cfg.left,
+                top: cfg.top,
+                width: cfg.width,
+                zIndex: cfg.zIndex,
+                transition: 'transform 900ms cubic-bezier(0.2, 0.9, 0.3, 1), opacity 800ms ease-out',
                 transitionDelay: `${member.entranceDelay}ms`,
                 transform: isLoaded
-                  ? `translate3d(0, ${parallaxOffset}px, 0) scale(1)`
-                  : `translate3d(0, ${parallaxOffset + 70}px, 0) scale(0.92)`,
+                  ? 'translate3d(0, 0, 0)'
+                  : 'translate3d(0, 24px, 0)',
                 opacity: isLoaded ? 1 : 0
               }}
             >
-              {/* Authentic stage cutout - clean, unobscured, non-clickable */}
               <img
                 src={member.image}
                 alt={member.alt}
@@ -168,57 +190,17 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
         })}
       </div>
 
-      {/* Mobile & Portrait Stage Layout - Dynamically sized to prevent dead gaps in portrait */}
-      <div className="md:hidden relative w-full h-[78svh] min-h-[36rem] max-h-[48rem] pt-16 overflow-visible">
-        {STAGE_FIGURES.map((member) => {
-          const parallaxOffset = Math.min(scrollY * member.depthRatio, 35);
-
-          return (
-            <div
-              key={member.id}
-              className="absolute cursor-default select-none pointer-events-none"
-              style={{
-                left: member.mobile.left,
-                top: member.mobile.top,
-                width: member.mobile.width,
-                zIndex: member.mobile.zIndex,
-                transition: 'transform 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 650ms ease-out',
-                transitionDelay: `${member.entranceDelay}ms`,
-                transform: isLoaded
-                  ? `translate3d(0, ${parallaxOffset}px, 0) scale(1)`
-                  : `translate3d(0, ${parallaxOffset + 50}px, 0) scale(0.92)`,
-                opacity: isLoaded ? 1 : 0
-              }}
-            >
-              <img
-                src={member.image}
-                alt={member.alt}
-                className="w-full h-auto object-contain filter drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)] pointer-events-none"
-                loading="eager"
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Ground Smoke & Fog Layer placed at bottom z-[2] so it stays under/behind figures and does not obscure faces/bodies */}
-      <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none z-[2] transition-transform duration-100 ease-out"
-        style={{
-          transform: `translate3d(0, ${Math.min(scrollY * -0.04, 20)}px, 0)`
-        }}
-      >
+      {/* Ground Smoke & Fog Layer placed at bottom z-[2] */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-[2]">
         <img
           src={ASSETS.smokeAlt}
           alt="Atmosphärischer Rauch"
-          className="w-full h-28 sm:h-36 md:h-44 object-cover object-bottom opacity-20 mix-blend-screen"
+          className="w-full h-24 sm:h-30 md:h-36 object-cover object-bottom opacity-20 mix-blend-screen"
           style={{
             filter: 'brightness(105%) contrast(98%)'
           }}
         />
       </div>
-
-      {/* Atmosphere floor transition without black cut-off so EnsembleSection overlaps seamlessly */}
     </section>
   );
 };

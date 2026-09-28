@@ -82,9 +82,9 @@ export const TermineSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="termine"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-12 pb-16 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-4 sm:pt-6 md:pt-8 pb-16 select-none"
     >
-      <div className="max-w-[80rem] mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
         
         {/* Section Heading matching .elementor-element-41d3014 with entrance animation */}
         <div
@@ -92,7 +92,7 @@ export const TermineSection: React.FC = () => {
             isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
           }`}
         >
-          <h2 className="font-macondo text-4xl sm:text-5xl md:text-[4rem] text-[#F5F5DC] font-normal tracking-wide drop-shadow-md">
+          <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[3.8rem] text-[#F5F5DC] font-normal tracking-wide drop-shadow-md">
             Aktuelle Termine
           </h2>
           {/* Subtle antique flourish line */}
@@ -154,8 +154,8 @@ export const TermineSection: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Title matching .uc_post_list_title - non-navigating, toggles accordion */}
-                  <h3 className="font-macondo text-2xl sm:text-3xl md:text-[2.6rem] md:leading-[2.9rem] font-normal mt-1 mb-4 text-[#D79951] group-hover:text-[#F3CE72] transition-colors duration-200 select-none">
+                  {/* Title matching .uc_post_list_title - non-navigating, 5% smaller */}
+                  <h3 className="font-macondo text-[1.425rem] sm:text-[1.78rem] md:text-[2.47rem] md:leading-[2.75rem] font-normal mt-1 mb-4 text-[#D79951] group-hover:text-[#F3CE72] transition-colors duration-200 select-none">
                     {event.title}
                   </h3>
 
