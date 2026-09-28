@@ -23,7 +23,18 @@ export default function App() {
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
 
   useEffect(() => {
-    // Ultra-silky Lenis smooth scrolling for luxury momentum feel
+    // Disable smooth scrolling on mobile / touch viewports (< 768px), native touch scrolling is used instead
+    const isMobileOrTouch = typeof window !== 'undefined' && (
+      window.innerWidth < 768 ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0
+    );
+
+    if (isMobileOrTouch) {
+      // Lenis is deactivated for mobile devices to allow native OS scrolling
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -31,7 +42,7 @@ export default function App() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      syncTouch: false,
     });
 
     (window as any).__lenis = lenis;
@@ -58,48 +69,31 @@ export default function App() {
     setLegalModalType(null);
   };
 
+  const handleCloseAllModals = () => {
+    setArchiveModalOpen(false);
+    setLegalModalType(null);
+  };
+
   return (
     <div className="relative min-h-screen bg-[#070202] text-[#F5F5DC] flex flex-col font-sans selection:bg-[#DAA520] selection:text-[#F5F5DC]">
       {/* 1:1 Preloader matching original site */}
       <Preloader />
 
-      {/* 1:1 Fixed Navigation Ribbon */}
+      {/* 1:1 Fixed Navigation Ribbon with synchronized menu and archive state */}
       <Header
         onOpenLegal={handleOpenLegal}
         onOpenTermineArchive={() => setArchiveModalOpen(true)}
+        isArchiveOpen={archiveModalOpen}
+        onCloseAll={handleCloseAllModals}
       />
 
       {/* Main Content Sections */}
       <main className="flex-1 w-full flex flex-col bg-[#070202]">
-        {/* Unified Theatrical Hall Realm: contains both the stage figures and the parchment ensemble section */}
-        <div className="relative w-full overflow-hidden bg-[#070202]">
-          {/* Continuous Stone Hall Backdrop spanning from header down behind EnsembleSection */}
-          <div
-            className="hidden lg:block absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
-            style={{
-              backgroundImage: `url(${ASSETS.heroBackgroundDesktop})`,
-              backgroundPosition: 'center top',
-              backgroundSize: '100% auto'
-            }}
-          />
-          <div
-            className="lg:hidden absolute inset-0 w-full h-[115%] bg-cover bg-top bg-no-repeat pointer-events-none opacity-95"
-            style={{
-              backgroundImage: `url(${ASSETS.heroBackgroundMobile})`,
-              backgroundPosition: 'center top',
-              backgroundSize: 'cover'
-            }}
-          />
+        {/* Clean Theatrical Hero Stage (#Start) */}
+        <HeroStage onSelectMember={() => {}} />
 
-          {/* Clean Theatrical Hero Stage (#Start) */}
-          <HeroStage onSelectMember={() => {}} />
-
-          {/* Parchment Ribbon Ensemble Section (#ensemble) - Overlapping with 100% transparent background */}
-          <EnsembleSection />
-
-          {/* Smooth, soft transition into the solid black website background before Termine */}
-          <div className="absolute bottom-0 inset-x-0 h-36 md:h-52 bg-gradient-to-b from-transparent via-[#070202]/70 to-[#070202] pointer-events-none z-10" />
-        </div>
+        {/* Parchment Ribbon Ensemble Section (#ensemble) - Overlapping stage with 100% transparent background */}
+        <EnsembleSection />
 
         {/* Termine Section (#termine) */}
         <TermineSection />
@@ -110,10 +104,11 @@ export default function App() {
         />
       </main>
 
-      {/* 1:1 Footer */}
+      {/* 1:1 Footer with Konzertchronik */}
       <Footer
         onOpenLegal={handleOpenLegal}
         onOpenCookies={() => handleOpenLegal('cookies')}
+        onOpenTermineArchive={() => setArchiveModalOpen(true)}
       />
 
       {/* 1:1 Floating Audio Player (♫ bottom-right) */}

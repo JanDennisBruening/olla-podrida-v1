@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ASSETS } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
@@ -65,30 +65,45 @@ const MUSICIANS: MusicianPortrait[] = [
 
 export const EnsembleSection: React.FC = () => {
   const [hoveredMember, setHoveredMember] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="ensemble"
-      className="relative w-full bg-transparent text-[#F5F5DC] overflow-visible -mt-[18vw] sm:-mt-[16vw] md:-mt-[12vw] lg:-mt-[9rem] xl:-mt-[11.8rem] pt-0 pb-0 select-none z-20"
+      className="relative w-full bg-transparent text-[#F5F5DC] overflow-visible -mt-[15vw] md:-mt-[12vw] lg:-mt-[7.5rem] xl:-mt-[9.5rem] pt-0 pb-0 select-none z-20"
     >
-      {/* Main Parchment Paper Ribbon Container (.elementor-element-54faf8e6 & 28ffdb8c) */}
-      <div className="w-full flex justify-center px-[4%] sm:px-[5.5%] relative z-10">
+      {/* Main Parchment Paper Container */}
+      <div className="w-full flex flex-col items-center px-0 md:px-[5.5%] relative z-10">
+
+        {/* Authentic Parchment Scroll: Integrated ribbon banner on top, authentic deckled sides, and torn bottom */}
         <div
-          className={`relative w-full max-w-[67rem] min-h-0 md:min-h-[64rem] lg:min-h-[72rem] xl:min-h-[78rem] bg-[length:100%_100%] bg-top bg-no-repeat transition-all duration-700 ease-out transform ${
+          className={`relative w-full max-w-none md:max-w-[67rem] filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] transition-all duration-700 ease-out transform ${
             isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-6 scale-[0.99]'
           }`}
           style={{
-            backgroundImage: `url("${ASSETS.ribbonPaper}")`
+            backgroundImage: `url(${isMobile ? '/SchleifePapierMobile.webp' : '/SchleifePapier.webp'})`,
+            backgroundPosition: 'top center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: isMobile ? '100% 100%' : '100% auto'
           }}
         >
-          {/* Internal Content mapped directly inside the parchment paper area with calibrated padding */}
-          <div className="pt-[26vw] sm:pt-[22vw] md:pt-[18vw] lg:pt-[14.5rem] xl:pt-[16.5rem] pb-[16vw] sm:pb-[14vw] md:pb-16 lg:pb-24 px-[11vw] sm:px-[11vw] md:px-[11vw] lg:px-[8rem] xl:px-[9.5rem] flex flex-col items-start text-left">
+          {/* Internal Content mapped directly inside the authentic parchment paper scroll with proper padding */}
+          <div className="pt-[28vw] md:pt-[16.5rem] lg:pt-[17.5rem] pb-[14vw] md:pb-[10rem] px-[12vw] md:px-[9rem] lg:px-[10rem] flex flex-col items-start text-left">
             
-            {/* Title matching .elementor-element-7bd36bc3 - Left-aligned, perfectly framed inside parchment */}
+            {/* Title matching .elementor-element-7bd36bc3 - Positioned cleanly on the parchment paper below ribbon */}
             <h2
-              className={`font-macondo text-[5.8vw] sm:text-[4.5vw] md:text-[2.6rem] lg:text-[3.35rem] font-semibold text-[#0A0707] tracking-normal mb-2.5 md:mb-6 leading-tight text-left w-full transition-all duration-700 delay-100 ease-out ${
+              className={`font-macondo text-[6.5vw] md:text-[2.6rem] lg:text-[3.35rem] font-semibold text-[#0A0707] tracking-normal mb-2 md:mb-6 leading-tight text-left w-full transition-all duration-700 delay-100 ease-out ${
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
@@ -97,23 +112,23 @@ export const EnsembleSection: React.FC = () => {
 
             {/* Container 615a8bb3: Paragraph 1 + Logo (Side-by-side on tablet & desktop, stacked cleanly on mobile) */}
             <div
-              className={`w-full flex flex-col md:flex-row items-center justify-between text-left mb-2.5 md:mb-6 gap-3 md:gap-8 transition-all duration-700 delay-200 ease-out ${
+              className={`w-full flex flex-col md:flex-row items-center justify-between text-left mb-2 md:mb-6 gap-2 md:gap-8 transition-all duration-700 delay-200 ease-out ${
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <div className="w-full md:w-[62%] font-macondo text-[3.5vw] sm:text-[3.2vw] md:text-[1.24rem] lg:text-[1.28rem] font-semibold text-[#0A0707] leading-[4.7vw] sm:leading-[4.2vw] md:leading-[1.82rem] text-justify md:text-left">
+              <div className="w-full md:w-[60%] font-macondo text-[3.7vw] md:text-[1.24rem] lg:text-[1.28rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.82rem] text-justify md:text-left">
                 <p>
                   Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.
                 </p>
               </div>
 
-              {/* Large, proud Olla Podrida Pot Illustration .elementor-element-dd00022 */}
-              <div className="w-full md:w-[38%] flex justify-center md:justify-end shrink-0 my-1 md:my-0">
-                <div className="relative animate-pot-alive flex items-center justify-center">
+              {/* Large, proud Olla Podrida Pot Illustration .elementor-element-dd00022 - Enlarged by 30% proportionally */}
+              <div className="w-full md:w-[40%] flex justify-center md:justify-end shrink-0 my-3 md:my-0">
+                <div className="relative flex items-center justify-center">
                   <img
                     src={ASSETS.logo}
                     alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                    className="w-28 sm:w-36 md:w-64 lg:w-[20rem] xl:w-[23rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                    className="w-[17rem] md:w-[34rem] lg:w-[41.5rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                     loading="lazy"
                   />
                 </div>
@@ -122,7 +137,7 @@ export const EnsembleSection: React.FC = () => {
 
             {/* Paragraph 2 matching .elementor-element-57e0be44 */}
             <div
-              className={`w-full font-macondo text-[3.5vw] sm:text-[3.2vw] md:text-[1.24rem] lg:text-[1.28rem] font-semibold text-[#0A0707] leading-[4.7vw] sm:leading-[4.2vw] md:leading-[1.82rem] mb-2.5 md:mb-7 text-justify md:text-left transition-all duration-700 delay-300 ease-out ${
+              className={`w-full font-macondo text-[3.7vw] md:text-[1.24rem] lg:text-[1.28rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.82rem] mb-2 md:mb-7 text-justify md:text-left transition-all duration-700 delay-300 ease-out ${
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >

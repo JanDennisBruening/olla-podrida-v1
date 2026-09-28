@@ -25,17 +25,24 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+      onClick={onClose}
+    >
       <div
-        className="relative w-full max-w-5xl max-h-[90vh] bg-[#120B08] border border-[#DAA520] rounded-2xl shadow-2xl overflow-hidden flex flex-col text-[#F5F5DC]"
+        data-lenis-prevent="true"
+        className="relative w-full max-w-5xl max-h-[88vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(218,165,32,0.25)] overflow-hidden flex flex-col text-[#F5F5DC]"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          touchAction: 'pan-y'
+        }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#DAA520]/30 bg-[#1C120D]">
-          <div className="flex items-center space-x-3">
-            <Music className="text-[#DAA520]" size={26} />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#DAA520]/30 bg-[#1C120D] shrink-0">
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <Music className="text-[#DAA520] shrink-0" size={24} />
             <div>
-              <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
+              <h2 className="font-macondo text-xl sm:text-3xl text-[#DAA520] leading-tight">
                 Konzertchronik &amp; Archiv
               </h2>
               <p className="text-xs text-[#D1C7AC]">Alle Veranstaltungen von Olla Podrida</p>
@@ -44,16 +51,23 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#D1C7AC] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-2 rounded-full bg-[#070202] border border-[#DAA520]/50 text-[#F5F5DC] hover:text-[#DAA520] hover:scale-105 active:scale-95 transition-all cursor-pointer"
             aria-label="Schließen"
           >
-            <X size={24} />
+            <X size={22} />
           </button>
         </div>
 
-        {/* Content list */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Content list with native smooth touch scrolling and Lenis prevention */}
+        <div
+          data-lenis-prevent="true"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 overscroll-contain"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y'
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {CONCERT_EVENTS.map((event) => (
               <div
                 key={event.id}

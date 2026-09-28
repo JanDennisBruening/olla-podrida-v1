@@ -5,9 +5,10 @@ import { useInView } from '../hooks/useInView';
 interface FooterProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
   onOpenCookies: () => void;
+  onOpenTermineArchive: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive }) => {
   const currentYear = new Date().getFullYear();
   const [cookieTooltip, setCookieTooltip] = useState(false);
   const { ref: footerRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
@@ -27,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
   return (
     <footer
       ref={footerRef}
-      className="relative w-full bg-[#070202] pt-6 md:pt-8 pb-8 text-[#F5F5DC] overflow-hidden select-none"
+      className="relative w-full bg-[#070202] pt-12 md:pt-16 pb-8 text-[#F5F5DC] overflow-hidden select-none"
     >
       {/* Smoke & Fog Atmosphere attached to the very bottom with smooth transition into black */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -47,8 +48,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
         }`}
       >
         
-        {/* Seal Emblem .elementor-element-195d87f2 */}
-        <div className="mb-8 transition-transform duration-300 hover:scale-110 cursor-pointer" onClick={() => scrollTo('Start')}>
+        {/* Seal Emblem .elementor-element-195d87f2 with generous breathing space above */}
+        <div className="mt-2 mb-6 sm:mb-8 transition-transform duration-300 hover:scale-110 cursor-pointer" onClick={() => scrollTo('Start')}>
           <img
             src={ASSETS.footerSeal}
             alt="Olla Podrida"
@@ -57,57 +58,70 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies }) =>
           />
         </div>
 
-        {/* Footer Navigation Buttons: 2 rows of 3 columns on mobile, row on tablet/desktop */}
-        <div className="w-full max-w-[20rem] sm:max-w-none grid grid-cols-3 gap-y-3.5 gap-x-2 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-10 mb-6 font-macondo text-base sm:text-lg md:text-[1.3rem] font-semibold text-[#F5F5DC] text-center">
-          <button
-            onClick={() => scrollTo('ensemble')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
-          >
-            Ensemble
-          </button>
-          <button
-            onClick={() => scrollTo('termine')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
-          >
-            Termine
-          </button>
-          <button
-            onClick={() => scrollTo('kontakt')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
-          >
-            Kontakt
-          </button>
-
-          {/* Cookies button with Premium Tooltip */}
-          <div className="relative inline-block py-1">
+        {/* Footer Navigation Buttons: Two cleanly stacked rows with minimal line gap */}
+        <div className="w-full flex flex-col items-center gap-y-1 sm:gap-y-1.5 mb-4 font-macondo text-[0.92rem] sm:text-[1.02rem] md:text-[1.12rem] font-medium text-[#F5F5DC] text-center">
+          
+          {/* Main sections row */}
+          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8">
             <button
-              onClick={onOpenCookies}
-              onMouseEnter={() => setCookieTooltip(true)}
-              onMouseLeave={() => setCookieTooltip(false)}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer"
+              onClick={() => scrollTo('ensemble')}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
             >
-              Cookies
+              Ensemble
             </button>
-            {cookieTooltip && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-sm whitespace-nowrap shadow-2xl z-50 pointer-events-none">
-                Nur essenzielle Cookies und Musik aus alten Zeiten!
-                <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
-              </div>
-            )}
+            <button
+              onClick={() => scrollTo('termine')}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Termine
+            </button>
+            <button
+              onClick={onOpenTermineArchive}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Konzertchronik
+            </button>
+            <button
+              onClick={() => scrollTo('kontakt')}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Kontakt
+            </button>
           </div>
 
-          <button
-            onClick={() => onOpenLegal('datenschutz')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
-          >
-            Datenschutz
-          </button>
-          <button
-            onClick={() => onOpenLegal('impressum')}
-            className="hover:text-[#DAA520] transition-colors cursor-pointer py-1"
-          >
-            Impressum
-          </button>
+          {/* Legal and cookies row */}
+          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8">
+            {/* Cookies button with Premium Tooltip */}
+            <div className="relative inline-block py-0.5">
+              <button
+                onClick={onOpenCookies}
+                onMouseEnter={() => setCookieTooltip(true)}
+                onMouseLeave={() => setCookieTooltip(false)}
+                className="hover:text-[#DAA520] transition-colors cursor-pointer"
+              >
+                Cookies
+              </button>
+              {cookieTooltip && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-sm whitespace-nowrap shadow-2xl z-50 pointer-events-none">
+                  Nur essenzielle Cookies und Musik aus alten Zeiten!
+                  <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => onOpenLegal('datenschutz')}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Datenschutz
+            </button>
+            <button
+              onClick={() => onOpenLegal('impressum')}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Impressum
+            </button>
+          </div>
         </div>
 
         {/* Divider with Center "O" matching .elementor-element-6e50220f */}

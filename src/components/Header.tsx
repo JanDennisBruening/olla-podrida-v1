@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
 import { ASSETS } from '../data/siteContent';
-import { X } from 'lucide-react';
 
 interface HeaderProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
   onOpenTermineArchive: () => void;
+  isArchiveOpen?: boolean;
+  onCloseAll?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchive }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onOpenLegal,
+  onOpenTermineArchive,
+  isArchiveOpen = false,
+  onCloseAll
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  const isAnyOpen = mobileMenuOpen || isArchiveOpen;
 
   React.useEffect(() => {
     const timer = setTimeout(() => setIsMounted(true), 60);
     return () => clearTimeout(timer);
   }, []);
 
+  const handleToggleMobileMenu = () => {
+    if (isAnyOpen) {
+      setMobileMenuOpen(false);
+      if (onCloseAll) onCloseAll();
+    } else {
+      setMobileMenuOpen(true);
+    }
+  };
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
+    if (onCloseAll) onCloseAll();
     const element = document.getElementById(id);
     if (element) {
       const lenis = (window as any).__lenis;
@@ -33,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
     <>
       {/* Fixed Header Navigation matching .elementor-element-4aa968b4 */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[998] flex flex-col items-center pointer-events-none select-none transition-all duration-700 ease-out ${
+        className={`fixed top-0 left-0 right-0 z-[10020] flex flex-col items-center pointer-events-none select-none transition-all duration-700 ease-out ${
           isMounted ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
         }`}
         style={{
@@ -105,23 +123,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
           </div>
         </div>
 
-        {/* Mobile Header Ribbon (.elementor-element-6cf3c0da mobile) */}
+        {/* Mobile Header Ribbon (.elementor-element-6cf3c0da mobile) - Unified Mobile Viewport */}
         <div
-          className="pointer-events-auto relative md:hidden flex items-start justify-between w-full h-[24vw] min-h-[5.5rem] max-h-[7rem] px-5 pt-1.5 sm:pt-2"
+          className="pointer-events-auto relative md:hidden flex items-center justify-between w-full h-[15vw] min-h-[3.6rem] max-h-[4.8rem] px-3.5"
           style={{
             backgroundImage: `url(${ASSETS.menuBackgroundMobile})`,
-            backgroundPosition: 'top center',
+            backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: '140vw auto'
+            backgroundSize: '100% 100%'
           }}
         >
-          {/* Logo pinned to top edge, larger size */}
+          {/* Logo pinned flush against top edge: exactly 25% of total width as requested */}
           <button
             onClick={() => scrollToSection('Start')}
-            className="flex items-center -mt-1 sm:-mt-2 transition-transform duration-200 active:scale-95 cursor-pointer z-30"
+            className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30"
           >
             <div
-              className="w-22 h-22 sm:w-26 sm:h-26 flex items-center justify-center p-1 filter drop-shadow-xl"
+              className="w-[25vw] h-[25vw] min-w-[5.8rem] min-h-[5.8rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
               style={{
                 backgroundImage: `url(${ASSETS.logoBackground})`,
                 backgroundPosition: 'center center',
@@ -132,40 +150,70 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLegal, onOpenTermineArchiv
               <img
                 src={ASSETS.navLogo}
                 alt="Ensemble Olla Podrida Logo"
-                className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow -mt-1"
+                className="w-[84%] h-[84%] object-contain drop-shadow-md"
               />
             </div>
           </button>
 
-          {/* Hamburger toggle button positioned high up in header ribbon with high contrast */}
+          {/* Medieval Calligraphic Menu / Close Button with smooth morphing animation, identical proportions and colors */}
           <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="mt-2.5 sm:mt-3 p-2.5 rounded-full bg-[#070202]/90 border border-[#DAA520]/70 text-[#DAA520] hover:text-[#F5F5DC] hover:border-[#DAA520] focus:outline-none cursor-pointer flex flex-col space-y-1 justify-center items-center shadow-lg transition-transform active:scale-90 z-30"
-            aria-label="Menü öffnen"
+            onClick={handleToggleMobileMenu}
+            className="self-center my-auto mr-4 flex flex-col items-center justify-center p-1 cursor-pointer transition-all duration-300 active:scale-90 scale-[1.03] z-30"
+            aria-label={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
+            title={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
           >
-            <span className="block w-5 h-[2px] bg-current rounded-full" />
-            <span className="block w-5 h-[2px] bg-current rounded-full" />
-            <span className="block w-4 h-[2px] bg-current rounded-full self-start" />
+            <div className="w-[26px] h-[17px] relative flex flex-col justify-between items-center filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+              {/* Top calligraphic bar */}
+              <span
+                className="block w-full h-[2.5px] bg-[#1D1D1B] rounded-[2px] transition-all duration-300 ease-in-out origin-center"
+                style={{
+                  transform: isAnyOpen ? 'translateY(7.25px) rotate(45deg)' : 'translateY(0) rotate(0deg)'
+                }}
+              />
+              {/* Middle calligraphic bar */}
+              <span
+                className="block w-full h-[2.5px] bg-[#1D1D1B] rounded-[2px] transition-all duration-200 ease-in-out origin-center"
+                style={{
+                  opacity: isAnyOpen ? 0 : 1,
+                  transform: isAnyOpen ? 'scale(0)' : 'scale(1)'
+                }}
+              />
+              {/* Bottom calligraphic bar */}
+              <span
+                className="block w-full h-[2.5px] bg-[#1D1D1B] rounded-[2px] transition-all duration-300 ease-in-out origin-center"
+                style={{
+                  transform: isAnyOpen ? 'translateY(-7.25px) rotate(-45deg)' : 'translateY(0) rotate(0deg)'
+                }}
+              />
+            </div>
+            <span className="font-macondo font-bold text-[10.5px] tracking-wider text-[#1D1D1B] uppercase leading-none mt-1 min-w-[3rem] text-center transition-all duration-300">
+              {isAnyOpen ? 'Schließen' : 'Menü'}
+            </span>
           </button>
         </div>
       </nav>
 
-      {/* Modern Medieval Mobile Menu Overlay */}
+      {/* Modern Medieval Mobile Menu Overlay with full scrollability */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[9999] flex flex-col justify-center items-center p-5 bg-[#070202]/95 backdrop-blur-md select-none transition-all duration-300">
-          
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-[10010] flex flex-col justify-start items-center p-4 sm:p-6 pt-22 sm:pt-24 pb-8 bg-[#070202]/95 backdrop-blur-md select-none overflow-y-auto transition-all duration-300"
+        >
           {/* Menu Card Container with antique golden border */}
-          <div className="relative w-full max-w-sm mx-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_10px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(218,165,32,0.18)]">
-            
-            {/* Close button */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-sm mx-auto my-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_10px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(218,165,32,0.18)]"
+          >
+            {/* Elegant Close Button inside Modal Card */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-3.5 right-3.5 p-2 rounded-full bg-[#070202] border border-[#DAA520]/50 text-[#F5F5DC] hover:text-[#DAA520] hover:scale-110 active:scale-95 transition-all cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-[#DAA520]/40 flex items-center justify-center text-[#DAA520] hover:text-[#141210] hover:bg-[#DAA520] transition-all duration-200 active:scale-90 cursor-pointer"
               aria-label="Menü schließen"
             >
-              <X size={26} />
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M 2 2 L 12 12 M 12 2 L 2 12" />
+              </svg>
             </button>
-
             {/* Logo in Mobile Menu */}
             <div className="flex flex-col items-center mb-5 mt-1">
               <img

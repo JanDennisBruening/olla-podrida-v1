@@ -57,7 +57,7 @@ export const AUDIO_TRACKS: AudioTrack[] = [
     id: 'riu-riu-chiu',
     title: 'Riu Riu Chiu',
     subtitle: 'Live in Atter (Spanisches Renaissance-Villancico)',
-    src: 'https://olla-podrida.de/wp-content/uploads/2024/07/Riu-riu-chiu-live-in-Atter.mp3',
+    src: '/audio/riu-riu-chiu.mp3',
     duration: '2:45'
   },
   {
