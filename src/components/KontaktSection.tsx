@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ASSETS } from '../data/siteContent';
+import { getContactConfig, resolveAssetUrl } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
 interface KontaktSectionProps {
@@ -7,7 +7,8 @@ interface KontaktSectionProps {
 }
 
 export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy }) => {
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
+  const contactConfig = getContactConfig();
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -43,67 +44,63 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     <section
       ref={sectionRef}
       id="kontakt"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none scroll-mt-24 md:scroll-mt-32"
     >
       <div className="max-w-[70rem] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
 
         {/* Two-Column Layout (.elementor-element-29fca19) - tightly connected without black voids */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* Left Column: Heading + Text + Susanne - broader on desktop for comfortable line length */}
+          {/* Left Column: Heading + Text extending right up to the contact form + Susanne underneath */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-700 delay-150 ease-out z-20 ${
-              isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-800 delay-100 ease-out z-20 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
             }`}
           >
-            {/* Mobile: Row with text + Susanne. Tablet & Desktop: Column with Headline, Text, and Susanne underneath */}
-            <div className="flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-4">
-              <div className="w-[64%] sm:w-[66%] md:w-full flex flex-col pl-2 sm:pl-4 md:pl-0">
-                <h2 className="font-macondo text-[2.1rem] min-[380px]:text-[2.4rem] sm:text-[2.88rem] md:text-[2.65rem] lg:text-[3.5rem] text-[#F5F5DC] font-normal tracking-wide text-left mb-1 sm:mb-2 leading-tight">
-                  <span className="whitespace-nowrap">Kontakt &amp;</span>
-                  <br />
-                  <span>Anfragen</span>
-                </h2>
-                <div className="space-y-2 sm:space-y-3 font-macondo text-[0.88rem] sm:text-[1.05rem] md:text-[1.12rem] lg:text-[1.22rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.75rem] text-left max-w-xl">
-                  <p>
-                    Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.
-                  </p>
-                  <p>
-                    Kontaktieren Sie uns über unser Formular oder per E-Mail:{' '}
-                    <a
-                      href="mailto:info@olla-podrida.de"
-                      className="font-macondo text-[0.98rem] sm:text-[1.15rem] md:text-[1.14rem] lg:text-[1.25rem] text-[#DAA520] hover:underline break-words"
-                    >
-                      info(at)olla-podrida.de
-                    </a>
-                  </p>
-                </div>
-              </div>
+            {/* Heading */}
+            <h2 className="font-macondo text-[2.2rem] min-[380px]:text-[2.5rem] sm:text-[3rem] md:text-[3rem] lg:text-[3.8rem] text-[#DAA520] font-normal tracking-wide text-left mb-3 sm:mb-4 md:mb-5 leading-tight">
+              Kontakt &amp; Anfragen
+            </h2>
 
-              {/* Susanne figure: on mobile at the side; on tablet & desktop cleanly placed underneath the text */}
-              <div className="w-[38%] md:w-full flex justify-center md:justify-start items-center shrink-0 -mb-8 md:mb-0 md:mt-5 z-30 pointer-events-none">
-                <div className="w-36 md:w-44 lg:w-52 transition-transform duration-500 hover:scale-105">
-                  <img
-                    src="https://olla-podrida.de/wp-content/uploads/2024/07/Susanne_klein.webp"
-                    alt="Susanne spielt vergnügt auf der Flöte"
-                    className="w-full h-auto object-contain drop-shadow-md"
-                    loading="lazy"
-                  />
-                </div>
+            {/* Desktop Intro Text - Spans broadly right up to the contact card */}
+            <div className="w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-left pr-0 md:pr-2 lg:pr-4">
+              <p className="w-full">
+                {contactConfig.introParagraph1 || 'Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.'}
+              </p>
+              <p className="w-full">
+                {contactConfig.introParagraph2 || 'Kontaktieren Sie uns über unser Formular oder per E-Mail:'}{' '}
+                <a
+                  href={`mailto:${contactConfig.recipientEmail || 'info@olla-podrida.de'}`}
+                  className="font-macondo text-[1.05rem] sm:text-[1.18rem] md:text-[1.22rem] lg:text-[1.32rem] text-[#DAA520] hover:underline break-words"
+                >
+                  {contactConfig.emailDisplay || 'info(at)olla-podrida.de'}
+                </a>
+              </p>
+            </div>
+
+            {/* Susanne figure: positioned cleanly underneath the intro text on desktop & tablet */}
+            <div className="w-full flex justify-start items-center mt-5 sm:mt-6 md:mt-8 z-30 pointer-events-none">
+              <div className="w-32 sm:w-40 md:w-44 lg:w-52 transition-transform duration-500 hover:scale-105">
+                <img
+                  src={contactConfig.portrait || resolveAssetUrl('/images/Susanne_klein.webp')}
+                  alt="Susanne spielt vergnügt auf der Flöte"
+                  className="w-full h-auto object-contain drop-shadow-md"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
 
           {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-700 delay-250 ease-out z-10 ${
-              isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-800 delay-200 ease-out z-10 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-14'
             }`}
           >
             {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned on top of form */}
             <div className="hidden md:block absolute -top-14 sm:-top-18 md:-top-22 lg:-top-24 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[24rem]">
               <img
-                src="/musiknoten-banner.png"
+                src={resolveAssetUrl('/images/musiknoten-banner.png')}
                 alt="Musiknoten Pergament"
                 className="w-full h-auto object-contain drop-shadow-md"
                 loading="eager"
@@ -113,7 +110,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             <div
               className="relative w-full max-w-[42rem] min-h-[38rem] sm:min-h-[42rem] md:min-h-[44rem] px-7 sm:px-12 md:px-16 py-12 sm:py-14 md:py-16 flex flex-col justify-center transition-all duration-300 z-10 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)]"
               style={{
-                backgroundImage: `url("https://olla-podrida.de/wp-content/uploads/2024/07/hintergrundbild2.png")`,
+                backgroundImage: `url("${resolveAssetUrl('/images/hintergrundbild2.png')}")`,
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: '100% 100%'

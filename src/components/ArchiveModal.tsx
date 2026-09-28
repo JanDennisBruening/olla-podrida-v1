@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CONCERT_EVENTS, ConcertEvent } from '../data/siteContent';
+import { getConcertEvents, ConcertEvent } from '../data/siteContent';
 import { X, Calendar, MapPin, Clock, ExternalLink, Music } from 'lucide-react';
 
 interface ArchiveModalProps {
@@ -8,6 +8,7 @@ interface ArchiveModalProps {
 }
 
 export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) => {
+  const concertEvents = getConcertEvents();
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -26,7 +27,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
@@ -68,7 +69,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {CONCERT_EVENTS.map((event) => (
+            {concertEvents.map((event) => (
               <div
                 key={event.id}
                 className="bg-[#1A100B] border border-[#DAA520]/30 rounded-xl p-5 shadow-lg flex flex-col justify-between hover:border-[#DAA520] transition-colors"

@@ -1,5 +1,5 @@
-import React from 'react';
-import { ASSETS } from '../data/siteContent';
+import React, { useMemo, useState, useEffect } from 'react';
+import { getAssets, getConcertEvents, resolveAssetUrl } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
 interface PostEvent {
@@ -15,62 +15,31 @@ interface PostEvent {
   linkUrl?: string;
 }
 
-const EVENTS: PostEvent[] = [
-  {
-    id: 'boerstel-2026',
-    category: 'Konzert',
-    title: 'Konzert beim Bio-Regio-Markt im Stift Börstel',
-    dateStr: '11/10/2026',
-    timeStr: '14.00',
-    locationStr: 'Stiftskirche Börstel, Börstel 1, 49626 Berge',
-    descriptionHtml: 'Eintritt frei, um eine Spende wird gebeten&nbsp;<a href="https://www.oekomodellregion-hasetal.de/#c269" target="_blank" rel="noopener noreferrer" class="text-[#DAA520] underline hover:text-[#E5C031]">https://www.oekomodellregion-hasetal.de/#c269</a>',
-    expandedDetailsHtml: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Begleiten Sie uns durch die herbstliche Kulisse des historischen Stifts Börstel und genießen Sie die authentische Klangwelt der Renaissance.',
-    imageSrc: 'https://olla-podrida.de/wp-content/uploads/2026/09/Biomarkt-vorne-mit-Musik.jpg',
-    linkUrl: 'https://www.oekomodellregion-hasetal.de/#c269'
-  },
-  {
-    id: 'atter-advent-2026',
-    category: 'Konzert',
-    title: 'Lebendiger Adventskalender in Atter',
-    dateStr: '29/11/2026',
-    timeStr: '18.00 Uhr',
-    locationStr: 'Stadtteiltreff Atter, Karl-Barth-Straße 10, 49076 Osnabrück',
-    descriptionHtml: 'Winterlich-weihnachtliches Konzert zum 17. Lebendigen Adventskalender im Stadteiltreff Atter<br/>• Beginn 18.00 Uhr<br/>• Freie Platzwahl<br/>• Wir freuen uns über Deine Spende am Ausgang.<br/>• Zwischen den Musikstücken werden bei Keksen und Punsch kurze Geschichten erzählt.<br/><a href="https://www.wir-in-atter.de/" target="_blank" rel="noopener noreferrer" class="text-[#DAA520] underline hover:text-[#E5C031]">https://www.wir-in-atter.de/</a>',
-    expandedDetailsHtml: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Neben festlicher Instrumentalmusik auf Krummhörnern und Sackpfeifen erklingen stimmungsvolle Gesänge zur Adventszeit.',
-    imageSrc: 'https://olla-podrida.de/wp-content/uploads/2024/09/Screenshot_20240929_154952_Samsung-Internet-1536x956.jpg',
-    linkUrl: 'https://www.wir-in-atter.de/'
-  },
-  {
-    id: 'quakenbrueck-2026',
-    category: 'Konzert',
-    title: '3. Weihnachts- und Mitsingkonzert zusammen mit dem Chorforum Quakenbrück',
-    dateStr: '30/12/2026',
-    timeStr: '16.00 Uhr',
-    locationStr: 'St. Marienkirche Quakenbrück, Markt 4, 49610 Quakenbrück',
-    descriptionHtml: 'Gemeinsam Weihnachten singen und Gemeinsam Weihnachten lauschen<br/>• Zusammen mit dem Chorforum Quakenbrück laden wir herzlich zu einem kleinen Mitsing-Konzert in die St. Marienkirche nach Quakenbrück ein.<br/><a href="https://www.chorforum-quakenbrueck.de/" target="_blank" rel="noopener noreferrer" class="text-[#DAA520] underline hover:text-[#E5C031]">https://www.chorforum-quakenbrueck.de/</a>',
-    expandedDetailsHtml: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Ein feierlicher Jahresausklang in der akustisch eindrucksvollen St. Marienkirche Quakenbrück mit gemeinsamem Gesang und historischer Musik.',
-    imageSrc: 'https://olla-podrida.de/wp-content/uploads/2024/11/st-marienkirche-quakenbr-ck-1536x1152.jpg',
-    linkUrl: 'https://www.chorforum-quakenbrueck.de/'
-  }
-];
-
-const parseEventDate = (dStr: string): number => {
-  const parts = dStr.split('/');
-  if (parts.length === 3) {
-    return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10)).getTime();
-  }
-  return 0;
-};
-
 export const TermineSection: React.FC = () => {
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
-  const [scrollY, setScrollY] = React.useState(0);
-  const [expandedEventId, setExpandedEventId] = React.useState<string | null>(null);
+  const assets = getAssets();
+  const rawEvents = getConcertEvents();
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
+  const [scrollY, setScrollY] = useState(0);
+  const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
 
-  // Always sorted chronologically: nearest upcoming event at the top, following events below
-  const sortedEvents = React.useMemo(() => {
-    return [...EVENTS].sort((a, b) => parseEventDate(a.dateStr) - parseEventDate(b.dateStr));
-  }, []);
+  // Filter for upcoming events (or fallback to all if none flagged upcoming)
+  const sortedEvents = useMemo(() => {
+    const upcoming = rawEvents.filter((e) => e.isUpcoming);
+    const list = upcoming.length > 0 ? upcoming : rawEvents;
+
+    return list.map((ev) => ({
+      id: ev.id,
+      category: ev.category || 'Konzert',
+      title: ev.title,
+      dateStr: ev.date,
+      timeStr: ev.time,
+      locationStr: ev.location,
+      descriptionHtml: ev.description,
+      expandedDetailsHtml: ev.ticketInfo || ev.description,
+      imageSrc: resolveAssetUrl(ev.imageUrl || '/images/Biomarkt-vorne-mit-Musik.jpg'),
+      linkUrl: ev.link
+    }));
+  }, [rawEvents]);
 
   const toggleEvent = (eventId: string) => {
     setExpandedEventId((prev) => (prev === eventId ? null : eventId));
@@ -105,7 +74,7 @@ export const TermineSection: React.FC = () => {
             isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
           }`}
         >
-          <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[3.8rem] text-[#F5F5DC] font-normal tracking-wide drop-shadow-md">
+          <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[4.0rem] text-[#F5F5DC] font-normal tracking-wide drop-shadow-md">
             Aktuelle Termine
           </h2>
           {/* Subtle antique flourish line */}
@@ -131,11 +100,11 @@ export const TermineSection: React.FC = () => {
                   isExpanded ? 'border-[#DAA520] shadow-[0_0_1.5625rem_rgba(218,165,32,0.22)]' : 'border-[#2a2825] hover:border-[#DAA520]/60'
                 }`}
                 style={{
-                  transform: isInView ? 'scale(1)' : 'scale(0.88)',
+                  transform: isInView ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.97)',
                   opacity: isInView ? 1 : 0,
                   transitionProperty: 'opacity, transform, background-color, border-color, box-shadow',
-                  transitionDuration: '650ms, 650ms, 300ms, 300ms, 300ms',
-                  transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transitionDuration: '750ms, 750ms, 300ms, 300ms, 300ms',
+                  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                   transitionDelay: `${staggerDelay}ms, ${staggerDelay}ms, 0ms, 0ms, 0ms`
                 }}
               >
@@ -143,7 +112,7 @@ export const TermineSection: React.FC = () => {
                 <div
                   className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-50 transition-all duration-700 mix-blend-screen bg-cover bg-bottom bg-no-repeat z-0"
                   style={{
-                    backgroundImage: `url("${ASSETS.smokeAlt}")`,
+                    backgroundImage: `url("${assets.smokeAlt}")`,
                     transform: `translate3d(0, ${smokeFloat}px, 0)`
                   }}
                 />

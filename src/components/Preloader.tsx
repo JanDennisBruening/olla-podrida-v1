@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ASSETS } from '../data/siteContent';
+import { getAssets } from '../data/siteContent';
 
 export const Preloader: React.FC = () => {
+  const assets = getAssets();
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
@@ -56,7 +57,7 @@ export const Preloader: React.FC = () => {
       {/* Ambient drifting smoke layer in background */}
       <div className="absolute inset-0 pointer-events-none opacity-25 mix-blend-screen overflow-hidden">
         <img
-          src={ASSETS.smokeAlt}
+          src={assets.smokeAlt}
           alt=""
           className="w-full h-full object-cover object-center animate-pulse"
           style={{
@@ -97,7 +98,7 @@ export const Preloader: React.FC = () => {
           {/* Center Medallion: Authentic Olla Podrida Seal */}
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center p-2 filter drop-shadow-[0_0_24px_rgba(218,165,32,0.45)] transition-transform duration-300">
             <img
-              src={ASSETS.footerSeal}
+              src={assets.footerSeal}
               alt="Ensemble Olla Podrida Siegel"
               className="w-full h-full object-contain filter drop-shadow-md"
             />

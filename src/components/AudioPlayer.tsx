@@ -1,49 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-const AUDIO_SRC = '/audio/riu-riu-chiu.mp3';
+import { getAudioConfig } from '../data/siteContent';
 
 export const AudioPlayer: React.FC = () => {
+  const config = getAudioConfig();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const audioSrc = config.src || '';
+  const initialVolume = typeof config.volume === 'number' ? config.volume : 0.5;
+  const buttonText = config.buttonText || '• Musik an / aus • Musik an / aus';
+
   useEffect(() => {
+    if (!config.enabled || !audioSrc.trim()) return;
+
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.5;
+    audio.volume = initialVolume;
 
-    // Direct autoplay attempt
-    const promise = audio.play();
-    if (promise !== undefined) {
-      promise.then(() => {
-        setIsPlaying(true);
-      }).catch(() => {
-        // If browser blocks non-gesture autoplay, start cleanly on very first user interaction
-        let hasTriggered = false;
-        const events = ['click', 'touchstart', 'pointerdown', 'keydown'] as const;
+    if (config.autoplay) {
+      // Direct autoplay attempt
+      const promise = audio.play();
+      if (promise !== undefined) {
+        promise.then(() => {
+          setIsPlaying(true);
+        }).catch(() => {
+          // If browser blocks non-gesture autoplay, start cleanly on very first user interaction
+          let hasTriggered = false;
+          const events = ['click', 'touchstart', 'pointerdown', 'keydown'] as const;
 
-        const cleanup = () => {
+          const cleanup = () => {
+            events.forEach((ev) => {
+              window.removeEventListener(ev, startOnGesture);
+            });
+          };
+
+          const startOnGesture = () => {
+            if (hasTriggered) return;
+            hasTriggered = true;
+            cleanup();
+
+            if (audioRef.current && audioRef.current.paused) {
+              audioRef.current.play().then(() => {
+                setIsPlaying(true);
+              }).catch(() => {});
+            }
+          };
+
           events.forEach((ev) => {
-            window.removeEventListener(ev, startOnGesture);
+            window.addEventListener(ev, startOnGesture, { once: true, passive: true });
           });
-        };
-
-        const startOnGesture = () => {
-          if (hasTriggered) return;
-          hasTriggered = true;
-          cleanup();
-
-          if (audioRef.current && audioRef.current.paused) {
-            audioRef.current.play().then(() => {
-              setIsPlaying(true);
-            }).catch(() => {});
-          }
-        };
-
-        events.forEach((ev) => {
-          window.addEventListener(ev, startOnGesture, { once: true, passive: true });
         });
-      });
+      }
     }
 
     return () => {
@@ -51,7 +59,7 @@ export const AudioPlayer: React.FC = () => {
         audioRef.current.pause();
       }
     };
-  }, []);
+  }, [audioSrc, config.autoplay, initialVolume]);
 
   const togglePlay = () => {
     const audio = audioRef.current;
@@ -70,13 +78,17 @@ export const AudioPlayer: React.FC = () => {
     }
   };
 
+  if (!config.enabled || !audioSrc.trim()) {
+    return null;
+  }
+
   return (
     <div
       className="audio-player fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[10030] select-none"
     >
       <audio
         ref={audioRef}
-        src={AUDIO_SRC}
+        src={audioSrc}
         preload="metadata"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
@@ -93,7 +105,7 @@ export const AudioPlayer: React.FC = () => {
         onClick={togglePlay}
         className="relative group cursor-pointer flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-transform duration-300 hover:scale-105 active:scale-95 bg-transparent border-none p-0 focus:outline-none"
         aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
-        title={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
+        title={config.title ? `${config.title} - ${isPlaying ? 'Pausieren' : 'Abspielen'}` : (isPlaying ? 'Musik pausieren' : 'Musik abspielen')}
       >
         {/* Ambient Dark Backdrop behind the badge with golden glow loop when playing */}
         <div
@@ -131,7 +143,7 @@ export const AudioPlayer: React.FC = () => {
               startOffset="50%"
               textAnchor="middle"
             >
-              • Musik an / aus • Musik an / aus
+              {buttonText}
             </textPath>
           </text>
         </svg>
@@ -164,5 +176,3 @@ export const AudioPlayer: React.FC = () => {
     </div>
   );
 };
-
-

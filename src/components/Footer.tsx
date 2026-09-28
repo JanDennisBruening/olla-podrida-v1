@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { ASSETS } from '../data/siteContent';
+import { getAssets } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
 interface FooterProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
   onOpenCookies: () => void;
   onOpenTermineArchive: () => void;
+  onOpenPresse?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive, onOpenPresse }) => {
+  const assets = getAssets();
   const currentYear = new Date().getFullYear();
   const [cookieTooltip, setCookieTooltip] = useState(false);
-  const { ref: footerRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
+  const { ref: footerRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -33,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
       {/* Smoke & Fog Atmosphere attached to the very bottom with smooth transition into black */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <img
-          src={ASSETS.smokeAlt}
+          src={assets.smokeAlt}
           alt="Dunsthintergrund"
           className="w-full h-full object-cover object-bottom opacity-35 mix-blend-screen"
         />
@@ -51,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
         {/* Seal Emblem .elementor-element-195d87f2 with generous breathing space above */}
         <div className="mt-2 mb-6 sm:mb-8 transition-transform duration-300 hover:scale-110 cursor-pointer" onClick={() => scrollTo('Start')}>
           <img
-            src={ASSETS.footerSeal}
+            src={assets.footerSeal}
             alt="Olla Podrida"
             className="w-28 h-28 md:w-32 md:h-32 object-contain p-1 overflow-visible"
             loading="lazy"
@@ -89,8 +91,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             </button>
           </div>
 
-          {/* Legal and cookies row */}
+          {/* Legal, press and cookies row */}
           <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8">
+            <button
+              onClick={onOpenPresse}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+            >
+              Presse
+            </button>
+
             {/* Cookies button with Premium Tooltip */}
             <div className="relative inline-block py-0.5">
               <button
@@ -136,10 +145,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
         {/* Dynamic Current Year with JavaScript (new Date().getFullYear()) & Headline Font (font-macondo) */}
         <div className="text-center text-xs sm:text-sm text-[#F5F5DC]/80 font-normal space-y-1.5 mt-2">
           <p className="font-macondo text-lg sm:text-xl md:text-2xl text-[#F5F5DC] tracking-wide">
-            {new Date().getFullYear()} © Olla Podrida
+            {currentYear} © Ensemble Olla Podrida
           </p>
           <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
-            Design und Entwicklung: Jan Dennis Brüning ·{' '}
+            Design, Konzept und Webentwicklung: Jan Brüning ·{' '}
             <a
               href="https://www.janbruening.de"
               target="_blank"

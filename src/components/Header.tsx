@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ASSETS } from '../data/siteContent';
+import { getAssets } from '../data/siteContent';
 
 interface HeaderProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
@@ -14,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   isArchiveOpen = false,
   onCloseAll
 }) => {
+  const assets = getAssets();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -39,10 +40,13 @@ export const Header: React.FC<HeaderProps> = ({
     const element = document.getElementById(id);
     if (element) {
       const lenis = (window as any).__lenis;
+      const isMobile = window.innerWidth < 768;
+      const navOffset = isMobile ? -75 : -110;
       if (lenis) {
-        lenis.scrollTo(element, { offset: -25, duration: 1.2 });
+        lenis.scrollTo(element, { offset: navOffset, duration: 1.2 });
       } else {
-        element.scrollIntoView({ behavior: 'smooth' });
+        const y = element.getBoundingClientRect().top + window.pageYOffset + navOffset;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       }
     }
   };
@@ -51,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       {/* Fixed Header Navigation matching .elementor-element-4aa968b4 */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[10020] flex flex-col items-center pointer-events-none select-none transition-all duration-700 ease-out ${
+        className={`fixed top-0 left-0 right-0 z-40 flex flex-col items-center pointer-events-none select-none transition-all duration-700 ease-out ${
           isMounted ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
         }`}
         style={{
@@ -63,14 +67,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           className="pointer-events-auto relative hidden md:flex items-center justify-center w-full max-w-[80rem] aspect-[2048/238] transition-all duration-300"
           style={{
-            backgroundImage: `url(${ASSETS.menuBackgroundDesktop})`,
+            backgroundImage: `url(${assets.menuBackgroundDesktop})`,
             backgroundPosition: 'top center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain'
           }}
         >
-          {/* Left Navigation Container (.elementor-element-709406c2) - optically centered vertically on parchment banner */}
-          <div className="w-[38%] h-full flex items-center justify-end space-x-5 md:space-x-7 lg:space-x-12 pr-3 md:pr-6 lg:pr-14 -translate-y-1 md:-translate-y-1.5 lg:-translate-y-2.5">
+          {/* Left Navigation Container – always vertically centred in the ribbon */}
+          <div className="w-[38%] h-full flex items-center justify-end space-x-5 md:space-x-7 lg:space-x-12 pr-3 md:pr-6 lg:pr-14">
             <button
               onClick={() => scrollToSection('Start')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
@@ -85,29 +89,29 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          {/* Center Logo Container (.elementor-element-7c6f51bd & 4897424a) - hangs over navigation (noticeably enlarged) */}
-          <div className="w-[20%] -mt-1 lg:-mt-2 flex justify-center items-start z-30">
+          {/* Center Logo Container – shifted down by ~5% (translate-y) so it is never cropped at the top, perfectly centered within the parchment paper */}
+          <div className="w-[20%] h-full flex justify-center items-center z-30">
             <button
               onClick={() => scrollToSection('Start')}
-              className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-34 md:h-34 lg:w-46 lg:h-46 xl:w-52 xl:h-52 flex items-center justify-center transition-all duration-300 hover:scale-115 cursor-pointer translate-y-1 md:translate-y-2 lg:translate-y-3 filter drop-shadow-xl scale-[1.15]"
+              className="relative aspect-[324/391] h-28 sm:h-32 md:h-36 lg:h-44 xl:h-48 flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer filter drop-shadow-xl translate-y-3.5 sm:translate-y-4 md:translate-y-5 lg:translate-y-6"
               style={{
-                backgroundImage: `url(${ASSETS.logoBackground})`,
+                backgroundImage: `url(${assets.logoBackground})`,
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain'
+                backgroundSize: 'contain',
               }}
               title="Ensemble Olla Podrida"
             >
               <img
-                src={ASSETS.navLogo}
+                src={assets.navLogo}
                 alt="Ensemble Olla Podrida Logo"
-                className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 lg:w-36 lg:h-36 xl:w-42 xl:h-42 object-contain -mt-1.5 md:-mt-2 lg:-mt-3 drop-shadow-md"
+                className="w-[85%] h-[85%] object-contain drop-shadow-md my-auto transition-transform duration-200"
               />
             </button>
           </div>
 
-          {/* Right Navigation Container (.elementor-element-4236051d) - optically centered vertically on parchment banner */}
-          <div className="w-[38%] h-full flex items-center justify-start space-x-5 md:space-x-7 lg:space-x-12 pl-3 md:pl-6 lg:pl-14 -translate-y-1 md:-translate-y-1.5 lg:-translate-y-2.5">
+          {/* Right Navigation Container – always vertically centred in the ribbon */}
+          <div className="w-[38%] h-full flex items-center justify-start space-x-5 md:space-x-7 lg:space-x-12 pl-3 md:pl-6 lg:pl-14">
             <button
               onClick={() => scrollToSection('termine')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
@@ -127,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           className="pointer-events-auto relative md:hidden flex items-center justify-between w-full h-[15vw] min-h-[3.6rem] max-h-[4.8rem] px-3.5"
           style={{
-            backgroundImage: `url(${ASSETS.menuBackgroundMobile})`,
+            backgroundImage: `url(${assets.menuBackgroundMobile})`,
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: '100% 100%'
@@ -141,14 +145,14 @@ export const Header: React.FC<HeaderProps> = ({
             <div
               className="w-[24vw] h-[24vw] min-w-[5.6rem] min-h-[5.6rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
               style={{
-                backgroundImage: `url(${ASSETS.logoBackground})`,
+                backgroundImage: `url(${assets.logoBackground})`,
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain'
               }}
             >
               <img
-                src={ASSETS.navLogo}
+                src={assets.navLogo}
                 alt="Ensemble Olla Podrida Logo"
                 className="w-[84%] h-[84%] object-contain drop-shadow-md"
               />
@@ -217,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Logo in Mobile Menu */}
             <div className="flex flex-col items-center mb-5 mt-1">
               <img
-                src={ASSETS.logo}
+                src={assets.logo}
                 alt="Olla Podrida"
                 className="w-20 h-20 object-contain drop-shadow-md"
               />

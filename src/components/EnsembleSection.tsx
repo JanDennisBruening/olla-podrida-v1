@@ -1,81 +1,37 @@
 import React, { useState } from 'react';
-import { ASSETS } from '../data/siteContent';
+import { getAssets, getEnsembleConfig, getEnsembleMembers, resolveAssetUrl } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
-interface MusicianPortrait {
-  id: string;
-  name: string;
-  image: string;
-  alt: string;
-  baseScale: number;
-}
-
-// 7 Musician Cutout Portraits - exact sequence:
-// Simone, Klemens, Silke, Sandra, Lutz, Susanne, Ruth
-const MUSICIANS: MusicianPortrait[] = [
-  {
-    id: 'simone',
-    name: 'Simone',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Simone_klein.webp',
-    alt: 'Simone',
-    baseScale: 1.0
-  },
-  {
-    id: 'klemens',
-    name: 'Klemens',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Klemens_3_klein.webp',
-    alt: 'Klemens',
-    baseScale: 1.0
-  },
-  {
-    id: 'silke',
-    name: 'Silke',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Silke_2_klein.webp',
-    alt: 'Silke',
-    baseScale: 1.0
-  },
-  {
-    id: 'sandra',
-    name: 'Sandra',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/10/2024_Sandra_2-Ebene-2-1-712x1024.webp',
-    alt: 'Sandra',
-    baseScale: 1.0
-  },
-  {
-    id: 'lutz',
-    name: 'Lutz',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Lutz_klein.png',
-    alt: 'Lutz',
-    baseScale: 1.0
-  },
-  {
-    id: 'susanne',
-    name: 'Susanne',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Susanne_klein.webp',
-    alt: 'Susanne spielt vergnügt auf der Flöte',
-    baseScale: 1.0
-  },
-  {
-    id: 'ruth',
-    name: 'Ruth',
-    image: 'https://olla-podrida.de/wp-content/uploads/2024/07/Ruth_2_klein.webp',
-    alt: 'Ruth',
-    baseScale: 1.0
-  }
-];
-
 export const EnsembleSection: React.FC = () => {
+  const assets = getAssets();
+  const ensembleConfig = getEnsembleConfig();
+  const rawMembers = getEnsembleMembers();
+
+  // 7 Musician Cutout Portraits in original canonical sequence:
+  // Simone, Klemens, Silke, Sandra, Lutz, Susanne, Ruth
+  const sequence = ['simone', 'klemens', 'silke', 'sandra', 'lutz', 'susanne', 'ruth'];
+  const musicians = sequence.map((id) => {
+    const found = rawMembers.find((m) => m.id === id);
+    return {
+      id,
+      name: found ? found.name : id.charAt(0).toUpperCase() + id.slice(1),
+      image: found?.portraitImage || resolveAssetUrl(`/images/${id}_klein.webp`),
+      alt: found?.tooltip || found?.name || id,
+      baseScale: 1.0
+    };
+  });
+
   const [hoveredMember, setHoveredMember] = useState<string | null>(null);
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.1, triggerOnce: false });
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.04, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
 
   // Tablet split (4 + 3)
-  const tabletRow1 = MUSICIANS.slice(0, 4); // Simone, Klemens, Silke, Sandra
-  const tabletRow2 = MUSICIANS.slice(4);    // Lutz, Susanne, Ruth
+  const tabletRow1 = musicians.slice(0, 4); // Simone, Klemens, Silke, Sandra
+  const tabletRow2 = musicians.slice(4);    // Lutz, Susanne, Ruth
 
   // Narrow Mobile split (3 + 3 + 1)
-  const mobileRow1 = MUSICIANS.slice(0, 3); // Simone, Klemens, Silke
-  const mobileRow2 = MUSICIANS.slice(3, 6); // Sandra, Lutz, Susanne
-  const mobileRow3 = MUSICIANS.slice(6);    // Ruth (solo, centered & slightly larger)
+  const mobileRow1 = musicians.slice(0, 3); // Simone, Klemens, Silke
+  const mobileRow2 = musicians.slice(3, 6); // Sandra, Lutz, Susanne
+  const mobileRow3 = musicians.slice(6);    // Ruth (solo, centered & slightly larger)
 
   return (
     <section
@@ -91,11 +47,11 @@ export const EnsembleSection: React.FC = () => {
         {/* Single continuous parchment scroll: SchleifePapier.webp (Desktop) / SchleifePapierMobile.webp (Mobile/Tablet) */}
         {/* background-size: 100% auto locks banner proportions so it NEVER squashes, stretches, or deforms */}
         <div
-          className={`relative w-[96vw] sm:w-[96vw] md:w-[96vw] max-w-[62rem] lg:max-w-[70rem] xl:max-w-[76rem] mx-auto filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] flex flex-col items-center transition-all duration-700 ease-out transform ${
-            isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-6 scale-[0.99]'
+          className={`relative w-[96vw] sm:w-[96vw] md:w-[96vw] max-w-[62rem] lg:max-w-[70rem] xl:max-w-[76rem] mx-auto filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] flex flex-col items-center transition-all duration-1000 ease-out transform ${
+            isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.98]'
           }`}
           style={{
-            backgroundImage: `url('/SchleifePapierMobile.webp')`,
+            backgroundImage: `url('${resolveAssetUrl('/SchleifePapierMobile.webp')}')`,
             backgroundPosition: 'top center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: '100% auto'
@@ -110,7 +66,7 @@ export const EnsembleSection: React.FC = () => {
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              Ensemble Olla Podrida
+              {ensembleConfig.title || 'Ensemble Olla Podrida'}
             </h2>
 
             {/* ======================================================== */}
@@ -120,14 +76,14 @@ export const EnsembleSection: React.FC = () => {
               {/* Paragraph 1 (left column: ~64%) */}
               <div className="w-[63%] xl:w-[65%] font-macondo text-[1.3rem] font-semibold text-[#0A0707] leading-[1.85rem] text-left">
                 <p>
-                  Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.
+                  {ensembleConfig.paragraph1 || 'Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.'}
                 </p>
               </div>
 
               {/* Suppentopf Illustration (right column: ~35%) - generous breathing room so all music notes are completely visible */}
               <div className="w-[37%] xl:w-[35%] flex justify-center items-center overflow-visible p-2">
                 <img
-                  src={ASSETS.logo}
+                  src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
                   className="w-full max-w-[17.5rem] xl:max-w-[18.5rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
@@ -140,7 +96,7 @@ export const EnsembleSection: React.FC = () => {
             {/* ======================================================== */}
             <div className="lg:hidden w-full font-macondo text-[3.7vw] md:text-[1.3rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.85rem] text-justify md:text-left transition-all duration-700 delay-200 ease-out">
               <p>
-                Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.
+                {ensembleConfig.paragraph1 || 'Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.'}
               </p>
             </div>
 
@@ -148,7 +104,7 @@ export const EnsembleSection: React.FC = () => {
             <div className="lg:hidden w-full flex justify-center my-4 sm:my-6 md:my-7 overflow-visible">
               <div className="relative flex items-center justify-center p-2 overflow-visible">
                 <img
-                  src={ASSETS.logo}
+                  src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
                   className="w-[14.5rem] sm:w-[18rem] md:w-[21rem] max-w-full h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
@@ -161,7 +117,7 @@ export const EnsembleSection: React.FC = () => {
               className={`w-full font-macondo text-[3.7vw] md:text-[1.3rem] lg:text-[1.3rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.85rem] lg:leading-[1.85rem] mb-4 sm:mb-6 md:mb-7 lg:mb-8 text-justify md:text-left transition-all duration-700 delay-300 ease-out`}
             >
               <p>
-                Die Klangvielfalt aus Mittelalter und Renaissance – so sehen wir uns und genauso lebendig wie damals, so erleben wir uns! Voller Kraft mit Krummhörnern, Sackpfeifen und Trommeln, aber auch verspielt und anrührend mit Harfe, Laute und Psalter. Rein instrumental oder mit mehrstimmigem Gesang vorgetragen – wir erwecken diese Musik mit Freude und Hingabe zu neuem Leben.
+                {ensembleConfig.paragraph2 || 'Die Klangvielfalt aus Mittelalter und Renaissance – so sehen wir uns und genauso lebendig wie damals, so erleben wir uns! Voller Kraft mit Krummhörnern, Sackpfeifen und Trommeln, aber auch verspielt und anrührend mit Harfe, Laute und Psalter. Rein instrumental oder mit mehrstimmigem Gesang vorgetragen – wir erwecken diese Musik mit Freude und Hingabe zu neuem Leben.'}
               </p>
             </div>
 
@@ -169,7 +125,7 @@ export const EnsembleSection: React.FC = () => {
             {/* 1. DESKTOP VIEWPORT (>= 1024px / lg:): ALL 7 FIGURES SIDE-BY-SIDE IN ONE ROW */}
             {/* ======================================================== */}
             <div className="hidden lg:flex w-full my-6 overflow-visible justify-between items-end gap-2 xl:gap-4">
-              {MUSICIANS.map((musician, index) => {
+              {musicians.map((musician, index) => {
                 const isHovered = hoveredMember === musician.id;
                 const targetScale = isHovered ? 1.08 : 1.0;
                 const entranceDelay = index * 70;
@@ -339,7 +295,7 @@ export const EnsembleSection: React.FC = () => {
             {/* ======================================================== */}
             {/* 3. MOBILE VIEWPORT (< 768px): 3 + 3 + 1 (UNIFORM SIZE ACROSS ALL 7 FIGURES) */}
             {/* ======================================================== */}
-            <div className="md:hidden w-full my-4 overflow-visible flex flex-col items-center gap-3 sm:gap-4">
+            <div className="md:hidden w-full my-4 overflow-visible flex flex-col items-center gap-3 sm:gap-4 -mx-1">
               {/* Row 1: 3 Musicians (Simone, Klemens, Silke) */}
               <div className="w-full flex justify-center items-end gap-2.5 sm:gap-3.5 overflow-visible">
                 {mobileRow1.map((musician, index) => {
@@ -366,8 +322,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(28vw, 8.5rem)',
-                          minHeight: '6.4rem',
+                          height: 'min(32vw, 9.5rem)',
+                          minHeight: '7rem',
+                          maxHeight: '9.5rem',
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
@@ -382,7 +339,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>
@@ -417,8 +374,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(28vw, 8.5rem)',
-                          minHeight: '6.4rem',
+                          height: 'min(32vw, 9.5rem)',
+                          minHeight: '7rem',
+                          maxHeight: '9.5rem',
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
@@ -433,7 +391,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>
@@ -468,8 +426,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(28vw, 8.5rem)',
-                          minHeight: '6.4rem',
+                          height: 'min(32vw, 9.5rem)',
+                          minHeight: '7rem',
+                          maxHeight: '9.5rem',
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
@@ -484,7 +443,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>
@@ -499,7 +458,7 @@ export const EnsembleSection: React.FC = () => {
               className={`w-full font-macondo text-[3.7vw] md:text-[1.3rem] lg:text-[1.3rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.85rem] lg:leading-[1.85rem] mt-3 md:mt-5 lg:mt-6 text-justify md:text-left transition-all duration-700 delay-400 ease-out`}
             >
               <p>
-                In seiner jetzigen Besetzung besteht das Ensemble seit 2017 und ist aus der Musikgruppe „Mercks wol!“ hervorgegangen. Wir konzertieren an historischen Stätten, in Kirchen und Museen, manchmal auch auf Märkten, und verleihen Lesungen und Vorträgen den musikalischen Rahmen. Die Berufsmusik ist uns eine Fremde, und so ist es jedes einzelne Mal ein besonderes Ereignis, wenn wir alle zusammenkommen, aus allen Himmelsrichtungen, und die alten Klänge der Vergangenheit in der Gegenwart erklingen lassen.
+                {ensembleConfig.paragraph3 || 'In seiner jetzigen Besetzung besteht das Ensemble seit 2017 und ist aus der Musikgruppe „Mercks wol!“ hervorgegangen. Wir konzertieren an historischen Stätten, in Kirchen und Museen, manchmal auch auf Märkten, und verleihen Lesungen und Vorträgen den musikalischen Rahmen. Die Berufsmusik ist uns eine Fremde, und so ist es jedes einzelne Mal ein besonderes Ereignis, wenn wir alle zusammenkommen, aus allen Himmelsrichtungen, und die alten Klänge der Vergangenheit in der Gegenwart erklingen lassen.'}
               </p>
             </div>
 

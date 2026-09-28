@@ -14,6 +14,7 @@ import { Footer } from './components/Footer';
 import { AudioPlayer } from './components/AudioPlayer';
 import { LegalModal } from './components/LegalModal';
 import { ArchiveModal } from './components/ArchiveModal';
+import { PresseModal } from './components/PresseModal';
 
 import { Preloader } from './components/Preloader';
 import { ASSETS } from './data/siteContent';
@@ -21,6 +22,7 @@ import { ASSETS } from './data/siteContent';
 export default function App() {
   const [legalModalType, setLegalModalType] = useState<'impressum' | 'datenschutz' | 'cookies' | null>(null);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
+  const [presseModalOpen, setPresseModalOpen] = useState(false);
 
   useEffect(() => {
     // Disable smooth scrolling on mobile / touch viewports (< 768px), native touch scrolling is used instead
@@ -61,6 +63,19 @@ export default function App() {
     };
   }, []);
 
+  // Pause Lenis smooth scrolling when any modal is open to ensure 100% native, unblocked inner scrolling
+  useEffect(() => {
+    const isAnyModalOpen = !!legalModalType || archiveModalOpen || presseModalOpen;
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      if (isAnyModalOpen) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    }
+  }, [legalModalType, archiveModalOpen, presseModalOpen]);
+
   const handleOpenLegal = (type: 'impressum' | 'datenschutz' | 'cookies') => {
     setLegalModalType(type);
   };
@@ -71,6 +86,7 @@ export default function App() {
 
   const handleCloseAllModals = () => {
     setArchiveModalOpen(false);
+    setPresseModalOpen(false);
     setLegalModalType(null);
   };
 
@@ -104,11 +120,12 @@ export default function App() {
         />
       </main>
 
-      {/* 1:1 Footer with Konzertchronik */}
+      {/* 1:1 Footer with Konzertchronik & Presse */}
       <Footer
         onOpenLegal={handleOpenLegal}
         onOpenCookies={() => handleOpenLegal('cookies')}
         onOpenTermineArchive={() => setArchiveModalOpen(true)}
+        onOpenPresse={() => setPresseModalOpen(true)}
       />
 
       {/* 1:1 Floating Audio Player (♫ bottom-right) */}
@@ -125,6 +142,12 @@ export default function App() {
       <ArchiveModal
         isOpen={archiveModalOpen}
         onClose={() => setArchiveModalOpen(false)}
+      />
+
+      {/* Press & Media Kit Modal */}
+      <PresseModal
+        isOpen={presseModalOpen}
+        onClose={() => setPresseModalOpen(false)}
       />
     </div>
   );

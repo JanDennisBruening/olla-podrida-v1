@@ -1,0 +1,425 @@
+/**
+ * Ensemble Olla Podrida - WordPress Admin Styling
+ */
+
+.olla-podrida-admin-wrap {
+    max-width: 1200px;
+    margin: 20px 20px 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.olla-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #15110e;
+    color: #F5F5DC;
+    padding: 24px 30px;
+    border-radius: 8px;
+    border: 1px solid #DAA520;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.olla-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.olla-logo-badge {
+    font-size: 38px;
+    background: #251d18;
+    border: 1px solid #DAA520;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.olla-header-brand h1 {
+    color: #DAA520;
+    font-size: 26px;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+}
+
+.olla-header-subtitle {
+    margin: 0;
+    color: #F5F5DC;
+    opacity: 0.85;
+    font-size: 14px;
+}
+
+/* Nav Tabs: Stable, non-jumping flex layout */
+.olla-nav-tab-wrapper {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #DAA520;
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+}
+
+.olla-nav-tab-wrapper::before,
+.olla-nav-tab-wrapper::after {
+    display: none !important;
+    content: none !important;
+}
+
+.olla-nav-tab-wrapper .nav-tab {
+    float: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 9px 16px;
+    margin: 0 !important;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #ccd0d4;
+    border-bottom: none;
+    background: #f0f0f1;
+    color: #2c3338;
+    line-height: 1.3;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.olla-nav-tab-wrapper .nav-tab:hover {
+    background: #e2e4e7;
+    color: #070202;
+    border-color: #8c8f94;
+}
+
+.olla-nav-tab-wrapper .nav-tab-active,
+.olla-nav-tab-wrapper .nav-tab-active:hover,
+.olla-nav-tab-wrapper .nav-tab-active:focus {
+    background: #15110e !important;
+    color: #DAA520 !important;
+    border-color: #DAA520 !important;
+    border-bottom: 2px solid #15110e !important;
+    box-shadow: 0 -2px 6px rgba(218, 165, 32, 0.2);
+    /* Strict identical font-weight to prevent width shift */
+    font-weight: 500;
+}
+
+/* Card Styling */
+.olla-card {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.olla-card-header {
+    padding: 20px 24px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+}
+
+.olla-card-header h2 {
+    margin: 0 0 6px 0;
+    font-size: 19px;
+    color: #1d2327;
+}
+
+.olla-card-header p {
+    margin: 0;
+    color: #646970;
+    font-size: 13px;
+}
+
+.olla-card-body {
+    padding: 24px;
+}
+
+.olla-card-footer {
+    padding: 16px 24px;
+    background: #f6f7f7;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+/* Field Groups */
+.olla-field-group {
+    margin-bottom: 18px;
+}
+
+.olla-field-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13.5px;
+    color: #1d2327;
+}
+
+.olla-grid-2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.olla-grid-2 .olla-field-group {
+    min-width: 0;
+    margin-bottom: 14px;
+}
+
+.olla-grid-2 input[type="text"],
+.olla-grid-2 input[type="url"],
+.olla-grid-2 input[type="email"],
+.olla-grid-2 select,
+.olla-grid-2 textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 782px) {
+    .olla-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+/* Media Uploader Fields */
+.olla-media-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.olla-media-row input[type="text"] {
+    flex: 1;
+}
+
+.olla-media-preview img {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Musician Accordion */
+.olla-musicians-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.olla-musician-item {
+    border: 1px solid #e2e4e7;
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.olla-musician-header {
+    padding: 14px 18px;
+    background: #f8f9fa;
+    cursor: pointer;
+    user-select: none;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.15s ease;
+}
+
+.olla-musician-header:hover {
+    background: #f0f2f5;
+}
+
+.olla-musician-drag-icon {
+    color: #999;
+    cursor: grab;
+}
+
+.olla-musician-subrole {
+    color: #646970;
+    font-size: 13px;
+    flex: 1;
+}
+
+.olla-accordion-arrow {
+    transition: transform 0.2s ease;
+}
+
+.olla-musician-content {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid #eee;
+    background: #fafbfc;
+}
+
+.olla-musician-item.is-open .olla-musician-content {
+    display: block;
+}
+
+.olla-musician-item.is-open .olla-accordion-arrow {
+    transform: rotate(180deg);
+}
+
+/* Status Pills */
+.olla-status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s;
+}
+
+.olla-status-pill:hover {
+    opacity: 0.85;
+}
+
+.olla-status-pill.is-upcoming {
+    background: #e6f7ec;
+    color: #0e622b;
+    border: 1px solid #b7ebc7;
+}
+
+.olla-status-pill.is-past {
+    background: #f0f2f5;
+    color: #555;
+    border: 1px solid #dcdcdc;
+}
+
+.olla-badge-category {
+    background: #fef3e2;
+    color: #b45309;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #fde68a;
+}
+
+/* Modal: Generous width & clean responsive padding */
+.olla-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(7, 2, 2, 0.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.olla-modal-dialog {
+    background: #fff;
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    border-radius: 10px;
+    border: 1px solid #DAA520;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.olla-modal-header {
+    padding: 18px 28px;
+    background: #15110e;
+    color: #DAA520;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #DAA520;
+}
+
+.olla-modal-header h3 {
+    margin: 0;
+    color: #DAA520;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.olla-modal-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(218, 165, 32, 0.4);
+    color: #F5F5DC;
+    font-size: 22px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.olla-modal-close:hover {
+    background: #DAA520;
+    color: #070202;
+    border-color: #DAA520;
+}
+
+.olla-modal-body {
+    padding: 28px 32px;
+    overflow-y: auto;
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.olla-modal-body .olla-field-group {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.olla-modal-body input[type="text"],
+.olla-modal-body input[type="url"],
+.olla-modal-body input[type="email"],
+.olla-modal-body select,
+.olla-modal-body textarea,
+.olla-modal-body .regular-text,
+.olla-modal-body .large-text {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 14px;
+    padding: 8px 12px;
+    height: auto;
+    min-height: 38px;
+    line-height: 1.4;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+}
+
+.olla-modal-body select {
+    padding-right: 28px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.olla-modal-body textarea {
+    min-height: 90px;
+}
+
+.olla-modal-footer {
+    padding: 18px 32px;
+    background: #f6f7f7;
+    border-top: 1px solid #e2e4e7;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
