@@ -108,7 +108,7 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w <= 600) {
+      if (w < 768) {
         setViewportMode('mobile');
       } else if (w <= 1024) {
         setViewportMode('tablet');
@@ -149,10 +149,10 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       style={{
         // Harmonized height so the figures fit naturally and the lower robes dip directly behind the parchment ribbon
         minHeight: viewportMode === 'mobile'
-          ? 'min(58svh, 25rem)'
+          ? 'min(48svh, 21rem)'
           : viewportMode === 'tablet'
-          ? 'min(72svh, 42rem)'
-          : 'min(78svh, 48rem)'
+          ? 'min(52svh, 26rem)'
+          : 'min(72svh, 42rem)'
       }}
     >
       {/* Stone Hall Backdrop strictly for the Hero Stage */}
@@ -173,16 +173,16 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
         }}
       />
       {/* Bottom fade into pure #070202 */}
-      <div className="absolute bottom-0 inset-x-0 h-16 md:h-24 bg-gradient-to-b from-transparent to-[#070202] pointer-events-none -z-10" />
+      <div className="absolute bottom-0 inset-x-0 h-12 md:h-16 bg-gradient-to-b from-transparent to-[#070202] pointer-events-none -z-10" />
 
       {/* Harmonized Stage Layer across Mobile, Tablet, and Desktop */}
       <div
         className={`relative w-full max-w-[76rem] mx-auto overflow-visible ${
           viewportMode === 'mobile'
-            ? 'h-[58svh] min-h-[20rem] max-h-[27rem]'
+            ? 'h-[48svh] min-h-[17rem] max-h-[22rem]'
             : viewportMode === 'tablet'
-            ? 'h-[70svh] min-h-[34rem] max-h-[42rem]'
-            : 'h-[76svh] min-h-[38rem] max-h-[48rem]'
+            ? 'h-[52svh] min-h-[21rem] max-h-[27rem]'
+            : 'h-[70svh] min-h-[32rem] max-h-[42rem]'
         }`}
       >
         {STAGE_FIGURES.map((member) => {

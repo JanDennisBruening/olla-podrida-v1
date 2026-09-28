@@ -37,7 +37,7 @@ export interface AudioTrack {
 }
 
 export const ASSETS = {
-  logo: 'https://olla-podrida.de/wp-content/uploads/2024/07/Logo_Olla-Podrida_1_srgb.png',
+  logo: '/logo-pot.png',
   navLogo: 'https://olla-podrida.de/wp-content/uploads/2024/07/2024_07_15_Logo_Olla-Podrida_V1_1.png',
   logoBackground: 'https://olla-podrida.de/wp-content/uploads/2024/07/Logo-Background.png',
   menuBackgroundDesktop: 'https://olla-podrida.de/wp-content/uploads/2024/07/Menu-Background-2048x238.png',

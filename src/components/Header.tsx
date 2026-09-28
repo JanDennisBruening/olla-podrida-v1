@@ -70,26 +70,26 @@ export const Header: React.FC<HeaderProps> = ({
           }}
         >
           {/* Left Navigation Container (.elementor-element-709406c2) - optically centered vertically on parchment banner */}
-          <div className="w-[38%] h-full flex items-center justify-end space-x-6 sm:space-x-8 lg:space-x-12 pr-4 sm:pr-8 md:pr-10 lg:pr-14 -translate-y-1 sm:-translate-y-1.5 md:-translate-y-2.5 lg:-translate-y-3">
+          <div className="w-[38%] h-full flex items-center justify-end space-x-5 md:space-x-7 lg:space-x-12 pr-3 md:pr-6 lg:pr-14 -translate-y-1 md:-translate-y-1.5 lg:-translate-y-2.5">
             <button
               onClick={() => scrollToSection('Start')}
-              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
+              className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Start
             </button>
             <button
               onClick={() => scrollToSection('ensemble')}
-              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
+              className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Ensemble
             </button>
           </div>
 
-          {/* Center Logo Container (.elementor-element-7c6f51bd & 4897424a) - hangs over navigation */}
-          <div className="w-[18%] -mt-1 lg:-mt-2 flex justify-center items-start z-30">
+          {/* Center Logo Container (.elementor-element-7c6f51bd & 4897424a) - hangs over navigation (noticeably enlarged) */}
+          <div className="w-[20%] -mt-1 lg:-mt-2 flex justify-center items-start z-30">
             <button
               onClick={() => scrollToSection('Start')}
-              className="relative w-22 h-22 sm:w-26 sm:h-26 md:w-30 md:h-30 lg:w-40 lg:h-40 xl:w-46 xl:h-46 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer translate-y-1 md:translate-y-2 lg:translate-y-3 filter drop-shadow-xl"
+              className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-34 md:h-34 lg:w-46 lg:h-46 xl:w-52 xl:h-52 flex items-center justify-center transition-all duration-300 hover:scale-115 cursor-pointer translate-y-1 md:translate-y-2 lg:translate-y-3 filter drop-shadow-xl scale-[1.15]"
               style={{
                 backgroundImage: `url(${ASSETS.logoBackground})`,
                 backgroundPosition: 'center center',
@@ -101,22 +101,22 @@ export const Header: React.FC<HeaderProps> = ({
               <img
                 src={ASSETS.navLogo}
                 alt="Ensemble Olla Podrida Logo"
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-38 xl:h-38 object-contain -mt-2 lg:-mt-3 drop-shadow-md"
+                className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 lg:w-36 lg:h-36 xl:w-42 xl:h-42 object-contain -mt-1.5 md:-mt-2 lg:-mt-3 drop-shadow-md"
               />
             </button>
           </div>
 
           {/* Right Navigation Container (.elementor-element-4236051d) - optically centered vertically on parchment banner */}
-          <div className="w-[38%] h-full flex items-center justify-start space-x-6 sm:space-x-8 lg:space-x-12 pl-4 sm:pl-8 md:pl-10 lg:pl-14 -translate-y-1 sm:-translate-y-1.5 md:-translate-y-2.5 lg:-translate-y-3">
+          <div className="w-[38%] h-full flex items-center justify-start space-x-5 md:space-x-7 lg:space-x-12 pl-3 md:pl-6 lg:pl-14 -translate-y-1 md:-translate-y-1.5 lg:-translate-y-2.5">
             <button
               onClick={() => scrollToSection('termine')}
-              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
+              className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Termine
             </button>
             <button
               onClick={() => scrollToSection('kontakt')}
-              className="font-macondo text-[1.1rem] sm:text-[1.25rem] md:text-[1.38rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
+              className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
               Kontakt
             </button>
@@ -133,13 +133,13 @@ export const Header: React.FC<HeaderProps> = ({
             backgroundSize: '100% 100%'
           }}
         >
-          {/* Logo pinned flush against top edge: exactly 25% of total width as requested */}
+          {/* Logo pinned flush against top edge: exactly 24% of total width as requested */}
           <button
             onClick={() => scrollToSection('Start')}
             className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30"
           >
             <div
-              className="w-[25vw] h-[25vw] min-w-[5.8rem] min-h-[5.8rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
+              className="w-[24vw] h-[24vw] min-w-[5.6rem] min-h-[5.6rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
               style={{
                 backgroundImage: `url(${ASSETS.logoBackground})`,
                 backgroundPosition: 'center center',
@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Medieval Calligraphic Menu / Close Button with smooth morphing animation, identical proportions and colors */}
           <button
             onClick={handleToggleMobileMenu}
-            className="self-center my-auto mr-4 flex flex-col items-center justify-center p-1 cursor-pointer transition-all duration-300 active:scale-90 scale-[1.03] z-30"
+            className="self-center my-auto mr-4 flex flex-col items-center justify-center p-1 cursor-pointer transition-all duration-300 active:scale-80 scale-[0.90] z-30"
             aria-label={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
             title={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
           >

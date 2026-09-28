@@ -43,25 +43,28 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     <section
       ref={sectionRef}
       id="kontakt"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-4 md:pt-10 pb-6 md:pb-8 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none"
     >
-      <div className="max-w-[66rem] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+      <div className="max-w-[70rem] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
 
         {/* Two-Column Layout (.elementor-element-29fca19) - tightly connected without black voids */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* Left Column: Heading + Text + Susanne */}
+          {/* Left Column: Heading + Text + Susanne - broader on desktop for comfortable line length */}
           <div
-            className={`md:col-span-5 flex flex-col text-left transition-all duration-700 delay-150 ease-out z-20 ${
+            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-700 delay-150 ease-out z-20 ${
               isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <div className="flex flex-row items-center md:items-start justify-between gap-3">
-              <div className="w-[62%] sm:w-[65%] md:w-full flex flex-col pl-4 sm:pl-6 md:pl-5">
-                <h2 className="font-macondo text-[2.88rem] md:text-[4.5rem] text-[#F5F5DC] font-normal tracking-wide text-left mb-1 sm:mb-2 leading-tight">
-                  Kontakt &amp; Anfragen
+            {/* Mobile: Row with text + Susanne. Tablet & Desktop: Column with Headline, Text, and Susanne underneath */}
+            <div className="flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-4">
+              <div className="w-[64%] sm:w-[66%] md:w-full flex flex-col pl-2 sm:pl-4 md:pl-0">
+                <h2 className="font-macondo text-[2.1rem] min-[380px]:text-[2.4rem] sm:text-[2.88rem] md:text-[2.65rem] lg:text-[3.5rem] text-[#F5F5DC] font-normal tracking-wide text-left mb-1 sm:mb-2 leading-tight">
+                  <span className="whitespace-nowrap">Kontakt &amp;</span>
+                  <br />
+                  <span>Anfragen</span>
                 </h2>
-                <div className="space-y-1.5 sm:space-y-2.5 font-macondo text-[0.88rem] sm:text-[1.05rem] md:text-[1.18rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.7rem] text-left">
+                <div className="space-y-2 sm:space-y-3 font-macondo text-[0.88rem] sm:text-[1.05rem] md:text-[1.12rem] lg:text-[1.22rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.75rem] text-left max-w-xl">
                   <p>
                     Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.
                   </p>
@@ -69,7 +72,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                     Kontaktieren Sie uns über unser Formular oder per E-Mail:{' '}
                     <a
                       href="mailto:info@olla-podrida.de"
-                      className="font-macondo text-[0.98rem] sm:text-[1.15rem] md:text-[1.2rem] text-[#DAA520] hover:underline break-words"
+                      className="font-macondo text-[0.98rem] sm:text-[1.15rem] md:text-[1.14rem] lg:text-[1.25rem] text-[#DAA520] hover:underline break-words"
                     >
                       info(at)olla-podrida.de
                     </a>
@@ -77,9 +80,9 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
                 </div>
               </div>
 
-              {/* Susanne figure on right on mobile: chest aligned with headline, extends down over form card */}
-              <div className="w-[38%] sm:w-[35%] md:w-full flex justify-center md:justify-start items-center shrink-0 -mb-8 sm:-mb-10 md:mb-0 md:mt-2 z-30 pointer-events-none">
-                <div className="w-36 sm:w-44 md:w-56 lg:w-60 transition-transform duration-500 hover:scale-105">
+              {/* Susanne figure: on mobile at the side; on tablet & desktop cleanly placed underneath the text */}
+              <div className="w-[38%] md:w-full flex justify-center md:justify-start items-center shrink-0 -mb-8 md:mb-0 md:mt-5 z-30 pointer-events-none">
+                <div className="w-36 md:w-44 lg:w-52 transition-transform duration-500 hover:scale-105">
                   <img
                     src="https://olla-podrida.de/wp-content/uploads/2024/07/Susanne_klein.webp"
                     alt="Susanne spielt vergnügt auf der Flöte"
@@ -93,17 +96,17 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
 
           {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
-            className={`md:col-span-7 flex justify-center relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-700 delay-250 ease-out z-10 ${
+            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-700 delay-250 ease-out z-10 ${
               isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
             }`}
           >
-            {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned higher up overlapping top */}
-            <div className="hidden md:block absolute -top-16 sm:-top-22 md:-top-28 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[25rem]">
+            {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned on top of form */}
+            <div className="hidden md:block absolute -top-14 sm:-top-18 md:-top-22 lg:-top-24 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[24rem]">
               <img
-                src="https://olla-podrida.de/wp-content/uploads/2024/07/2024_07_22_Elemente_Olla-Podrida_Zeichenflaeche-1-1024x611.png"
+                src="/musiknoten-banner.png"
                 alt="Musiknoten Pergament"
                 className="w-full h-auto object-contain drop-shadow-md"
-                loading="lazy"
+                loading="eager"
               />
             </div>
 
