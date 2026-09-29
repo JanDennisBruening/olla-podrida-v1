@@ -6,9 +6,10 @@ import { ShieldCheck, Music2, Lock } from 'lucide-react';
 interface CookieBannerProps {
   onAccept: () => void;
   onOpenPrivacy: () => void;
+  onOpenImpressum: () => void;
 }
 
-export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPrivacy }) => {
+export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPrivacy, onOpenImpressum }) => {
   const assets = getAssets();
   const [isClosing, setIsClosing] = useState(false);
 
@@ -101,8 +102,8 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </div>
         </div>
 
-        {/* Privacy Note */}
-        <p className="text-[0.72rem] text-center text-[#D1C7AC]/75 mb-6">
+        {/* Privacy & Impressum Note */}
+        <p className="text-[0.76rem] text-center text-[#D1C7AC]/85 mb-6">
           Ausführliche Informationen findest du jederzeit in unserer{' '}
           <button
             type="button"
@@ -110,6 +111,14 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
             className="text-[#DAA520] underline hover:text-[#FFD700] transition-colors cursor-pointer font-medium"
           >
             Datenschutzerklärung
+          </button>{' '}
+          sowie im{' '}
+          <button
+            type="button"
+            onClick={onOpenImpressum}
+            className="text-[#DAA520] underline hover:text-[#FFD700] transition-colors cursor-pointer font-medium"
+          >
+            Impressum
           </button>.
         </p>
 

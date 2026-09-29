@@ -53,7 +53,7 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
 
   return (
     <div
-      className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div

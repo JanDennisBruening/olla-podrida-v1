@@ -208,7 +208,7 @@ class Olla_Podrida_Settings {
                 ]
             ],
             'contact' => [
-                'recipient_email' => get_option('admin_email', 'info@olla-podrida.de'),
+                'recipient_email' => get_option('admin_email', ''),
                 'subject' => 'Neue Anfrage über das Ensemble Olla Podrida Kontaktformular',
                 'portrait' => $assets_url . 'Susanne_klein.webp',
                 'title' => 'Kontakt & Anfragen',
@@ -325,7 +325,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
                 'subtitle' => 'Offizielle Pressematerialien, Logos und Bilddateien des Ensemble Olla Podrida',
                 'intro_text' => "Das Ensemble Olla Podrida steht für lebendige Klangwelten aus Mittelalter und Renaissance. Mit historischen Instrumenten wie Krummhörnern, Renaissanceblockflöten, Sackpfeifen, Harfe, Laute und Landsknechtstrommeln erweckt die Musikgruppe historische Musik an Schlössern, Kirchen, Museen und Festen zu neuem Leben.",
                 'contact_name' => 'Susanne Hoffmann (Ensembleleitung)',
-                'contact_email' => 'info@olla-podrida.de',
+                'contact_email' => get_option('admin_email', ''),
                 'contact_phone' => '',
                 'press_note' => 'Die hier bereitgestellten Pressefotos und Grafiken dürfen im Rahmen redaktioneller Berichterstattung über das Ensemble Olla Podrida sowie zur Ankündigung von Veranstaltungen unter Nennung der Quelle honorarfrei verwendet werden.',
                 'logo_pot' => $assets_url . 'logo-pot.png',

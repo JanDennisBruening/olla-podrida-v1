@@ -94,9 +94,9 @@ $total_messages = count($messages);
                 <div class="olla-grid-2">
                     <div class="olla-field-group">
                         <label for="recipient_email"><strong>Empfänger-E-Mail(s) (an wen gehen Anfragen?) *:</strong></label>
-                        <input type="text" id="recipient_email" name="recipient_email" required value="<?php echo esc_attr($contact['recipient_email']); ?>" class="large-text" placeholder="info@olla-podrida.de, susanne@olla-podrida.de" />
+                        <input type="text" id="recipient_email" name="recipient_email" required value="<?php echo esc_attr($contact['recipient_email']); ?>" class="large-text" placeholder="kontakt@ihre-domain.de" />
                         <p class="description" style="margin-top: 5px; font-size: 12px; color: #666;">
-                            💡 <strong>Mehrere Empfänger möglich:</strong> Sie können eine oder mehrere E-Mail-Adressen kommagetrennt eingeben (z. B. <code>info@olla-podrida.de, susanne@olla-podrida.de</code>). Alle Adressen erhalten zeitgleich eine Benachrichtigung.
+                            💡 <strong>Mehrere Empfänger möglich:</strong> Sie können eine oder mehrere E-Mail-Adressen kommagetrennt eingeben. Alle hinterlegten Adressen erhalten eingehende Anfragen zeitgleich als Benachrichtigung.
                         </p>
                     </div>
                     <div class="olla-field-group">
@@ -127,7 +127,7 @@ $total_messages = count($messages);
                 </div>
 
                 <div class="olla-field-group olla-media-field">
-                    <label><strong>Porträt Susanne / Ansprechpartnerin (neben dem Formular):</strong></label>
+                    <label><strong>Porträt Ensembleleitung / Ansprechpartner(in) (neben dem Formular):</strong></label>
                     <div class="olla-media-row">
                         <input type="text" name="portrait" id="contact_portrait" value="<?php echo esc_url($contact['portrait']); ?>" class="regular-text olla-media-input" />
                         <button type="button" class="button olla-media-upload-btn" data-target="#contact_portrait" data-preview="#contact_portrait_preview">Aus Mediathek wählen</button>

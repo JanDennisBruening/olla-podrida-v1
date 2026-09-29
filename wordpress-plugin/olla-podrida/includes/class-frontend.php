@@ -212,7 +212,7 @@ class Olla_Podrida_Frontend {
                 'subtitle' => $press['subtitle'] ?? 'Offizielle Pressematerialien, Logos und Bilddateien des Ensemble Olla Podrida',
                 'introText' => $press['intro_text'] ?? '',
                 'contactName' => $press['contact_name'] ?? 'Susanne Hoffmann (Ensembleleitung)',
-                'contactEmail' => $press['contact_email'] ?? 'info@olla-podrida.de',
+                'contactEmail' => $press['contact_email'] ?? get_option('admin_email', ''),
                 'contactPhone' => $press['contact_phone'] ?? '',
                 'pressNote' => $press['press_note'] ?? '',
                 'logos' => [

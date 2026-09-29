@@ -20,26 +20,67 @@ import { Preloader } from './components/Preloader';
 import { CookieBanner } from './components/CookieBanner';
 import { ASSETS } from './data/siteContent';
 
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+function checkHasConsent(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  // URL parameter to force consent reset for testing (?reset=1 or ?cookie=1)
+  if (urlParams.has('reset') || urlParams.has('cookie') || urlParams.has('banner')) {
+    return false;
+  }
+  if (urlParams.has('skip_banner') || urlParams.has('nobanner')) {
+    return true;
+  }
+
+  // 1. Check for valid 30-day browser cookie
+  const cookies = document.cookie.split(';');
+  for (const c of cookies) {
+    const trimmed = c.trim();
+    if (trimmed.startsWith('olla_cookie_consent=true')) {
+      return true;
+    }
+  }
+
+  // 2. Check localStorage with 30-day expiration timestamp
+  try {
+    const consentTimeStr = localStorage.getItem('olla_cookie_consent_time');
+    if (consentTimeStr) {
+      const consentTime = parseInt(consentTimeStr, 10);
+      if (!isNaN(consentTime) && Date.now() - consentTime < THIRTY_DAYS_MS) {
+        return true;
+      }
+    }
+  } catch {}
+
+  return false;
+}
+
+function saveConsent() {
+  if (typeof window === 'undefined') return;
+
+  // Set 30-day cookie
+  const maxAgeSeconds = 30 * 24 * 60 * 60;
+  document.cookie = `olla_cookie_consent=true; max-age=${maxAgeSeconds}; path=/; SameSite=Lax`;
+
+  // Set localStorage backup with timestamp
+  try {
+    localStorage.setItem('olla_cookie_consent', 'true');
+    localStorage.setItem('olla_cookie_consent_time', Date.now().toString());
+  } catch {}
+}
+
 export default function App() {
   const [legalModalType, setLegalModalType] = useState<'impressum' | 'datenschutz' | 'cookies' | null>(null);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [presseModalOpen, setPresseModalOpen] = useState(false);
 
-  // Cookie consent & welcome state: presents the greeting banner on entry so user starts music on click
-  const [hasConsent, setHasConsent] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('skip_banner') || urlParams.has('nobanner')) {
-        return true;
-      }
-    }
-    return false;
-  });
+  // Cookie consent: stored as a 30-day cookie. If already accepted within 30 days, preloader starts immediately.
+  const [hasConsent, setHasConsent] = useState(checkHasConsent);
 
   const handleAcceptCookies = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('olla_cookie_consent', 'true');
-    }
+    saveConsent();
     setHasConsent(true);
   };
 
@@ -119,6 +160,7 @@ export default function App() {
         <CookieBanner
           onAccept={handleAcceptCookies}
           onOpenPrivacy={() => handleOpenLegal('datenschutz')}
+          onOpenImpressum={() => handleOpenLegal('impressum')}
         />
       )}
 

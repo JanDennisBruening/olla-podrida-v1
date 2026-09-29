@@ -32,7 +32,7 @@ $seo = Olla_Podrida_Settings::get_section('seo');
                         <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png'); ?>" style="width: 18px; height: 18px; object-fit: contain;" alt="Logo" />
                     </div>
                     <div>
-                        <div style="font-size: 13px; color: #202124; line-height: 1.3; font-weight: 500;">Ensemble Olla Podrida</div>
+                        <div style="font-size: 13px; color: #202124; line-height: 1.3; font-weight: 500;"><?php echo esc_html(get_option('blogname', 'Ensemble Olla Podrida')); ?></div>
                         <div style="font-size: 11.5px; color: #4d5156; line-height: 1.2;" id="serp-preview-url"><?php echo esc_html(home_url('/')); ?></div>
                     </div>
                 </div>

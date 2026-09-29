@@ -53,7 +53,7 @@ $press = Olla_Podrida_Settings::get_section('press');
                 </div>
                 <div class="olla-field-group">
                     <label for="contact_email"><strong>Presse-E-Mail-Adresse:</strong></label>
-                    <input type="email" id="contact_email" name="contact_email" value="<?php echo esc_attr($press['contact_email'] ?? 'info@olla-podrida.de'); ?>" class="regular-text" />
+                    <input type="email" id="contact_email" name="contact_email" value="<?php echo esc_attr($press['contact_email'] ?? get_option('admin_email', '')); ?>" class="regular-text" placeholder="presse@ihre-domain.de" />
                 </div>
             </div>
 
