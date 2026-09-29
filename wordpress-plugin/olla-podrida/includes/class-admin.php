@@ -424,7 +424,7 @@ class Olla_Podrida_Admin {
         if ($can_contact) {
             wp_add_dashboard_widget(
                 'olla_podrida_dashboard_contact',
-                '✉️ Olla Podrida: Kontaktanfragen & Posteingang',
+                'Kontaktanfragen und Posteingang',
                 [__CLASS__, 'render_dashboard_contact_widget'],
                 null,
                 null,
@@ -451,59 +451,48 @@ class Olla_Podrida_Admin {
     }
 
     public static function render_dashboard_contact_widget() {
-        $messages = Olla_Podrida_Contact::get_messages(5);
-        $total = count($messages);
+        $counts = Olla_Podrida_Contact::get_message_counts();
         $contact_url = admin_url('admin.php?page=olla-podrida&tab=contact');
         ?>
-        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+        <div class="olla-dashboard-widget" style="padding: 4px 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <div>
-                    <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Eingegangene Anfragen:</span>
-                    <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 4px;">
-                        <?php echo intval($total); ?>
+                    <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Eingegangene Nachrichten:</span>
+                    <span style="background: <?php echo $counts['unread'] > 0 ? '#2e7d32' : '#DAA520'; ?>; color: #ffffff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 4px;">
+                        <?php echo intval($counts['total']); ?>
                     </span>
                 </div>
                 <a href="<?php echo esc_url($contact_url); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 600;">
-                    Posteingang &rarr;
+                    📥 Weiter zum Posteingang &rarr;
                 </a>
             </div>
 
-            <?php if (empty($messages)): ?>
-                <div style="text-align: center; padding: 14px 10px; background: #faf8f5; border-radius: 6px; border: 1px dashed #d5ccbe;">
-                    <p style="color: #666; font-style: italic; margin: 0; font-size: 12px;">Aktuell liegen keine neuen Kontaktanfragen vor.</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 8px 6px; text-align: center;">
+                    <div style="font-size: 17px; font-weight: 700; color: <?php echo $counts['unread'] > 0 ? '#2e7d32' : '#666'; ?>;">
+                        <?php echo intval($counts['unread']); ?>
+                    </div>
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Neu / Ungelesen</div>
                 </div>
-            <?php else: ?>
-                <ul style="margin: 0; padding: 0; list-style: none;">
-                    <?php foreach ($messages as $msg): 
-                        $name = is_array($msg) ? ($msg['name'] ?? '') : ($msg->name ?? '');
-                        $email = is_array($msg) ? ($msg['email'] ?? '') : ($msg->email ?? '');
-                        $message = is_array($msg) ? ($msg['message'] ?? '') : ($msg->message ?? '');
-                        $created_at = is_array($msg) ? ($msg['created_at'] ?? '') : ($msg->created_at ?? '');
-                    ?>
-                        <li style="padding: 8px 0; border-bottom: 1px dotted #e5e0d5;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 2px;">
-                                <strong style="color: #1d2327; font-size: 13px;"><?php echo esc_html($name); ?></strong>
-                                <span style="font-size: 11px; color: #646970; white-space: nowrap;">
-                                    <?php echo esc_html(date_i18n('d.m.Y H:i', strtotime($created_at))); ?>
-                                </span>
-                            </div>
-                            <div style="font-size: 11px; margin-bottom: 2px;">
-                                <a href="mailto:<?php echo esc_attr($email); ?>" style="color: #2271b1; text-decoration: none;">
-                                    <?php echo esc_html($email); ?>
-                                </a>
-                            </div>
-                            <div style="font-size: 12px; color: #50575e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <?php echo esc_html(wp_trim_words($message, 12)); ?>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f1; text-align: right;">
-                    <a href="<?php echo esc_url($contact_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
-                        Alle Anfragen verwalten &rarr;
-                    </a>
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 8px 6px; text-align: center;">
+                    <div style="font-size: 17px; font-weight: 700; color: #555;">
+                        <?php echo intval($counts['read']); ?>
+                    </div>
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Archiviert / Gelesen</div>
                 </div>
-            <?php endif; ?>
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 8px 6px; text-align: center;">
+                    <div style="font-size: 17px; font-weight: 700; color: #1d2327;">
+                        <?php echo intval($counts['total']); ?>
+                    </div>
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Gesamt</div>
+                </div>
+            </div>
+
+            <div style="padding-top: 8px; border-top: 1px solid #f0f0f1; text-align: right;">
+                <a href="<?php echo esc_url($contact_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    Alle Anfragen verwalten &rarr;
+                </a>
+            </div>
         </div>
         <?php
     }

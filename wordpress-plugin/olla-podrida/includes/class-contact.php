@@ -148,4 +148,20 @@ class Olla_Podrida_Contact {
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
         return $wpdb->update($table_name, ['is_read' => 1], ['id' => intval($id)]);
     }
+
+    public static function get_message_counts() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'olla_podrida_messages';
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+            return ['total' => 0, 'unread' => 0, 'read' => 0];
+        }
+        $total = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
+        $unread = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_name WHERE is_read = 0");
+        $read = max(0, $total - $unread);
+        return [
+            'total' => $total,
+            'unread' => $unread,
+            'read' => $read,
+        ];
+    }
 }

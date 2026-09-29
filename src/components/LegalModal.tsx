@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { X, Shield, BookOpen, Cookie, ExternalLink } from 'lucide-react';
-import { getLegalConfig } from '../data/siteContent';
 
 interface LegalModalProps {
   type: 'impressum' | 'datenschutz' | 'cookies' | null;
@@ -9,7 +8,6 @@ interface LegalModalProps {
 }
 
 export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchType }) => {
-  const legalConfig = getLegalConfig();
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -33,7 +31,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
     >
       <div
         data-lenis-prevent="true"
-        className="relative w-full max-w-4xl max-h-[88vh] h-[88vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden"
+        className="relative w-full max-w-3xl max-h-[75vh] md:max-h-[70vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_12px_45px_rgba(0,0,0,0.92),0_0_30px_rgba(218,165,32,0.2)] flex flex-col text-[#F5F5DC] overflow-hidden my-auto"
         onClick={(e) => e.stopPropagation()}
         style={{
           touchAction: 'pan-y'
@@ -103,16 +101,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           
           {/* IMPRESSUM (Gemäß § 5 DDG) */}
           {type === 'impressum' && (
-            legalConfig?.impressumHtml && legalConfig.impressumHtml.length > 100 ? (
-              <div 
-                className="space-y-4 text-xs sm:text-sm leading-relaxed text-[#D1C7AC] [&_h3]:font-macondo [&_h3]:text-2xl [&_h3]:text-[#F5F5DC] [&_h3]:mt-4 [&_h3]:mb-1 [&_strong]:text-[#F5F5DC] [&_a]:text-[#DAA520] [&_a:hover]:underline [&_hr]:border-[#DAA520]/30 [&_hr]:my-4 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1"
-                dangerouslySetInnerHTML={{ __html: legalConfig.impressumHtml }}
-              />
-            ) : (
-              <div className="space-y-6">
-                <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
-                  Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)
-                </div>
+            <div className="space-y-6">
+              <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
+                Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)
+              </div>
 
                 <div>
                   <h3 className="font-macondo text-2xl text-[#F5F5DC] mb-2">Verantwortlich für den Inhalt</h3>
@@ -188,17 +180,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                   </p>
                 </div>
               </div>
-            )
           )}
 
           {/* DATENSCHUTZERKLÄRUNG (DSGVO / DDG) */}
           {type === 'datenschutz' && (
-            legalConfig?.datenschutzHtml && legalConfig.datenschutzHtml.length > 100 ? (
-              <div 
-                className="space-y-4 text-xs sm:text-sm leading-relaxed text-[#D1C7AC] [&_h3]:font-macondo [&_h3]:text-2xl [&_h3]:text-[#F5F5DC] [&_h3]:mt-4 [&_h3]:mb-1 [&_h4]:font-semibold [&_h4]:text-[#DAA520] [&_h4]:text-sm [&_h4]:mt-3 [&_h4]:mb-1 [&_strong]:text-[#F5F5DC] [&_a]:text-[#DAA520] [&_a:hover]:underline [&_hr]:border-[#DAA520]/30 [&_hr]:my-4 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1"
-                dangerouslySetInnerHTML={{ __html: legalConfig.datenschutzHtml }}
-              />
-            ) : (
             <div className="space-y-6">
               <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
                 Datenschutzerklärung nach der EU-Datenschutz-Grundverordnung (DSGVO) und dem Digitale-Dienste-Gesetz (DDG)
@@ -327,7 +312,6 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                 </ul>
               </div>
             </div>
-            )
           )}
 
           {/* COOKIES INFO & ERKLÄRUNG */}

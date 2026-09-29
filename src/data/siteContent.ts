@@ -253,11 +253,11 @@ Jan Dennis Brüning · <a href="https://www.janbruening.de" target="_blank" rel=
 • <strong>Stockmedia &amp; Grafik:</strong> Licensed by Jan Dennis Brüning 2024 @ freepik.com (Premium Lizenz)</p>
 <hr/>
 <p><strong>Haftung für Inhalte:</strong><br/>
-Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
 <p><strong>Haftung für Links:</strong><br/>
-Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.</p>
+Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
 <p><strong>Urheberrecht:</strong><br/>
-Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht.</p>`,
+Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.</p>`,
   datenschutzHtml: `<div class="olla-datenschutz-document">
 <p class="olla-legal-badge"><strong>Datenschutzerklärung nach der EU-Datenschutz-Grundverordnung (DSGVO) und dem Digitale-Dienste-Gesetz (DDG)</strong></p>
 
@@ -280,22 +280,28 @@ Web: www.olla-podrida.de</p>
 <li>Website, von der aus der Zugriff erfolgt (Referrer-URL)</li>
 <li>Verwendeter Browser und ggf. das Betriebssystem Ihres Rechners</li>
 </ul>
-<p>Die genannten Daten werden zur Gewährleistung eines reibungslosen Verbindungsaufbaus der Website, einer komfortablen Nutzung unserer Website sowie zur Auswertung der Systemsicherheit und -stabilität verarbeitet (Art. 6 Abs. 1 S. 1 lit. f DSGVO).</p>
+<p>Die genannten Daten werden zur Gewährleistung eines reibungslosen Verbindungsaufbaus der Website, einer komfortablen Nutzung unserer Website sowie zur Auswertung der Systemsicherheit und -stabilität verarbeitet. Die Rechtsgrundlage für die Datenverarbeitung ist Art. 6 Abs. 1 S. 1 lit. f DSGVO. Unser berechtigtes Interesse folgt aus den oben aufgelisteten Zwecken zur Datenerhebung.</p>
 
 <h4>b) Bei Nutzung unseres Kontaktformulars</h4>
-<p>Bei Fragen jeglicher Art bieten wir Ihnen die Möglichkeit, mit uns über ein auf der Website bereitgestelltes Formular Kontakt aufzunehmen. Dabei ist die Angabe einer gültigen E-Mail-Adresse und Ihres Namens erforderlich, damit wir wissen, von wem die Anfrage stammt und um diese beantworten zu können (Art. 6 Abs. 1 S. 1 lit. a bzw. lit. b DSGVO).</p>
+<p>Bei Fragen jeglicher Art bieten wir Ihnen die Möglichkeit, mit uns über ein auf der Website bereitgestelltes Formular Kontakt aufzunehmen. Dabei ist die Angabe einer gültigen E-Mail-Adresse und Ihres Namens erforderlich, damit wir wissen, von wem die Anfrage stammt und um diese beantworten zu können. Die Datenverarbeitung zum Zwecke der Kontaktaufnahme mit uns erfolgt nach Art. 6 Abs. 1 S. 1 lit. a DSGVO auf Grundlage Ihrer freiwillig erteilten Einwilligung bzw. nach Art. 6 Abs. 1 lit. b DSGVO bei vorvertraglichen Anfragen (z. B. Konzertbuchungen).</p>
 
 <h4>c) Kontaktaufnahme per E-Mail oder Telefon</h4>
-<p>Wenn Sie uns per E-Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Kontaktdaten, Inhalt) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet.</p>
+<p>Wenn Sie uns per E-Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Kontaktdaten, Inhalt) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
 
 <h3>3. Weitergabe von Daten</h3>
-<p>Eine Übermittlung Ihrer persönlichen Daten an Dritte zu anderen als den im Folgenden aufgeführten Zwecken findet nicht statt. Wir geben Ihre persönlichen Daten nur an Dritte weiter, wenn Sie Ihre ausdrückliche Einwilligung dazu erteilt haben, die Weitergabe zur Geltendmachung von Rechtsansprüchen erforderlich ist oder eine gesetzliche Verpflichtung besteht.</p>
+<p>Eine Übermittlung Ihrer persönlichen Daten an Dritte zu anderen als den im Folgenden aufgeführten Zwecken findet nicht statt. Wir geben Ihre persönlichen Daten nur an Dritte weiter, wenn:</p>
+<ul>
+<li>Sie Ihre nach Art. 6 Abs. 1 S. 1 lit. a DSGVO ausdrückliche Einwilligung dazu erteilt haben,</li>
+<li>die Weitergabe nach Art. 6 Abs. 1 S. 1 lit. f DSGVO zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen erforderlich ist,</li>
+<li>für den Fall, dass für die Weitergabe nach Art. 6 Abs. 1 S. 1 lit. c DSGVO eine gesetzliche Verpflichtung besteht.</li>
+</ul>
 
 <h3>4. Hosting durch die IONOS SE &amp; Auftragsverarbeitung (AVV)</h3>
-<p>Wir hosten unsere Website bei der <strong>IONOS SE</strong>, Elgendorfer Str. 57, 56410 Montabaur, Deutschland.<br/>
+<p>Wir hosten unsere Website bei der <strong>IONOS SE</strong>. Anbieter ist:<br/>
+IONOS SE, Elgendorfer Str. 57, 56410 Montabaur, Deutschland.<br/>
 Datenschutzerklärung von IONOS: <a href="https://www.ionos.de/terms-gtc/terms-privacy/" target="_blank" rel="noopener noreferrer">https://www.ionos.de/terms-gtc/terms-privacy/</a></p>
 <p><strong>Vertrag über Auftragsverarbeitung (AVV):</strong> Wir haben mit der IONOS SE einen Vertrag zur Auftragsverarbeitung (AVV) gemäß Art. 28 DSGVO abgeschlossen. Hierbei handelt es sich um einen gesetzlich vorgeschriebenen Vertrag, der sicherstellt, dass IONOS die personenbezogenen Daten unserer Webseitenbesucher ausschließlich nach unseren Weisungen, zweckgebunden und unter strenger Einhaltung der Datenschutz-Grundverordnung verarbeitet.</p>
-<p><strong>Rechtsgrundlage:</strong> Der Einsatz von IONOS erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer zuverlässigen und sicheren Bereitstellung unseres Onlineauftritts).</p>
+<p><strong>Rechtsgrundlage:</strong> Der Einsatz von IONOS erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer möglichst zuverlässigen, schnellen und sicheren Bereitstellung unseres Internetauftritts.</p>
 
 <h3>5. Lokale Einbindung von Schriftarten und Medien (Keine Drittanbieter-CDNs)</h3>
 <p>Diese Website bindet alle Schriftarten (Fonts wie Macondo Swash Caps, Dosis, Roboto Slab) sowie sämtliche Medien (Bilder, Audiodateien, Grafiken) zu 100% lokal über den eigenen Webserver ein. Es findet zu keinem Zeitpunkt eine Übertragung Ihrer IP-Adresse oder sonstiger Daten an externe Server oder Content Delivery Networks (CDNs) von Drittanbietern (wie beispielsweise Google Fonts oder Google-Server) statt.</p>
