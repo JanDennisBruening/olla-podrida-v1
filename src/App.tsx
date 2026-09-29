@@ -25,21 +25,29 @@ export default function App() {
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [presseModalOpen, setPresseModalOpen] = useState(false);
 
-  // Cookie consent state: if not yet accepted, banner appears first and preloader waits
+  // Cookie consent state: if not yet accepted in this session, banner appears first and preloader waits
   const [hasConsent, setHasConsent] = useState(() => {
     if (typeof window !== 'undefined') {
-      return (
-        localStorage.getItem('olla_cookies_accepted') === 'true' ||
-        localStorage.getItem('olla_cookie_consent') === 'true'
-      );
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('cookie') || urlParams.has('banner') || urlParams.has('reset')) {
+        return false;
+      }
+      return sessionStorage.getItem('olla_cookie_consent_session') === 'true';
     }
     return false;
   });
 
   const handleAcceptCookies = () => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('olla_cookies_accepted', 'true');
+      sessionStorage.setItem('olla_cookie_consent_session', 'true');
       localStorage.setItem('olla_cookie_consent', 'true');
+      // Direct trigger of audio playback inside the user's click gesture stack!
+      if (typeof (window as any).__ollaPlayAudio === 'function') {
+        try {
+          (window as any).__ollaPlayAudio();
+        } catch {}
+      }
+      window.dispatchEvent(new CustomEvent('olla-play-audio'));
     }
     setHasConsent(true);
   };

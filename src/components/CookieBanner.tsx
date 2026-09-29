@@ -12,6 +12,15 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
   const [isClosing, setIsClosing] = useState(false);
 
   const handleAccept = () => {
+    // 1. Instantly unlock audio playback inside the synchronous user activation gesture!
+    if (typeof (window as any).__ollaPlayAudio === 'function') {
+      try {
+        (window as any).__ollaPlayAudio();
+      } catch {}
+    }
+    window.dispatchEvent(new CustomEvent('olla-play-audio'));
+
+    // 2. Smoothly animate closure
     setIsClosing(true);
     setTimeout(() => {
       onAccept();

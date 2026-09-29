@@ -37,19 +37,22 @@ export const Header: React.FC<HeaderProps> = ({
     };
   }, []);
 
-  // Smooth mobile menu open/close lifecycle with stagger transitions
+  // Smooth mobile menu open/close lifecycle with bi-directional stagger transitions
   useEffect(() => {
     if (mobileMenuOpen) {
       setIsMenuMounted(true);
-      const frame = requestAnimationFrame(() => {
+      setIsMenuVisible(false);
+      // Ensure DOM has mounted and initial hidden frame painted before animating in
+      const timer = setTimeout(() => {
         setIsMenuVisible(true);
-      });
-      return () => cancelAnimationFrame(frame);
+      }, 30);
+      return () => clearTimeout(timer);
     } else {
       setIsMenuVisible(false);
+      // Wait for all reverse stagger transitions to finish gracefully before unmounting
       const timer = setTimeout(() => {
         setIsMenuMounted(false);
-      }, 320);
+      }, 480);
       return () => clearTimeout(timer);
     }
   }, [mobileMenuOpen]);
@@ -233,14 +236,16 @@ export const Header: React.FC<HeaderProps> = ({
           className={`fixed inset-0 z-[10010] flex flex-col justify-start items-center p-4 sm:p-6 pt-[18vw] min-[400px]:pt-[19vw] sm:pt-24 pb-8 bg-[#070202]/92 backdrop-blur-md select-none overflow-y-auto transition-opacity duration-350 ease-in-out ${
             isMenuVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
+          style={{ transitionDelay: isMenuVisible ? '0ms' : '120ms' }}
         >
           {/* Menu Card Container with antique golden border & unfold animation */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_12px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.2)] transition-all duration-400 ease-out transform ${
-              isMenuVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-8'
+            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_12px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.2)] transition-all duration-300 ease-out transform ${
+              isMenuVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4'
             }`}
             style={{
+              transitionDelay: isMenuVisible ? '0ms' : '140ms',
               transitionTimingFunction: isMenuVisible ? 'cubic-bezier(0.16, 1, 0.3, 1)' : 'cubic-bezier(0.4, 0, 1, 1)'
             }}
           >
@@ -257,10 +262,10 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Logo in Mobile Menu - Stagger step 1 */}
             <div
-              className={`flex flex-col items-center mb-5 mt-1 transition-all duration-500 ease-out transform ${
-                isMenuVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95'
+              className={`flex flex-col items-center mb-5 mt-1 transition-all duration-300 ease-out transform ${
+                isMenuVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-3 scale-95'
               }`}
-              style={{ transitionDelay: isMenuVisible ? '100ms' : '0ms' }}
+              style={{ transitionDelay: isMenuVisible ? '70ms' : '240ms' }}
             >
               <img
                 src={assets.logo}
@@ -277,27 +282,27 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Divider */}
             <div
-              className={`w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/50 to-transparent mb-4 transition-all duration-400 ease-out ${
+              className={`w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/50 to-transparent mb-4 transition-all duration-300 ease-out ${
                 isMenuVisible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
               }`}
-              style={{ transitionDelay: isMenuVisible ? '160ms' : '0ms' }}
+              style={{ transitionDelay: isMenuVisible ? '130ms' : '200ms' }}
             />
 
-            {/* Main Navigation Links with Staggered Cascading Appearance */}
+            {/* Main Navigation Links with Bi-directional Staggered Appearance */}
             <div className="w-full flex flex-col space-y-2 text-center font-macondo">
               {[
-                { id: 'Start', label: 'Start', delay: '220ms' },
-                { id: 'ensemble', label: 'Ensemble', delay: '280ms' },
-                { id: 'termine', label: 'Termine', delay: '340ms' },
-                { id: 'kontakt', label: 'Kontakt', delay: '400ms' },
+                { id: 'Start', label: 'Start', openDelay: '180ms', closeDelay: '160ms' },
+                { id: 'ensemble', label: 'Ensemble', openDelay: '230ms', closeDelay: '120ms' },
+                { id: 'termine', label: 'Termine', openDelay: '280ms', closeDelay: '70ms' },
+                { id: 'kontakt', label: 'Kontakt', openDelay: '330ms', closeDelay: '30ms' },
               ].map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`w-full py-2.5 px-4 rounded-xl text-2xl text-[#F5F5DC] hover:text-[#0A0707] hover:bg-[#DAA520] transition-all duration-300 cursor-pointer active:scale-95 transform ${
-                    isMenuVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-5 scale-95'
+                    isMenuVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
                   }`}
-                  style={{ transitionDelay: isMenuVisible ? item.delay : '0ms' }}
+                  style={{ transitionDelay: isMenuVisible ? item.openDelay : item.closeDelay }}
                 >
                   {item.label}
                 </button>
@@ -306,18 +311,18 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Secondary links divider */}
             <div
-              className={`w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/30 to-transparent my-4 transition-all duration-400 ease-out ${
+              className={`w-full h-[1px] bg-gradient-to-r from-transparent via-[#DAA520]/30 to-transparent my-4 transition-all duration-300 ease-out ${
                 isMenuVisible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
               }`}
-              style={{ transitionDelay: isMenuVisible ? '450ms' : '0ms' }}
+              style={{ transitionDelay: isMenuVisible ? '380ms' : '15ms' }}
             />
 
             {/* Footer links in mobile menu - Stagger step final */}
             <div
-              className={`flex flex-wrap justify-center gap-3 text-xs font-sans text-[#F5F5DC]/80 transition-all duration-400 ease-out transform ${
+              className={`flex flex-wrap justify-center gap-3 text-xs font-sans text-[#F5F5DC]/80 transition-all duration-300 ease-out transform ${
                 isMenuVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
               }`}
-              style={{ transitionDelay: isMenuVisible ? '500ms' : '0ms' }}
+              style={{ transitionDelay: isMenuVisible ? '420ms' : '0ms' }}
             >
               <button
                 onClick={() => {

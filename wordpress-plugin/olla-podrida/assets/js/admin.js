@@ -218,6 +218,13 @@
                 }
             });
         });
+
+        // Load More Messages Button
+        $(document).on('click', '#olla-load-more-messages-btn', function(e) {
+            e.preventDefault();
+            $('.olla-hidden-message-row').fadeIn(250);
+            $(this).closest('.olla-load-more-container').slideUp(200);
+        });
     }
 
     /**

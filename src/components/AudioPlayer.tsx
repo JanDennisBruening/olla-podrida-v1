@@ -30,6 +30,10 @@ export const AudioPlayer: React.FC = () => {
       }
     };
 
+    // Expose globally so CookieBanner click can trigger playback synchronously
+    (window as any).__ollaPlayAudio = attemptPlay;
+    window.addEventListener('olla-play-audio', attemptPlay);
+
     if (config.autoplay) {
       // 1. Initial attempt
       attemptPlay();
@@ -58,6 +62,8 @@ export const AudioPlayer: React.FC = () => {
       });
 
       return () => {
+        delete (window as any).__ollaPlayAudio;
+        window.removeEventListener('olla-play-audio', attemptPlay);
         window.removeEventListener('preloader-finish', attemptPlay);
         window.removeEventListener('preloader-removed', attemptPlay);
         clearTimeout(t1);
@@ -71,6 +77,8 @@ export const AudioPlayer: React.FC = () => {
     }
 
     return () => {
+      delete (window as any).__ollaPlayAudio;
+      window.removeEventListener('olla-play-audio', attemptPlay);
       if (audioRef.current) {
         audioRef.current.pause();
       }

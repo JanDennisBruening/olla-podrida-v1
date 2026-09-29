@@ -525,7 +525,7 @@ class Olla_Podrida_Admin {
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <div>
                     <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Geplante Konzerte:</span>
-                    <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 4px;">
+                    <span style="background: #2e7d32; color: #ffffff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 4px;">
                         <?php echo count($upcoming); ?> anstehend
                     </span>
                     <?php if (!empty($past)): ?>
@@ -535,7 +535,7 @@ class Olla_Podrida_Admin {
                     <?php endif; ?>
                 </div>
                 <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 600;">
-                    + Neuer Termin
+                    + Neuen Termin anlegen
                 </a>
             </div>
 
@@ -543,7 +543,7 @@ class Olla_Podrida_Admin {
                 <div style="text-align: center; padding: 16px 10px; background: #faf8f5; border-radius: 6px; border: 1px dashed #d5ccbe;">
                     <p style="color: #666; font-style: italic; margin: 0 0 8px 0; font-size: 12px;">Aktuell sind keine bevorstehenden Konzerte eingetragen.</p>
                     <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210;">
-                        + Ersten Termin anlegen
+                        + Neuen Termin anlegen
                     </a>
                 </div>
             <?php else: ?>

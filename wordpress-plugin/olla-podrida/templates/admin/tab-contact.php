@@ -4,10 +4,81 @@ if (!defined('ABSPATH')) {
 }
 
 $contact = Olla_Podrida_Settings::get_section('contact');
-$messages = Olla_Podrida_Contact::get_messages(50);
+$messages = Olla_Podrida_Contact::get_messages(100);
+$total_messages = count($messages);
 ?>
 
 <div class="olla-contact-container">
+
+    <!-- 1. POSTEINGANG (Oben platziert): Eingegangene Anfragen -->
+    <div class="olla-card" style="margin-bottom: 30px;">
+        <div class="olla-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2>📥 Posteingang: Eingegangene Anfragen</h2>
+                <p>Hier werden alle Kontaktanfragen aus dem Frontend dauerhaft archiviert.</p>
+            </div>
+            <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 4px 12px; border-radius: 12px; font-size: 13px;">
+                <?php echo intval($total_messages); ?> <?php echo $total_messages === 1 ? 'Anfrage' : 'Anfragen'; ?>
+            </span>
+        </div>
+
+        <div class="olla-card-body">
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">Datum &amp; Zeit</th>
+                        <th style="width: 180px;">Absender / E-Mail</th>
+                        <th>Nachricht</th>
+                        <th style="width: 90px; text-align: right;">Aktion</th>
+                    </tr>
+                </thead>
+                <tbody id="olla-inbox-table-body">
+                    <?php if (empty($messages)): ?>
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 25px; color: #777; font-style: italic;">
+                                Noch keine Kontaktanfragen eingegangen.
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($messages as $idx => $msg): 
+                            $is_hidden = $idx >= 3;
+                        ?>
+                            <tr id="message-row-<?php echo esc_attr($msg['id']); ?>" class="<?php echo $is_hidden ? 'olla-hidden-message-row' : ''; ?>" style="<?php echo $is_hidden ? 'display: none;' : ''; ?>">
+                                <td>
+                                    <strong><?php echo esc_html(date_i18n('d.m.Y', strtotime($msg['created_at']))); ?></strong><br/>
+                                    <span style="font-size: 11px; color: #888;"><?php echo esc_html(date_i18n('H:i', strtotime($msg['created_at']))); ?> Uhr</span>
+                                </td>
+                                <td>
+                                    <strong style="color: #2c1810;"><?php echo esc_html($msg['name']); ?></strong><br/>
+                                    <a href="mailto:<?php echo esc_attr($msg['email']); ?>" style="color: #2271b1; text-decoration: none;">
+                                        <?php echo esc_html($msg['email']); ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap; font-size: 13px;">
+                                        <?php echo esc_html($msg['message']); ?>
+                                    </div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button type="button" class="button button-small button-link-delete olla-delete-message-btn" data-id="<?php echo esc_attr($msg['id']); ?>">Löschen</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <?php if ($total_messages > 3): ?>
+                <div class="olla-load-more-container" style="text-align: center; padding: 14px 0 4px 0; border-top: 1px solid #f0f0f1; margin-top: 10px;">
+                    <button type="button" id="olla-load-more-messages-btn" class="button button-secondary" style="font-weight: 600;">
+                        📥 Mehr laden (<?php echo ($total_messages - 3); ?> weitere Anfragen)
+                    </button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- 2. KONTAKTFORMULAR-EINSTELLUNGEN (Unten platziert) -->
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="olla-form-box">
         <input type="hidden" name="action" value="olla_podrida_save_settings" />
         <input type="hidden" name="section" value="contact" />
@@ -15,7 +86,7 @@ $messages = Olla_Podrida_Contact::get_messages(50);
 
         <div class="olla-card">
             <div class="olla-card-header">
-                <h2>✉️ Kontaktformular-Einstellungen (#kontakt)</h2>
+                <h2>⚙️ Kontaktformular-Einstellungen (#kontakt)</h2>
                 <p>Konfiguriere den E-Mail-Empfang, die Texte und das Porträt der Ensembleleitung.</p>
             </div>
 
@@ -90,54 +161,4 @@ $messages = Olla_Podrida_Contact::get_messages(50);
             </div>
         </div>
     </form>
-
-    <!-- Posteingang / Eingegangene Anfragen -->
-    <div class="olla-card" style="margin-top: 30px;">
-        <div class="olla-card-header">
-            <h2>📥 Posteingang: Eingegangene Anfragen</h2>
-            <p>Hier werden alle Kontaktanfragen aus dem Frontend zur Sicherheit dauerhaft archiviert.</p>
-        </div>
-
-        <div class="olla-card-body">
-            <table class="wp-list-table widefat fixed striped">
-                <thead>
-                    <tr>
-                        <th style="width: 140px;">Datum &amp; Zeit</th>
-                        <th style="width: 160px;">Absender / E-Mail</th>
-                        <th>Nachricht</th>
-                        <th style="width: 90px; text-align: right;">Aktion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($messages)): ?>
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: 20px; color: #777;">Noch keine Anfragen eingegangen.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($messages as $msg): ?>
-                            <tr id="message-row-<?php echo esc_attr($msg['id']); ?>">
-                                <td>
-                                    <?php echo esc_html(date_i18n('d.m.Y H:i', strtotime($msg['created_at']))); ?>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($msg['name']); ?></strong><br/>
-                                    <a href="mailto:<?php echo esc_attr($msg['email']); ?>" style="color: #0073aa; text-decoration: none;">
-                                        <?php echo esc_html($msg['email']); ?>
-                                    </a>
-                                </td>
-                                <td>
-                                    <div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap; font-size: 13px;">
-                                        <?php echo esc_html($msg['message']); ?>
-                                    </div>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button type="button" class="button button-small button-link-delete olla-delete-message-btn" data-id="<?php echo esc_attr($msg['id']); ?>">Löschen</button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
