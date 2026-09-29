@@ -17,12 +17,32 @@ import { ArchiveModal } from './components/ArchiveModal';
 import { PresseModal } from './components/PresseModal';
 
 import { Preloader } from './components/Preloader';
+import { CookieBanner } from './components/CookieBanner';
 import { ASSETS } from './data/siteContent';
 
 export default function App() {
   const [legalModalType, setLegalModalType] = useState<'impressum' | 'datenschutz' | 'cookies' | null>(null);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [presseModalOpen, setPresseModalOpen] = useState(false);
+
+  // Cookie consent state: if not yet accepted, banner appears first and preloader waits
+  const [hasConsent, setHasConsent] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        localStorage.getItem('olla_cookies_accepted') === 'true' ||
+        localStorage.getItem('olla_cookie_consent') === 'true'
+      );
+    }
+    return false;
+  });
+
+  const handleAcceptCookies = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('olla_cookies_accepted', 'true');
+      localStorage.setItem('olla_cookie_consent', 'true');
+    }
+    setHasConsent(true);
+  };
 
   useEffect(() => {
     // Disable smooth scrolling on mobile / touch viewports (< 768px), native touch scrolling is used instead
@@ -92,8 +112,16 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#070202] text-[#F5F5DC] flex flex-col font-sans selection:bg-[#DAA520] selection:text-[#F5F5DC]">
-      {/* 1:1 Preloader matching original site */}
-      <Preloader />
+      {/* 1:1 Preloader matching original site - waits for cookie consent on first visit */}
+      <Preloader canStart={hasConsent} />
+
+      {/* Atmospheric Medieval Cookie Consent Banner - displayed first before entering */}
+      {!hasConsent && (
+        <CookieBanner
+          onAccept={handleAcceptCookies}
+          onOpenPrivacy={() => handleOpenLegal('datenschutz')}
+        />
+      )}
 
       {/* 1:1 Fixed Navigation Ribbon with synchronized menu and archive state */}
       <Header

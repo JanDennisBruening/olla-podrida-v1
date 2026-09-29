@@ -67,10 +67,8 @@ foreach ($tabs as $key => $info) {
 
     <!-- Navigation Tabs -->
     <nav class="nav-tab-wrapper olla-nav-tab-wrapper">
-        <?php foreach ($filtered_tabs as $key => $info): 
-            $target_page = ($key === 'hero') ? 'olla-podrida' : 'olla-podrida-' . $key;
-        ?>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=' . $target_page . '&tab=' . $key)); ?>" 
+        <?php foreach ($filtered_tabs as $key => $info): ?>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=' . $key)); ?>" 
                class="nav-tab <?php echo $tab === $key ? 'nav-tab-active' : ''; ?>">
                 <?php echo esc_html($info['label']); ?>
             </a>

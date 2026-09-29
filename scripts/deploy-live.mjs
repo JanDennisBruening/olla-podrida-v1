@@ -47,7 +47,11 @@ async function main() {
     'templates/admin/tab-press.php',
   ].filter(Boolean);
 
-  console.log('🚀 Deploying v1.1.4 to https://cms.janbruening.de...');
+  const phpCode = fs.readFileSync(path.join(pluginDir, 'olla-podrida.php'), 'utf8');
+  const vMatch = phpCode.match(/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/);
+  const version = vMatch ? vMatch[1] : '1.1.5';
+
+  console.log(`🚀 Deploying v${version} to https://cms.janbruening.de...`);
   console.log(`📦 JS: ${jsFile}, CSS: ${cssFile}`);
 
   for (const rel of filesToDeploy) {
@@ -83,7 +87,7 @@ async function main() {
     const cleanJson = await cleanRes.json();
     console.log('🧹 Cleanup:', cleanJson.deleted);
   }
-  console.log('🎉 v1.1.4 live deployment complete!');
+  console.log(`🎉 v${version} live deployment complete!`);
 }
 
 main().catch(err => { console.error('Deploy error:', err); process.exit(1); });

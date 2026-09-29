@@ -122,8 +122,14 @@ class Olla_Podrida_Frontend {
                 'showHero' => !isset($m['show_hero']) || !empty($m['show_hero']),
                 'showEnsemble' => !isset($m['show_ensemble']) || !empty($m['show_ensemble']),
                 'showPress' => !isset($m['show_press']) || !empty($m['show_press']),
-                'offsetX' => intval($m['offset_x'] ?? 0),
-                'offsetY' => intval($m['offset_y'] ?? 0),
+                'offsetX' => intval($m['offset_x_desktop'] ?? $m['offset_x'] ?? 0),
+                'offsetY' => intval($m['offset_y_desktop'] ?? $m['offset_y'] ?? 0),
+                'offsetXDesktop' => intval($m['offset_x_desktop'] ?? $m['offset_x'] ?? 0),
+                'offsetYDesktop' => intval($m['offset_y_desktop'] ?? $m['offset_y'] ?? 0),
+                'offsetXTablet' => intval($m['offset_x_tablet'] ?? 0),
+                'offsetYTablet' => intval($m['offset_y_tablet'] ?? 0),
+                'offsetXMobile' => intval($m['offset_x_mobile'] ?? 0),
+                'offsetYMobile' => intval($m['offset_y_mobile'] ?? 0),
             ];
         }
 

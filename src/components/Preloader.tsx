@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { getAssets } from '../data/siteContent';
 
-export const Preloader: React.FC = () => {
+interface PreloaderProps {
+  canStart?: boolean;
+}
+
+export const Preloader: React.FC<PreloaderProps> = ({ canStart = true }) => {
   const assets = getAssets();
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
 
   useEffect(() => {
+    if (!canStart) return;
+
     // Smooth progress simulation from 0 to 100%
     const startTime = performance.now();
     const duration = 1200; // 1.2s silky loading duration
@@ -43,7 +49,7 @@ export const Preloader: React.FC = () => {
     animId = requestAnimationFrame(updateProgress);
 
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [canStart]);
 
   if (isRemoved) return null;
 

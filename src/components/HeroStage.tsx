@@ -245,6 +245,10 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       >
         {CANONICAL_STAGE_FIGURES.map((figure) => {
           const member = ensembleMembers.find((m) => m.id === figure.id);
+          if (member && member.showHero === false) {
+            return null;
+          }
+
           const cfg = viewportMode === 'mobile'
             ? figure.mobile
             : viewportMode === 'tablet'
@@ -252,6 +256,21 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
             : viewportMode === 'desktopLg'
             ? figure.desktopLg
             : figure.desktopXl;
+
+          // Viewport-specific fine-tuning offsets
+          let offX = 0;
+          let offY = 0;
+          if (viewportMode === 'mobile') {
+            offX = member?.offsetXMobile ?? member?.offsetX ?? 0;
+            offY = member?.offsetYMobile ?? member?.offsetY ?? 0;
+          } else if (viewportMode === 'tablet') {
+            offX = member?.offsetXTablet ?? member?.offsetX ?? 0;
+            offY = member?.offsetYTablet ?? member?.offsetY ?? 0;
+          } else {
+            // desktopLg or desktopXl
+            offX = member?.offsetXDesktop ?? member?.offsetX ?? 0;
+            offY = member?.offsetYDesktop ?? member?.offsetY ?? 0;
+          }
 
           // Determine authentic image source
           let imageSrc = figure.defaultImage;
@@ -278,8 +297,8 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
                 transition: 'transform 800ms cubic-bezier(0.16, 1, 0.3, 1), opacity 720ms ease-out',
                 transitionDelay: `${figure.entranceDelay}ms`,
                 transform: isLoaded
-                  ? 'translate3d(0, 0, 0)'
-                  : 'translate3d(0, 36px, 0)',
+                  ? `translate3d(${offX}px, ${offY}px, 0)`
+                  : `translate3d(${offX}px, ${offY + 36}px, 0)`,
                 opacity: isLoaded ? 1 : 0
               }}
             >

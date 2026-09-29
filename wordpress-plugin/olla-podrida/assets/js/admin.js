@@ -221,27 +221,39 @@
     }
 
     /**
-     * Musician Management: Nudge Buttons & Add Musician
+     * Musician Management: Viewport Tabs, Nudge Buttons & Add Musician
      */
     function initMusicianManagement() {
-        // Nudge offset buttons
+        // Viewport tab switcher
+        $(document).on('click', '.olla-vp-tab-btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var targetVp = $btn.data('vp');
+            var $stageBox = $btn.closest('.olla-musician-stage-box');
+            $stageBox.find('.olla-vp-tab-btn').removeClass('active').css({'background':'#f4efe6', 'border-color':'#d5c9b6', 'font-weight':'normal'});
+            $btn.addClass('active').css({'background':'#e2d7c5', 'border-color':'#bdae97', 'font-weight':'600'});
+            $stageBox.find('.olla-vp-panel').hide();
+            $stageBox.find('.olla-vp-' + targetVp).show();
+        });
+
+        // Nudge offset buttons for active viewport panel
         $(document).on('click', '.olla-nudge-btn', function(e) {
             e.preventDefault();
             var $btn = $(this);
             var axis = $btn.data('axis');
             var dir = parseInt($btn.data('dir'), 10) || 0;
-            var $group = $btn.closest('.olla-field-group');
-            var $input = axis === 'x' ? $group.find('.olla-offset-x') : $group.find('.olla-offset-y');
+            var $panel = $btn.closest('.olla-vp-panel');
+            var $input = axis === 'x' ? $panel.find('.olla-offset-x') : $panel.find('.olla-offset-y');
             var curVal = parseInt($input.val(), 10) || 0;
             $input.val(curVal + dir).trigger('change');
         });
 
-        // Nudge reset
+        // Nudge reset for active viewport panel
         $(document).on('click', '.olla-nudge-reset', function(e) {
             e.preventDefault();
-            var $group = $(this).closest('.olla-field-group');
-            $group.find('.olla-offset-x').val(0).trigger('change');
-            $group.find('.olla-offset-y').val(0).trigger('change');
+            var $panel = $(this).closest('.olla-vp-panel');
+            $panel.find('.olla-offset-x').val(0).trigger('change');
+            $panel.find('.olla-offset-y').val(0).trigger('change');
         });
 
         // Add Musician button
@@ -281,47 +293,106 @@
                         '<label><strong>Tooltip-Text beim Hovern:</strong></label>' +
                         '<input type="text" name="musicians[' + idx + '][tooltip]" value="Musiker" class="regular-text" />' +
                     '</div>' +
-                    '<div class="olla-field-group" style="background:#faf8f5; border:1px solid #e2d7c5; border-radius:6px; padding:10px 14px; margin-top:10px;">' +
-                        '<label style="display:block; margin-bottom:6px;"><strong>Sichtbarkeit in den Sektionen:</strong></label>' +
-                        '<div style="display:flex; gap:18px; flex-wrap:wrap;">' +
-                            '<label><input type="checkbox" name="musicians[' + idx + '][show_hero]" value="1" checked /> 🏰 Hero-Bühne (Oben)</label>' +
-                            '<label><input type="checkbox" name="musicians[' + idx + '][show_ensemble]" value="1" checked /> 📜 Ensemble-Galerie (Mitte)</label>' +
-                            '<label><input type="checkbox" name="musicians[' + idx + '][show_press]" value="1" checked /> 📰 Pressematerial (Download)</label>' +
+                    '<!-- SEKTION 1: Bühnenbild & Hero-Bühne -->' +
+                    '<div class="olla-musician-stage-box" style="background:#f9f7f2; border:1px solid #dcd3c1; border-radius:8px; padding:16px; margin-top:16px;">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e5dccb; padding-bottom:8px;">' +
+                            '<h4 style="margin:0; font-size:15px; color:#2c1810; display:flex; align-items:center; gap:6px;">' +
+                                '<span class="dashicons dashicons-format-image" style="color:#b45309;"></span>' +
+                                '<strong>1. Bühnenbild &amp; Hero-Bühne (Startbereich oben)</strong>' +
+                            '</h4>' +
+                            '<label style="cursor:pointer; font-weight:600; font-size:13px; color:#2c1810;">' +
+                                '<input type="checkbox" name="musicians[' + idx + '][show_hero]" value="1" checked /> Auf der Hero-Bühne anzeigen' +
+                            '</label>' +
                         '</div>' +
-                    '</div>' +
-                    '<div class="olla-field-group" style="background:#f0ede6; border:1px solid #d4c8b2; border-radius:6px; padding:10px 14px; margin-top:10px;">' +
-                        '<label style="display:block; margin-bottom:6px;"><strong>Positionierung &amp; Feinjustierung (Bühnen-Offset in Pixeln):</strong></label>' +
-                        '<div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">' +
-                            '<div style="display:flex; align-items:center; gap:6px;">' +
-                                '<span style="font-size:12px; font-weight:600;">X (Horizontal):</span>' +
-                                '<input type="number" name="musicians[' + idx + '][offset_x]" value="0" class="small-text olla-offset-x" style="width:60px;" />' +
-                                '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="-5" title="5px nach links">◄</button>' +
-                                '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="5" title="5px nach rechts">►</button>' +
-                            '</div>' +
-                            '<div style="display:flex; align-items:center; gap:6px;">' +
-                                '<span style="font-size:12px; font-weight:600;">Y (Vertikal):</span>' +
-                                '<input type="number" name="musicians[' + idx + '][offset_y]" value="0" class="small-text olla-offset-y" style="width:60px;" />' +
-                                '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="-5" title="5px nach oben">▲</button>' +
-                                '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="5" title="5px nach unten">▼</button>' +
-                            '</div>' +
-                            '<button type="button" class="button button-small olla-nudge-reset" title="Auf 0 zurücksetzen">↺ Reset</button>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="olla-grid-2" style="margin-top:10px;">' +
-                        '<div class="olla-field-group olla-media-field">' +
-                            '<label><strong>Bühnenbild / Freisteller (HeroStage):</strong></label>' +
+                        '<div class="olla-field-group olla-media-field" style="margin-bottom:14px;">' +
+                            '<label><strong>Freisteller-Bühnenbild (HeroStage):</strong></label>' +
                             '<div class="olla-media-row">' +
-                                '<input type="text" name="musicians[' + idx + '][stage_image]" id="stage_img_' + idx + '" value="" class="regular-text olla-media-input" />' +
-                                '<button type="button" class="button olla-media-upload-btn" data-target="#stage_img_' + idx + '" data-preview="#stage_preview_' + idx + '">Wählen</button>' +
+                                '<input type="text" name="musicians[' + idx + '][stage_image]" id="stage_img_' + idx + '" value="" class="regular-text olla-media-input" placeholder="https://.../figur.webp" />' +
+                                '<button type="button" class="button olla-media-upload-btn" data-target="#stage_img_' + idx + '" data-preview="#stage_preview_' + idx + '">Aus Mediathek wählen</button>' +
                             '</div>' +
                             '<div class="olla-media-preview" id="stage_preview_' + idx + '"></div>' +
                         '</div>' +
-                        '<div class="olla-field-group olla-media-field">' +
-                            '<label><strong>Porträtbild (Pergament-Galerie):</strong></label>' +
-                            '<div class="olla-media-row">' +
-                                '<input type="text" name="musicians[' + idx + '][portrait_image]" id="portrait_img_' + idx + '" value="" class="regular-text olla-media-input" />' +
-                                '<button type="button" class="button olla-media-upload-btn" data-target="#portrait_img_' + idx + '" data-preview="#portrait_preview_' + idx + '">Wählen</button>' +
+                        '<div class="olla-positioning-wrap" style="background:#fff; border:1px solid #d4c8b2; border-radius:6px; padding:12px 14px;">' +
+                            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">' +
+                                '<div><strong style="font-size:13px; color:#2c1810;">🎯 Positionierung &amp; Feinjustierung (Versatz in Pixeln):</strong></div>' +
+                                '<div class="olla-vp-tabs" style="display:flex; gap:4px;">' +
+                                    '<button type="button" class="button olla-vp-tab-btn active" data-vp="desktop" style="display:inline-flex; align-items:center; gap:4px; font-weight:600; background:#e2d7c5; border-color:#bdae97;"><span class="dashicons dashicons-desktop" style="font-size:14px; width:14px; height:14px;"></span> Desktop</button>' +
+                                    '<button type="button" class="button olla-vp-tab-btn" data-vp="tablet" style="display:inline-flex; align-items:center; gap:4px; background:#f4efe6; border-color:#d5c9b6;"><span class="dashicons dashicons-tablet" style="font-size:14px; width:14px; height:14px;"></span> Tablet</button>' +
+                                    '<button type="button" class="button olla-vp-tab-btn" data-vp="mobile" style="display:inline-flex; align-items:center; gap:4px; background:#f4efe6; border-color:#d5c9b6;"><span class="dashicons dashicons-smartphone" style="font-size:14px; width:14px; height:14px;"></span> Smartphone</button>' +
+                                '</div>' +
                             '</div>' +
+                            '<div class="olla-vp-panel olla-vp-desktop" style="display:block;">' +
+                                '<div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:85px;">X (Horizontal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_x_desktop]" value="0" class="small-text olla-offset-x" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="-5" title="5px nach links"><span class="dashicons dashicons-arrow-left-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="5" title="5px nach rechts"><span class="dashicons dashicons-arrow-right-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:70px;">Y (Vertikal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_y_desktop]" value="0" class="small-text olla-offset-y" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="-5" title="5px nach oben"><span class="dashicons dashicons-arrow-up-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="5" title="5px nach unten"><span class="dashicons dashicons-arrow-down-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<button type="button" class="button button-small olla-nudge-reset" title="Auf 0 zurücksetzen"><span class="dashicons dashicons-image-rotate"></span> Reset</button>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="olla-vp-panel olla-vp-tablet" style="display:none;">' +
+                                '<div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:85px;">X (Horizontal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_x_tablet]" value="0" class="small-text olla-offset-x" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="-5" title="5px nach links"><span class="dashicons dashicons-arrow-left-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="5" title="5px nach rechts"><span class="dashicons dashicons-arrow-right-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:70px;">Y (Vertikal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_y_tablet]" value="0" class="small-text olla-offset-y" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="-5" title="5px nach oben"><span class="dashicons dashicons-arrow-up-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="5" title="5px nach unten"><span class="dashicons dashicons-arrow-down-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<button type="button" class="button button-small olla-nudge-reset" title="Auf 0 zurücksetzen"><span class="dashicons dashicons-image-rotate"></span> Reset</button>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="olla-vp-panel olla-vp-mobile" style="display:none;">' +
+                                '<div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:85px;">X (Horizontal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_x_mobile]" value="0" class="small-text olla-offset-x" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="-5" title="5px nach links"><span class="dashicons dashicons-arrow-left-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="5" title="5px nach rechts"><span class="dashicons dashicons-arrow-right-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<div style="display:flex; align-items:center; gap:6px;">' +
+                                        '<span style="font-size:12px; font-weight:600; min-width:70px;">Y (Vertikal):</span>' +
+                                        '<input type="number" name="musicians[' + idx + '][offset_y_mobile]" value="0" class="small-text olla-offset-y" style="width:65px;" />' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="-5" title="5px nach oben"><span class="dashicons dashicons-arrow-up-alt2"></span></button>' +
+                                        '<button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="5" title="5px nach unten"><span class="dashicons dashicons-arrow-down-alt2"></span></button>' +
+                                    '</div>' +
+                                    '<button type="button" class="button button-small olla-nudge-reset" title="Auf 0 zurücksetzen"><span class="dashicons dashicons-image-rotate"></span> Reset</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<!-- SEKTION 2: Porträtbild & Pergament-Galerie -->' +
+                    '<div class="olla-musician-portrait-box" style="background:#faf8f5; border:1px solid #e2d7c5; border-radius:8px; padding:16px; margin-top:16px;">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eae1d2; padding-bottom:8px;">' +
+                            '<h4 style="margin:0; font-size:15px; color:#2c1810; display:flex; align-items:center; gap:6px;">' +
+                                '<span class="dashicons dashicons-id-alt" style="color:#b45309;"></span>' +
+                                '<strong>2. Porträtbild (Pergament-Galerie &amp; Presse)</strong>' +
+                            '</h4>' +
+                            '<div style="display:flex; gap:16px; flex-wrap:wrap;">' +
+                                '<label style="cursor:pointer; font-weight:600; font-size:13px; color:#2c1810;"><input type="checkbox" name="musicians[' + idx + '][show_ensemble]" value="1" checked /> In Ensemble-Galerie (#ensemble)</label>' +
+                                '<label style="cursor:pointer; font-weight:600; font-size:13px; color:#2c1810;"><input type="checkbox" name="musicians[' + idx + '][show_press]" value="1" checked /> Im Pressematerial (Download)</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="olla-field-group olla-media-field">' +
+                            '<label><strong>Porträtfoto:</strong></label>' +
+                            '<div class="olla-media-row">' +
+                                '<input type="text" name="musicians[' + idx + '][portrait_image]" id="portrait_img_' + idx + '" value="" class="regular-text olla-media-input" placeholder="https://.../portrait.webp" />' +
+                                '<button type="button" class="button olla-media-upload-btn" data-target="#portrait_img_' + idx + '" data-preview="#portrait_preview_' + idx + '">Aus Mediathek wählen</button>' +
+                            '</div>' +
+                            '<p class="description" style="font-size:12px; color:#666; margin-top:4px;">Wird auf den Pergamentkarten im Ensemblebereich automatisch zentriert (keine Feinjustierung erforderlich).</p>' +
                             '<div class="olla-media-preview" id="portrait_preview_' + idx + '"></div>' +
                         '</div>' +
                     '</div>' +
@@ -330,5 +401,6 @@
             $('#olla-musicians-list').append(html);
         });
     }
+
 
 })(jQuery);

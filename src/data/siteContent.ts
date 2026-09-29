@@ -21,6 +21,12 @@ export interface EnsembleMember {
   showPress?: boolean;
   offsetX?: number;
   offsetY?: number;
+  offsetXDesktop?: number;
+  offsetYDesktop?: number;
+  offsetXTablet?: number;
+  offsetYTablet?: number;
+  offsetXMobile?: number;
+  offsetYMobile?: number;
 }
 
 export interface ConcertEvent {

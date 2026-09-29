@@ -63,15 +63,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
           />
         </div>
 
-        {/* Footer Navigation Buttons: Two cleanly stacked rows with minimal line gap */}
-        <div className="w-full flex flex-col items-center gap-y-1 sm:gap-y-1.5 mb-4 font-macondo text-[0.92rem] sm:text-[1.02rem] md:text-[1.12rem] font-medium text-[#F5F5DC] text-center">
-          
-          {/* Main sections row */}
-          <div
-            className={`flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8 transition-all duration-700 delay-150 ease-out transform ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
+        {/* Footer Navigation Buttons: Single row on Desktop (lg:), two cleanly stacked rows on Mobile/Tablet */}
+        <div
+          className={`w-full flex flex-col lg:flex-row items-center justify-center gap-y-1.5 lg:gap-y-0 gap-x-0 lg:gap-x-7 xl:gap-x-8 mb-4 font-macondo text-[0.92rem] sm:text-[1.02rem] md:text-[1.08rem] lg:text-[1.12rem] font-medium text-[#F5F5DC] text-center transition-all duration-700 delay-150 ease-out transform ${
+            isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          {/* Main sections group */}
+          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 lg:gap-x-7 xl:gap-x-8">
             <button
               onClick={() => scrollTo('ensemble')}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
@@ -98,12 +97,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             </button>
           </div>
 
-          {/* Legal, press and cookies row */}
-          <div
-            className={`flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8 transition-all duration-700 delay-250 ease-out transform ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
+          {/* Legal, press and cookies group */}
+          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 lg:gap-x-7 xl:gap-x-8">
             <button
               onClick={onOpenPresse}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
@@ -167,7 +162,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             {currentYear} © Ensemble Olla Podrida
           </p>
           <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
-            Design, Konzept und Webentwicklung: Jan Brüning ·{' '}
+            Design, Konzept und Webentwicklung: Jan Dennis Brüning ·{' '}
             <a
               href="https://www.janbruening.de"
               target="_blank"

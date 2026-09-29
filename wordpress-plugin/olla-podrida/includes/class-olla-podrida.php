@@ -27,6 +27,7 @@ class Olla_Podrida {
         add_action('admin_head', [$this, 'inject_favicon'], 1);
         add_action('login_head', [$this, 'inject_favicon'], 1);
         add_filter('get_site_icon_url', [$this, 'filter_site_icon_url'], 99);
+        add_filter('has_site_icon', [$this, 'filter_has_site_icon'], 99);
 
         Olla_Podrida_Admin::init();
         Olla_Podrida_Frontend::init();
@@ -47,9 +48,23 @@ class Olla_Podrida {
         $ico_url = OLLA_PODRIDA_URL . 'assets/dist/images/favicon.ico?v=' . OLLA_PODRIDA_VERSION;
 
         echo '<link rel="icon" type="image/x-icon" href="' . esc_url($ico_url) . '" />' . "\n";
+        echo '<link rel="icon" type="image/png" sizes="32x32" href="' . esc_url($icon_url) . '" />' . "\n";
+        echo '<link rel="icon" type="image/png" sizes="192x192" href="' . esc_url($icon_url) . '" />' . "\n";
         echo '<link rel="icon" type="image/png" sizes="512x512" href="' . esc_url($icon_url) . '" />' . "\n";
         echo '<link rel="shortcut icon" type="image/png" href="' . esc_url($icon_url) . '" />' . "\n";
         echo '<link rel="apple-touch-icon" href="' . esc_url($icon_url) . '" />' . "\n";
+        echo '<meta name="msapplication-TileImage" content="' . esc_url($icon_url) . '" />' . "\n";
+    }
+
+    /**
+     * Fallback for themes that check has_site_icon().
+     */
+    public function filter_has_site_icon($has_icon) {
+        $settings = Olla_Podrida_Settings::get_section('settings');
+        if (isset($settings['favicon_enabled']) && empty($settings['favicon_enabled'])) {
+            return $has_icon;
+        }
+        return true;
     }
 
     /**

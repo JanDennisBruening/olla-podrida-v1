@@ -70,6 +70,20 @@ class Olla_Podrida_Admin {
                 }
             );
         }
+
+        // 3. Register hidden page hook for olla-podrida-{$first_key}
+        // Prevents native WordPress "Du bist leider nicht berechtigt" if someone visits page=olla-podrida-settings directly
+        add_submenu_page(
+            null,
+            $first_info['label'] . ' - Olla Podrida',
+            $first_info['label'],
+            'read',
+            'olla-podrida-' . $first_key,
+            function() use ($first_key) {
+                $_GET['tab'] = $first_key;
+                self::render_admin_page();
+            }
+        );
     }
 
     public static function enqueue_admin_assets($hook) {
@@ -196,9 +210,14 @@ class Olla_Podrida_Admin {
                             'portrait_image' => esc_url_raw($m['portrait_image'] ?? ''),
                             'show_hero' => !empty($m['show_hero']),
                             'show_ensemble' => !empty($m['show_ensemble']),
-                            'show_press' => !empty($m['show_press']),
-                            'offset_x' => intval($m['offset_x'] ?? 0),
-                            'offset_y' => intval($m['offset_y'] ?? 0),
+                            'offset_x' => intval($m['offset_x_desktop'] ?? $m['offset_x'] ?? 0),
+                            'offset_y' => intval($m['offset_y_desktop'] ?? $m['offset_y'] ?? 0),
+                            'offset_x_desktop' => intval($m['offset_x_desktop'] ?? $m['offset_x'] ?? 0),
+                            'offset_y_desktop' => intval($m['offset_y_desktop'] ?? $m['offset_y'] ?? 0),
+                            'offset_x_tablet' => intval($m['offset_x_tablet'] ?? 0),
+                            'offset_y_tablet' => intval($m['offset_y_tablet'] ?? 0),
+                            'offset_x_mobile' => intval($m['offset_x_mobile'] ?? 0),
+                            'offset_y_mobile' => intval($m['offset_y_mobile'] ?? 0),
                         ];
                     }
                     Olla_Podrida_Settings::update_section('musicians', $musicians);
@@ -321,9 +340,8 @@ class Olla_Podrida_Admin {
                 break;
         }
 
-        $redirect_page = ($section === 'settings' || $section === 'hero') ? 'olla-podrida' : 'olla-podrida-' . $section;
         wp_redirect(add_query_arg([
-            'page' => $redirect_page,
+            'page' => 'olla-podrida',
             'tab' => $section,
             'updated' => 'true'
         ], admin_url('admin.php')));

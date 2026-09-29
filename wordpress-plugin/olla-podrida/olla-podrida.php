@@ -3,7 +3,7 @@
  * Plugin Name: Ensemble Olla Podrida
  * Plugin URI: https://olla-podrida.de
  * Description: Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida (Klangvielfalt aus Mittelalter und Renaissance). Bietet eine theatralische Hero-Bühne, Pergament-Ensemble-Präsentation, Termine- und Konzertarchiv-Verwaltung, Kontaktformular mit Posteingang, konfigurierbaren Hintergrundmusik-Player und Rollen-Berechtigungssteuerung.
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: Jan Dennis Brüning
  * Author URI: https://janbruening.de
  * License: GPL v2 or later
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OLLA_PODRIDA_VERSION', '1.1.4');
+define('OLLA_PODRIDA_VERSION', '1.1.5');
 define('OLLA_PODRIDA_FILE', __FILE__);
 define('OLLA_PODRIDA_PATH', plugin_dir_path(__FILE__));
 define('OLLA_PODRIDA_URL', plugin_dir_url(__FILE__));
