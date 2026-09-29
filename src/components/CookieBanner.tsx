@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getAssets } from '../data/siteContent';
+import { audioManager } from '../utils/audioManager';
 import { ShieldCheck, Music2, Lock } from 'lucide-react';
 
 interface CookieBannerProps {
@@ -12,15 +13,17 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
   const [isClosing, setIsClosing] = useState(false);
 
   const handleAccept = () => {
-    // 1. Instantly unlock audio playback inside the synchronous user activation gesture!
-    if (typeof (window as any).__ollaPlayAudio === 'function') {
-      try {
-        (window as any).__ollaPlayAudio();
-      } catch {}
-    }
-    window.dispatchEvent(new CustomEvent('olla-play-audio'));
+    // 1. Immediately start audio playback synchronously inside the user's direct click gesture!
+    audioManager.play();
 
-    // 2. Smoothly animate closure
+    // 2. Smoothly animate closure and notify parent
+    setIsClosing(true);
+    setTimeout(() => {
+      onAccept();
+    }, 350);
+  };
+
+  const handleEssential = () => {
     setIsClosing(true);
     setTimeout(() => {
       onAccept();
@@ -48,11 +51,16 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
         <div className="absolute bottom-2 left-2 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
         <div className="absolute bottom-2 right-2 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
 
-        {/* Ornate Header with Emblem */}
+        {/* Ornate Header with Enlarged Logo Emblem (+20% for optimal recognition) */}
         <div className="flex flex-col items-center text-center mb-5">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 mb-3 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border border-dashed border-[#DAA520]/60 animate-spin" style={{ animationDuration: '30s' }} />
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#1e130c] border border-[#DAA520] p-1.5 shadow-[0_0_15px_rgba(218,165,32,0.4)] flex items-center justify-center">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 mb-3 flex items-center justify-center">
+            {/* Spinning antique dashed outer circle */}
+            <div
+              className="absolute inset-0 rounded-full border border-dashed border-[#DAA520]/60 animate-spin"
+              style={{ animationDuration: '30s' }}
+            />
+            {/* Inner illuminated medallion container */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#1e130c] border-2 border-[#DAA520] p-1.5 shadow-[0_0_20px_rgba(218,165,32,0.5)] flex items-center justify-center">
               <img
                 src={assets.footerSeal}
                 alt="Ensemble Olla Podrida"
@@ -105,7 +113,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </button>.
         </p>
 
-        {/* Action Buttons */}
+        {/* Action Buttons: "Alles klar, verstanden!" plays music immediately */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             type="button"
@@ -116,7 +124,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </button>
           <button
             type="button"
-            onClick={handleAccept}
+            onClick={handleEssential}
             className="w-full sm:w-auto py-2 sm:py-2.5 px-4 rounded-xl border border-[#DAA520]/40 text-[#D1C7AC] hover:text-[#F5F5DC] hover:border-[#DAA520] font-macondo text-sm transition-all cursor-pointer text-center"
           >
             Nur essenzielle Cookies

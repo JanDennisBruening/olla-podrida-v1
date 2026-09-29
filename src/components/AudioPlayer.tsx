@@ -1,108 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAudioConfig } from '../data/siteContent';
+import { audioManager } from '../utils/audioManager';
 
 export const AudioPlayer: React.FC = () => {
   const config = getAudioConfig();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(audioManager.isPlaying());
 
-  const audioSrc = config.src || '';
-  const initialVolume = typeof config.volume === 'number' ? config.volume : 0.5;
   const buttonText = config.buttonText || '• Musik an / aus • Musik an / aus';
 
   useEffect(() => {
-    if (!config.enabled || !audioSrc.trim()) return;
-
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = initialVolume;
-
-    const attemptPlay = () => {
-      if (!audioRef.current) return;
-      const promise = audioRef.current.play();
-      if (promise !== undefined) {
-        promise.then(() => {
-          setIsPlaying(true);
-        }).catch(() => {
-          // Playback blocked pending user engagement
-        });
-      }
-    };
-
-    // Expose globally so CookieBanner click can trigger playback synchronously
-    (window as any).__ollaPlayAudio = attemptPlay;
-    window.addEventListener('olla-play-audio', attemptPlay);
-
-    if (config.autoplay) {
-      // 1. Initial attempt
-      attemptPlay();
-
-      // 2. Retry on preloader events
-      window.addEventListener('preloader-finish', attemptPlay);
-      window.addEventListener('preloader-removed', attemptPlay);
-
-      // 3. Staggered retry timers right after preloader finishes
-      const t1 = setTimeout(attemptPlay, 600);
-      const t2 = setTimeout(attemptPlay, 1300);
-      const t3 = setTimeout(attemptPlay, 2000);
-
-      // 4. Any user gesture (including scroll, wheel, touch, click, pointerdown)
-      const events = ['click', 'touchstart', 'touchend', 'pointerdown', 'pointerup', 'keydown', 'wheel', 'scroll'] as const;
-
-      const onUserInteraction = () => {
-        attemptPlay();
-        if (audioRef.current && !audioRef.current.paused) {
-          events.forEach((ev) => window.removeEventListener(ev, onUserInteraction));
-        }
-      };
-
-      events.forEach((ev) => {
-        window.addEventListener(ev, onUserInteraction, { passive: true });
-      });
-
-      return () => {
-        delete (window as any).__ollaPlayAudio;
-        window.removeEventListener('olla-play-audio', attemptPlay);
-        window.removeEventListener('preloader-finish', attemptPlay);
-        window.removeEventListener('preloader-removed', attemptPlay);
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-        events.forEach((ev) => window.removeEventListener(ev, onUserInteraction));
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
-      };
-    }
-
-    return () => {
-      delete (window as any).__ollaPlayAudio;
-      window.removeEventListener('olla-play-audio', attemptPlay);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    };
-  }, [audioSrc, config.autoplay, initialVolume]);
+    // Synchronize play state with global audio manager
+    const unsubscribe = audioManager.subscribe((playing) => {
+      setIsPlaying(playing);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.play().then(() => {
-        setIsPlaying(true);
-      }).catch((err) => {
-        console.warn('Playback error:', err);
-        setIsPlaying(false);
-      });
-    }
+    audioManager.toggle();
   };
 
-  if (!config.enabled || !audioSrc.trim()) {
+  if (!config.enabled) {
     return null;
   }
 
@@ -110,20 +28,6 @@ export const AudioPlayer: React.FC = () => {
     <div
       className="audio-player fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[10030] select-none"
     >
-      <audio
-        ref={audioRef}
-        src={audioSrc}
-        preload="auto"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onEnded={() => {
-          setIsPlaying(false);
-          if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-          }
-        }}
-      />
-
       <button
         type="button"
         onClick={togglePlay}
@@ -138,7 +42,7 @@ export const AudioPlayer: React.FC = () => {
           }`}
         />
 
-        {/* Circular Curved SVG Text "MUSIK AN / AUS" - Rotates continuously to signal interactivity, spins with energy when playing */}
+        {/* Circular Curved SVG Text "MUSIK AN / AUS" - Rotates continuously, spins faster with energy when playing */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none origin-center"
           style={{
