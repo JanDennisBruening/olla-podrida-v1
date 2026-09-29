@@ -18,40 +18,56 @@ export const AudioPlayer: React.FC = () => {
 
     audio.volume = initialVolume;
 
-    if (config.autoplay) {
-      // Direct autoplay attempt
-      const promise = audio.play();
+    const attemptPlay = () => {
+      if (!audioRef.current) return;
+      const promise = audioRef.current.play();
       if (promise !== undefined) {
         promise.then(() => {
           setIsPlaying(true);
         }).catch(() => {
-          // If browser blocks non-gesture autoplay, start cleanly on very first user interaction
-          let hasTriggered = false;
-          const events = ['click', 'touchstart', 'pointerdown', 'keydown'] as const;
-
-          const cleanup = () => {
-            events.forEach((ev) => {
-              window.removeEventListener(ev, startOnGesture);
-            });
-          };
-
-          const startOnGesture = () => {
-            if (hasTriggered) return;
-            hasTriggered = true;
-            cleanup();
-
-            if (audioRef.current && audioRef.current.paused) {
-              audioRef.current.play().then(() => {
-                setIsPlaying(true);
-              }).catch(() => {});
-            }
-          };
-
-          events.forEach((ev) => {
-            window.addEventListener(ev, startOnGesture, { once: true, passive: true });
-          });
+          // Playback blocked pending user engagement
         });
       }
+    };
+
+    if (config.autoplay) {
+      // 1. Initial attempt
+      attemptPlay();
+
+      // 2. Retry on preloader events
+      window.addEventListener('preloader-finish', attemptPlay);
+      window.addEventListener('preloader-removed', attemptPlay);
+
+      // 3. Staggered retry timers right after preloader finishes
+      const t1 = setTimeout(attemptPlay, 600);
+      const t2 = setTimeout(attemptPlay, 1300);
+      const t3 = setTimeout(attemptPlay, 2000);
+
+      // 4. Any user gesture (including scroll, wheel, touch, click, pointerdown)
+      const events = ['click', 'touchstart', 'touchend', 'pointerdown', 'pointerup', 'keydown', 'wheel', 'scroll'] as const;
+
+      const onUserInteraction = () => {
+        attemptPlay();
+        if (audioRef.current && !audioRef.current.paused) {
+          events.forEach((ev) => window.removeEventListener(ev, onUserInteraction));
+        }
+      };
+
+      events.forEach((ev) => {
+        window.addEventListener(ev, onUserInteraction, { passive: true });
+      });
+
+      return () => {
+        window.removeEventListener('preloader-finish', attemptPlay);
+        window.removeEventListener('preloader-removed', attemptPlay);
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        events.forEach((ev) => window.removeEventListener(ev, onUserInteraction));
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+      };
     }
 
     return () => {

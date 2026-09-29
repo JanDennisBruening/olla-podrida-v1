@@ -112,18 +112,18 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
           
           {/* Left Column: Heading + Text extending right up to the contact form + Susanne underneath */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-800 ease-out z-20 ${
+            className={`md:col-span-6 lg:col-span-6 flex flex-col text-center md:text-left items-center md:items-start transition-all duration-800 ease-out z-20 ${
               isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
             {/* Heading */}
-            <h2 className="font-macondo text-[2.2rem] min-[380px]:text-[2.5rem] sm:text-[3rem] md:text-[3rem] lg:text-[3.8rem] text-[#DAA520] font-normal tracking-wide text-left mb-3 sm:mb-4 md:mb-5 leading-tight">
+            <h2 className="font-macondo text-[2.2rem] min-[380px]:text-[2.5rem] sm:text-[3rem] md:text-[3rem] lg:text-[3.8rem] text-[#DAA520] font-normal tracking-wide text-center md:text-left mb-3 sm:mb-4 md:mb-5 leading-tight">
               Kontakt &amp; Anfragen
             </h2>
 
-            {/* Desktop Intro Text - Spans broadly right up to the contact card */}
+            {/* Desktop & Mobile Intro Text */}
             <div
-              className={`w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-left pr-0 md:pr-2 lg:pr-4 transition-all duration-700 delay-150 ease-out ${
+              className={`w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-center md:text-left pr-0 md:pr-2 lg:pr-4 transition-all duration-700 delay-150 ease-out ${
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
             >
@@ -141,30 +141,30 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
               </p>
             </div>
 
-            {/* Susanne figure: with its own dedicated observer for a graceful entrance */}
+            {/* Susanne figure: centered on mobile, enlarged by 30%, slightly hovering over top edge of contact form on mobile */}
             <div
               ref={portraitRef}
-              className="w-full flex justify-start items-center mt-5 sm:mt-6 md:mt-8 z-30 pointer-events-none"
+              className="w-full flex justify-center md:justify-start items-center mt-6 sm:mt-8 md:mt-8 mb-[-3rem] min-[380px]:mb-[-3.6rem] sm:mb-[-4.2rem] md:mb-0 z-30 pointer-events-none"
             >
               <div
-                className={`w-32 sm:w-40 md:w-44 lg:w-52 transition-all duration-800 ease-out transform ${
+                className={`w-[10.5rem] min-[380px]:w-[11.8rem] sm:w-[13.5rem] md:w-44 lg:w-52 transition-all duration-800 ease-out transform ${
                   portraitInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-90'
                 }`}
               >
                 <img
                   src={contactConfig.portrait || resolveAssetUrl('/images/Susanne_klein.webp')}
                   alt="Susanne spielt vergnügt auf der Flöte"
-                  className="w-full h-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-300 pointer-events-auto"
+                  className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] hover:scale-105 transition-transform duration-300 pointer-events-auto"
                   loading="lazy"
                 />
               </div>
             </div>
           </div>
 
-          {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
+          {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png + extra horizontal margin on mobile */}
           <div
             ref={formRef}
-            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-900 ease-out z-10 ${
+            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative mt-0 px-3 min-[400px]:px-5 sm:px-8 md:px-0 transition-all duration-900 ease-out z-10 ${
               formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.97]'
             }`}
           >

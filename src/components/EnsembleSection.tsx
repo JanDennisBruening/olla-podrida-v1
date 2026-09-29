@@ -77,19 +77,19 @@ export const EnsembleSection: React.FC = () => {
             <div className={`hidden lg:flex w-full flex-row items-center justify-between gap-5 xl:gap-8 mb-5 overflow-visible transition-all duration-700 delay-200 ease-out ${
               isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
-              {/* Paragraph 1 (left column: ~64%) */}
-              <div className="w-[63%] xl:w-[65%] font-macondo text-[1.3rem] font-semibold text-[#0A0707] leading-[1.85rem] text-left">
+              {/* Paragraph 1 (left column: ~60%) */}
+              <div className="w-[60%] xl:w-[60%] font-macondo text-[1.3rem] font-semibold text-[#0A0707] leading-[1.85rem] text-left">
                 <p>
                   {ensembleConfig.paragraph1 || 'Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.'}
                 </p>
               </div>
 
-              {/* Suppentopf Illustration (right column: ~35%) - generous breathing room so all music notes are completely visible */}
-              <div className="w-[37%] xl:w-[35%] flex justify-center items-center overflow-visible p-2">
+              {/* Suppentopf Illustration (right column: ~40%) - enlarged by 20% */}
+              <div className="w-[40%] xl:w-[40%] flex justify-center items-center overflow-visible p-2">
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-full max-w-[17.5rem] xl:max-w-[18.5rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-full max-w-[21rem] xl:max-w-[22.2rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
@@ -106,15 +106,15 @@ export const EnsembleSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Suppentopf Illustration on Mobile & Tablet: Centered between text parts & ample space so notes are never clipped */}
-            <div className={`lg:hidden w-full flex justify-center my-4 sm:my-6 md:my-7 overflow-visible transition-all duration-700 delay-250 ease-out ${
+            {/* Suppentopf Illustration on Mobile & Tablet: Centered between text parts & enlarged by 20% */}
+            <div className={`lg:hidden w-full flex justify-center my-5 sm:my-7 md:my-8 overflow-visible transition-all duration-700 delay-250 ease-out ${
               isInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}>
               <div className="relative flex items-center justify-center p-2 overflow-visible">
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-[14.5rem] sm:w-[18rem] md:w-[21rem] max-w-full h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-[17.4rem] sm:w-[21.6rem] md:w-[25.2rem] max-w-full h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
