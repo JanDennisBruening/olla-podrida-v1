@@ -29,6 +29,9 @@ class Olla_Podrida {
         add_filter('get_site_icon_url', [$this, 'filter_site_icon_url'], 99);
         add_filter('has_site_icon', [$this, 'filter_has_site_icon'], 99);
 
+        // Security HTTP Headers (anti-sniffing, framing, referrer)
+        add_action('send_headers', [$this, 'send_security_headers']);
+
         Olla_Podrida_Admin::init();
         Olla_Podrida_Frontend::init();
     }
@@ -79,6 +82,18 @@ class Olla_Podrida {
         return !empty($settings['favicon_url']) 
             ? $settings['favicon_url'] 
             : (OLLA_PODRIDA_URL . 'assets/dist/images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION);
+    }
+
+    /**
+     * Send robust HTTP security headers to protect against clickjacking, MIME sniffing, and referrer leaks.
+     */
+    public function send_security_headers() {
+        if (!is_admin() && !headers_sent()) {
+            header('X-Content-Type-Options: nosniff');
+            header('X-Frame-Options: SAMEORIGIN');
+            header('Referrer-Policy: strict-origin-when-cross-origin');
+            header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+        }
     }
 
     public static function activate() {

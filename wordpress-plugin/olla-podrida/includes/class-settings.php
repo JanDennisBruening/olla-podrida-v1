@@ -231,8 +231,91 @@ class Olla_Podrida_Settings {
             'legal' => [
                 'seal_image' => $assets_url . '3_Zeichenflaeche-1-Kopie-10-1024x1024.png',
                 'copyright_text' => '© ' . date('Y') . ' Ensemble Olla Podrida',
-                'impressum_html' => "<p><strong>Angaben gemäß § 5 DDG:</strong></p><p>Ensemble Olla Podrida<br/>Susanne Hoffmann (Ensembleleitung)<br/>Im Ort 4, 49356 Diepholz, Deutschland</p><p><strong>Kontakt:</strong><br/>Tel.: +49 174 186 3418<br/>E-Mail: info@olla-podrida.de</p><p><strong>Design, Konzept &amp; Webentwicklung:</strong><br/>Jan Brüning · <a href=\"https://www.janbruening.de\" target=\"_blank\" rel=\"noopener noreferrer\">www.janbruening.de</a></p><p><strong>Fotografie:</strong><br/>© Jan Dennis Brüning</p>",
-                'datenschutz_html' => "<p>Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Diese Website erhebt keine Tracking-Cookies und bindet alle Schriften sowie Medien lokal ein. Hosting durch die IONOS SE (Elgendorfer Str. 57, 56410 Montabaur) mit abgeschlossenem Vertrag zur Auftragsverarbeitung (AVV gem. Art. 28 DSGVO).</p>",
+                'impressum_html' => "<p><strong>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz):</strong></p>
+<p><strong>Ensemble Olla Podrida</strong><br/>
+Susanne Hoffmann (Ensembleleitung)<br/>
+Im Ort 4, 49356 Diepholz, Deutschland<br/>
+Tel.: +49 174 186 3418<br/>
+E-Mail: info@olla-podrida.de<br/>
+Web: www.olla-podrida.de</p>
+<hr/>
+<p><strong>Design, Konzept &amp; Webentwicklung:</strong><br/>
+Jan Dennis Brüning · <a href=\"https://www.janbruening.de\" target=\"_blank\" rel=\"noopener noreferrer\">www.janbruening.de</a><br/>
+© Jan Dennis Brüning</p>
+<hr/>
+<p><strong>Bildnachweise &amp; Schriften:</strong><br/>
+• <strong>Fotografie:</strong> © Jan Dennis Brüning<br/>
+• <strong>Schriften (Webfonts):</strong> Macondo Swash Caps, Dosis, Roboto Slab – 100% lokal gehostet ohne externe Serververbindungen.<br/>
+• <strong>Stockmedia &amp; Grafik:</strong> Licensed by Jan Dennis Brüning 2024 @ freepik.com (Premium Lizenz)</p>
+<hr/>
+<p><strong>Haftung für Inhalte:</strong><br/>
+Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen. Bei Bekanntwerden von Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+<p><strong>Haftung für Links:</strong><br/>
+Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.</p>
+<p><strong>Urheberrecht:</strong><br/>
+Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung und jede Art der Verwertung außerhalb der Urheberrechtsgrenzen bedürfen der schriftlichen Zustimmung.</p>",
+                'datenschutz_html' => "<div class=\"olla-datenschutz-document\">
+<p class=\"olla-legal-badge\"><strong>Datenschutzerklärung nach der EU-Datenschutz-Grundverordnung (DSGVO) und dem Digitale-Dienste-Gesetz (DDG)</strong></p>
+
+<h3>1. Verantwortliche Stelle</h3>
+<p><strong>Ensemble Olla Podrida</strong><br/>
+Susanne Hoffmann (Ensembleleitung)<br/>
+Im Ort 4, 49356 Diepholz, Deutschland<br/>
+Tel.: +49 174 186 3418<br/>
+E-Mail: info@olla-podrida.de<br/>
+Web: www.olla-podrida.de</p>
+
+<h3>2. Erhebung und Speicherung personenbezogener Daten sowie Art und Zweck von deren Verwendung</h3>
+<h4>a) Beim Aufruf der Website (Server-Logfiles)</h4>
+<p>Beim Aufrufen unserer Website www.olla-podrida.de werden durch den auf Ihrem Endgerät zum Einsatz kommenden Browser automatisch Informationen an den Server unserer Website gesendet. Diese Informationen werden temporär in den Server-Logfiles gespeichert:</p>
+<ul>
+<li>IP-Adresse des anfragenden Rechners</li>
+<li>Datum und Uhrzeit des Zugriffs</li>
+<li>Name und URL der abgerufenen Datei</li>
+<li>Übertragene Datenmenge und Zugriffsstatus (HTTP-Statuscode)</li>
+<li>Website, von der aus der Zugriff erfolgt (Referrer-URL)</li>
+<li>Verwendeter Browser und ggf. das Betriebssystem Ihres Rechners</li>
+</ul>
+<p>Die genannten Daten werden zur Gewährleistung eines reibungslosen Verbindungsaufbaus der Website, einer komfortablen Nutzung unserer Website sowie zur Auswertung der Systemsicherheit und -stabilität verarbeitet. Die Rechtsgrundlage für die Datenverarbeitung ist Art. 6 Abs. 1 S. 1 lit. f DSGVO.</p>
+
+<h4>b) Bei Nutzung unseres Kontaktformulars</h4>
+<p>Bei Fragen jeglicher Art bieten wir Ihnen die Möglichkeit, mit uns über ein auf der Website bereitgestelltes Formular Kontakt aufzunehmen. Dabei ist die Angabe einer gültigen E-Mail-Adresse und Ihres Namens erforderlich, damit wir wissen, von wem die Anfrage stammt und um diese beantworten zu können. Die Datenverarbeitung zum Zwecke der Kontaktaufnahme mit uns erfolgt nach Art. 6 Abs. 1 S. 1 lit. a DSGVO auf Grundlage Ihrer freiwillig erteilten Einwilligung bzw. nach Art. 6 Abs. 1 lit. b DSGVO bei vorvertraglichen Anfragen (z. B. Konzertbuchungen).</p>
+
+<h4>c) Kontaktaufnahme per E-Mail oder Telefon</h4>
+<p>Wenn Sie uns per E-Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Kontaktdaten, Inhalt) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
+
+<h3>3. Weitergabe von Daten</h3>
+<p>Eine Übermittlung Ihrer persönlichen Daten an Dritte zu anderen als den im Folgenden aufgeführten Zwecken findet nicht statt. Wir geben Ihre persönlichen Daten nur an Dritte weiter, wenn:</p>
+<ul>
+<li>Sie Ihre nach Art. 6 Abs. 1 S. 1 lit. a DSGVO ausdrückliche Einwilligung dazu erteilt haben,</li>
+<li>die Weitergabe nach Art. 6 Abs. 1 S. 1 lit. f DSGVO zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen erforderlich ist,</li>
+<li>für den Fall, dass für die Weitergabe nach Art. 6 Abs. 1 S. 1 lit. c DSGVO eine gesetzliche Verpflichtung besteht.</li>
+</ul>
+
+<h3>4. Hosting durch die IONOS SE &amp; Auftragsverarbeitung (AVV)</h3>
+<p>Wir hosten unsere Website bei der <strong>IONOS SE</strong>, Elgendorfer Str. 57, 56410 Montabaur, Deutschland.<br/>
+Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-privacy/\" target=\"_blank\" rel=\"noopener noreferrer\">https://www.ionos.de/terms-gtc/terms-privacy/</a></p>
+<p><strong>Vertrag über Auftragsverarbeitung (AVV):</strong> Wir haben mit der IONOS SE einen Vertrag zur Auftragsverarbeitung (AVV) gemäß Art. 28 DSGVO abgeschlossen. Hierbei handelt es sich um einen gesetzlich vorgeschriebenen Vertrag, der sicherstellt, dass IONOS die personenbezogenen Daten unserer Webseitenbesucher ausschließlich nach unseren Weisungen, zweckgebunden und unter strenger Einhaltung der Datenschutz-Grundverordnung verarbeitet.</p>
+<p><strong>Rechtsgrundlage:</strong> Der Einsatz von IONOS erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer zuverlässigen und sicheren Bereitstellung unseres Onlineauftritts).</p>
+
+<h3>5. Lokale Einbindung von Schriftarten und Medien (Keine Drittanbieter-CDNs)</h3>
+<p>Diese Website bindet alle Schriftarten (Fonts wie Macondo Swash Caps, Dosis, Roboto Slab) sowie sämtliche Medien (Bilder, Audiodateien, Grafiken) zu 100% lokal über den eigenen Webserver ein. Es findet zu keinem Zeitpunkt eine Übertragung Ihrer IP-Adresse oder sonstiger Daten an externe Server oder Content Delivery Networks (CDNs) von Drittanbietern (wie beispielsweise Google Fonts oder Google-Server) statt.</p>
+
+<h3>6. Cookies und lokale Speicherung</h3>
+<p>Unsere Website verzichtet vollständig auf Tracking-, Marketing- und Werbe-Cookies. Wir setzen ausschließlich technisch erforderliche Speicherfunktionen (z. B. den lokalen Browserspeicher „LocalStorage“) ein, um Ihre persönlichen Komfort-Einstellungen wie die Stummschaltung oder Lautstärke unseres Musikplayers zu speichern. Diese Daten verbleiben auf Ihrem Gerät und werden nicht an uns oder Dritte übertragen.</p>
+
+<h3>7. Ihre Rechte als betroffene Person</h3>
+<p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen der DSGVO jederzeit folgende Rechte:</p>
+<ul>
+<li><strong>Auskunftsrecht (Art. 15 DSGVO):</strong> Sie können Auskunft über Ihre von uns verarbeiteten personenbezogenen Daten verlangen.</li>
+<li><strong>Berichtigungsrecht (Art. 16 DSGVO):</strong> Sie können die Berichtigung unrichtiger Daten verlangen.</li>
+<li><strong>Löschungsrecht (Art. 17 DSGVO):</strong> Sie können die Löschung Ihrer bei uns gespeicherten Daten verlangen („Recht auf Vergessenwerden“).</li>
+<li><strong>Einschränkung der Verarbeitung (Art. 18 DSGVO):</strong> Sie können die Einschränkung der Verarbeitung Ihrer Daten verlangen.</li>
+<li><strong>Datenübertragbarkeit (Art. 20 DSGVO):</strong> Sie können verlangen, Ihre Daten in einem strukturierten, maschinenlesbaren Format zu erhalten.</li>
+<li><strong>Widerspruchsrecht (Art. 21 DSGVO):</strong> Sie können jederzeit Widerspruch gegen die künftige Verarbeitung Ihrer Daten einlegen.</li>
+<li><strong>Beschwerderecht (Art. 77 DSGVO):</strong> Sie haben das Recht, sich bei einer Aufsichtsbehörde zu beschweren.</li>
+</ul>
+</div>",
                 'cookie_banner_text' => 'Wir nutzen lokale Speicherung ausschließlich für essenzielle Funktionen (wie das Merken von Audioeinstellungen). Es werden keine Werbe-Cookies verwendet.',
                 'cookie_accept_text' => 'Einverstanden',
                 'cookie_decline_text' => 'Nur Notwendige',

@@ -71,8 +71,8 @@ class Olla_Podrida_Contact {
         }
         set_transient($rate_key, $attempts + 1, 10 * MINUTE_IN_SECONDS);
 
-        $name = sanitize_text_field($params['name'] ?? '');
-        $email = sanitize_email($params['email'] ?? '');
+        $name = str_replace(["\r", "\n"], '', sanitize_text_field($params['name'] ?? ''));
+        $email = str_replace(["\r", "\n"], '', sanitize_email($params['email'] ?? ''));
         $message = sanitize_textarea_field($params['message'] ?? '');
         $acceptance = !empty($params['acceptance']);
 
@@ -100,7 +100,7 @@ class Olla_Podrida_Contact {
         if (empty($recipients)) {
             $recipients = [get_option('admin_email')];
         }
-        $subject = $contact_settings['subject'] ?: 'Neue Kontaktanfrage über Olla Podrida';
+        $subject = str_replace(["\r", "\n"], '', $contact_settings['subject'] ?: 'Neue Kontaktanfrage über Olla Podrida');
 
         $body = "Neue Nachricht über das Olla Podrida Kontaktformular:\n\n";
         $body .= "Name: " . $name . "\n";

@@ -404,50 +404,94 @@ class Olla_Podrida_Admin {
             return;
         }
 
-        if (Olla_Podrida_Roles::can_user_manage_section('contact')) {
-            wp_add_dashboard_widget(
-                'olla_podrida_dashboard_contact',
-                '✉️ Olla Podrida: Kontaktanfragen & Posteingang',
-                [__CLASS__, 'render_dashboard_contact_widget']
-            );
-        }
+        $can_events = Olla_Podrida_Roles::can_user_manage_section('events');
+        $can_contact = Olla_Podrida_Roles::can_user_manage_section('contact');
 
-        if (Olla_Podrida_Roles::can_user_manage_section('events')) {
+        // Priority 1: Events Widget (if user has events rights, this goes at the very top)
+        if ($can_events) {
             wp_add_dashboard_widget(
                 'olla_podrida_dashboard_events',
                 '📅 Olla Podrida: Konzerttermine & Status',
-                [__CLASS__, 'render_dashboard_events_widget']
+                [__CLASS__, 'render_dashboard_events_widget'],
+                null,
+                null,
+                'normal',
+                'high'
             );
+        }
+
+        // Priority 2: Contact Widget
+        if ($can_contact) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_contact',
+                '✉️ Olla Podrida: Kontaktanfragen & Posteingang',
+                [__CLASS__, 'render_dashboard_contact_widget'],
+                null,
+                null,
+                'normal',
+                'high'
+            );
+        }
+
+        // Reorder dashboard widgets so that Olla Podrida widgets appear at the absolute top of the screen
+        global $wp_meta_boxes;
+        if (isset($wp_meta_boxes['dashboard']['normal']['high'])) {
+            $normal_high = $wp_meta_boxes['dashboard']['normal']['high'];
+            $prioritized = [];
+            if ($can_events && isset($normal_high['olla_podrida_dashboard_events'])) {
+                $prioritized['olla_podrida_dashboard_events'] = $normal_high['olla_podrida_dashboard_events'];
+                unset($normal_high['olla_podrida_dashboard_events']);
+            }
+            if ($can_contact && isset($normal_high['olla_podrida_dashboard_contact'])) {
+                $prioritized['olla_podrida_dashboard_contact'] = $normal_high['olla_podrida_dashboard_contact'];
+                unset($normal_high['olla_podrida_dashboard_contact']);
+            }
+            $wp_meta_boxes['dashboard']['normal']['high'] = array_merge($prioritized, $normal_high);
         }
     }
 
     public static function render_dashboard_contact_widget() {
         $messages = Olla_Podrida_Contact::get_messages(5);
         $total = count($messages);
+        $contact_url = admin_url('admin.php?page=olla-podrida&tab=contact');
         ?>
-        <div class="olla-dashboard-widget" style="padding: 6px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
-                <div>
-                    <span style="font-size: 15px; font-weight: 600;">Eingegangene Anfragen:</span>
-                    <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-size: 12px;"><?php echo intval($total); ?></span>
+        <div class="olla-dashboard-widget" style="padding: 4px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e0d8c8;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #2C1810;">Eingegangene Anfragen:</span>
+                    <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 9px; border-radius: 12px; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                        <?php echo intval($total); ?>
+                    </span>
                 </div>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida-contact')); ?>" class="button button-small button-primary">
+                <a href="<?php echo esc_url($contact_url); ?>" class="button button-small button-primary" style="background: #B8860B; border-color: #996515; font-weight: 600;">
                     Zum Posteingang &rarr;
                 </a>
             </div>
 
             <?php if (empty($messages)): ?>
-                <p style="color: #666; font-style: italic;">Aktuell liegen keine Kontaktanfragen vor.</p>
+                <div style="text-align: center; padding: 18px 10px; background: #faf8f5; border-radius: 8px; border: 1px dashed #d5ccbe;">
+                    <p style="color: #666; font-style: italic; margin: 0;">Aktuell liegen keine offenen Kontaktanfragen vor.</p>
+                </div>
             <?php else: ?>
                 <ul style="margin: 0; padding: 0; list-style: none;">
-                    <?php foreach ($messages as $msg): ?>
-                        <li style="padding: 8px 0; border-bottom: 1px dotted #e5e5e5;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <strong><?php echo esc_html($msg->name); ?></strong>
-                                <span style="font-size: 11px; color: #888;"><?php echo esc_html(date_i18n('d.m.Y H:i', strtotime($msg->created_at))); ?></span>
+                    <?php foreach ($messages as $msg): 
+                        $name = is_array($msg) ? ($msg['name'] ?? '') : ($msg->name ?? '');
+                        $email = is_array($msg) ? ($msg['email'] ?? '') : ($msg->email ?? '');
+                        $message = is_array($msg) ? ($msg['message'] ?? '') : ($msg->message ?? '');
+                        $created_at = is_array($msg) ? ($msg['created_at'] ?? '') : ($msg->created_at ?? '');
+                    ?>
+                        <li style="padding: 10px 0; border-bottom: 1px dotted #e5e0d5;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                                <strong style="color: #2C1810; font-size: 13px;"><?php echo esc_html($name); ?></strong>
+                                <span style="font-size: 11px; color: #888; background: #f5f2ea; padding: 2px 6px; border-radius: 3px;">
+                                    <?php echo esc_html(date_i18n('d.m.Y H:i', strtotime($created_at))); ?>
+                                </span>
                             </div>
-                            <div style="font-size: 12px; color: #555; margin-top: 2px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                <?php echo esc_html(wp_trim_words($msg->message, 15)); ?>
+                            <div style="font-size: 11px; color: #996515; margin-bottom: 3px;">
+                                <?php echo esc_html($email); ?>
+                            </div>
+                            <div style="font-size: 12px; color: #555; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                <?php echo esc_html(wp_trim_words($message, 14)); ?>
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -459,33 +503,76 @@ class Olla_Podrida_Admin {
 
     public static function render_dashboard_events_widget() {
         $events = Olla_Podrida_Events::get_all_events();
-        $upcoming = array_filter($events, function($e) {
-            return !empty($e['is_upcoming']);
-        });
+        $upcoming = [];
+        $past = [];
+        foreach ($events as $e) {
+            if (!empty($e['is_upcoming'])) {
+                $upcoming[] = $e;
+            } else {
+                $past[] = $e;
+            }
+        }
+        $events_url = admin_url('admin.php?page=olla-podrida&tab=events');
         ?>
-        <div class="olla-dashboard-widget" style="padding: 6px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
-                <div>
-                    <span style="font-size: 15px; font-weight: 600;">Geplante Konzerte:</span>
-                    <span style="background: #251d18; color: #DAA520; border: 1px solid #DAA520; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-size: 12px;"><?php echo count($upcoming); ?></span>
+        <div class="olla-dashboard-widget" style="padding: 4px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e0d8c8;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #2C1810;">Geplante Konzerte:</span>
+                    <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 9px; border-radius: 12px; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                        <?php echo count($upcoming); ?> anstehend
+                    </span>
+                    <?php if (!empty($past)): ?>
+                        <span style="background: #e8e4dc; color: #665; font-size: 11px; padding: 2px 7px; border-radius: 10px;">
+                            <?php echo count($past); ?> im Archiv
+                        </span>
+                    <?php endif; ?>
                 </div>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida-events')); ?>" class="button button-small button-primary">
-                    Termine verwalten &rarr;
-                </a>
+                <div style="display: flex; gap: 6px;">
+                    <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #B8860B; border-color: #996515; font-weight: 600;">
+                        + Neuer Termin
+                    </a>
+                    <a href="<?php echo esc_url($events_url); ?>" class="button button-small">
+                        Alle anzeigen &rarr;
+                    </a>
+                </div>
             </div>
 
             <?php if (empty($upcoming)): ?>
-                <p style="color: #666; font-style: italic;">Keine bevorstehenden Konzerte eingetragen.</p>
+                <div style="text-align: center; padding: 20px 10px; background: #faf8f5; border-radius: 8px; border: 1px dashed #d5ccbe;">
+                    <p style="color: #666; font-style: italic; margin: 0 0 10px 0;">Aktuell sind keine bevorstehenden Konzerte eingetragen.</p>
+                    <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-primary" style="background: #B8860B; border-color: #996515;">
+                        + Jetzt ersten Termin anlegen
+                    </a>
+                </div>
             <?php else: ?>
                 <ul style="margin: 0; padding: 0; list-style: none;">
-                    <?php foreach (array_slice($upcoming, 0, 4) as $ev): ?>
-                        <li style="padding: 8px 0; border-bottom: 1px dotted #e5e5e5;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <strong><?php echo esc_html($ev['title'] ?? 'Konzert'); ?></strong>
-                                <span style="font-size: 12px; color: #DAA520; font-weight: 600;"><?php echo esc_html($ev['date'] ?? ''); ?></span>
+                    <?php foreach (array_slice($upcoming, 0, 5) as $ev): ?>
+                        <li style="padding: 10px 0; border-bottom: 1px dotted #e5e0d5; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <strong style="color: #2C1810; font-size: 13px;"><?php echo esc_html($ev['title'] ?? 'Konzert'); ?></strong>
+                                    <span style="background: #e6f4ea; color: #137333; border: 1px solid #ceead6; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; letter-spacing: 0.3px;">
+                                        ● Aktiv
+                                    </span>
+                                    <?php if (!empty($ev['category'])): ?>
+                                        <span style="background: #fdf6e7; color: #8a6409; border: 1px solid #f2e3be; font-size: 10px; padding: 1px 6px; border-radius: 3px;">
+                                            <?php echo esc_html($ev['category']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div style="font-size: 12px; color: #555; margin-top: 3px;">
+                                    📍 <?php echo esc_html(($ev['location'] ?? '') . (!empty($ev['city']) ? ' (' . $ev['city'] . ')' : '')); ?>
+                                </div>
                             </div>
-                            <div style="font-size: 12px; color: #666; margin-top: 2px;">
-                                📍 <?php echo esc_html(($ev['location'] ?? '') . (!empty($ev['city']) ? ' (' . $ev['city'] . ')' : '')); ?>
+                            <div style="text-align: right; white-space: nowrap;">
+                                <span style="font-size: 12px; color: #996515; font-weight: 700; background: #fff8e7; padding: 3px 8px; border-radius: 4px; border: 1px solid #f0dfb8; display: inline-block;">
+                                    📅 <?php echo esc_html($ev['date'] ?? ''); ?>
+                                </span>
+                                <?php if (!empty($ev['time'])): ?>
+                                    <div style="font-size: 11px; color: #777; margin-top: 2px;">
+                                        🕒 <?php echo esc_html($ev['time']); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </li>
                     <?php endforeach; ?>

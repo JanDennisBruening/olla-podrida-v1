@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X, Shield, BookOpen, Cookie, ExternalLink } from 'lucide-react';
+import { getLegalConfig } from '../data/siteContent';
 
 interface LegalModalProps {
   type: 'impressum' | 'datenschutz' | 'cookies' | null;
@@ -8,6 +9,7 @@ interface LegalModalProps {
 }
 
 export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchType }) => {
+  const legalConfig = getLegalConfig();
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -101,89 +103,102 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           
           {/* IMPRESSUM (Gemäß § 5 DDG) */}
           {type === 'impressum' && (
-            <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
-                Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)
-              </div>
+            legalConfig?.impressumHtml && legalConfig.impressumHtml.length > 100 ? (
+              <div 
+                className="space-y-4 text-xs sm:text-sm leading-relaxed text-[#D1C7AC] [&_h3]:font-macondo [&_h3]:text-2xl [&_h3]:text-[#F5F5DC] [&_h3]:mt-4 [&_h3]:mb-1 [&_strong]:text-[#F5F5DC] [&_a]:text-[#DAA520] [&_a:hover]:underline [&_hr]:border-[#DAA520]/30 [&_hr]:my-4 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1"
+                dangerouslySetInnerHTML={{ __html: legalConfig.impressumHtml }}
+              />
+            ) : (
+              <div className="space-y-6">
+                <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
+                  Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)
+                </div>
 
-              <div>
-                <h3 className="font-macondo text-2xl text-[#F5F5DC] mb-2">Verantwortlich für den Inhalt</h3>
-                <div className="p-4 rounded-xl bg-[#090503] border border-[#DAA520]/20 space-y-1">
-                  <p className="font-semibold text-[#F5F5DC]">Ensemble Olla Podrida</p>
-                  <p>Susanne Hoffmann (Ensembleleitung)</p>
-                  <p>Im Ort 4, 49356 Diepholz</p>
-                  <p>Tel.: +49 174 186 3418</p>
-                  <p>
-                    E-Mail:{' '}
-                    <a href="mailto:info@olla-podrida.de" className="text-[#DAA520] hover:underline">
-                      info(at)olla-podrida.de
-                    </a>
+                <div>
+                  <h3 className="font-macondo text-2xl text-[#F5F5DC] mb-2">Verantwortlich für den Inhalt</h3>
+                  <div className="p-4 rounded-xl bg-[#090503] border border-[#DAA520]/20 space-y-1">
+                    <p className="font-semibold text-[#F5F5DC]">Ensemble Olla Podrida</p>
+                    <p>Susanne Hoffmann (Ensembleleitung)</p>
+                    <p>Im Ort 4, 49356 Diepholz</p>
+                    <p>Tel.: +49 174 186 3418</p>
+                    <p>
+                      E-Mail:{' '}
+                      <a href="mailto:info@olla-podrida.de" className="text-[#DAA520] hover:underline">
+                        info(at)olla-podrida.de
+                      </a>
+                    </p>
+                    <p>
+                      Web:{' '}
+                      <a href="https://www.olla-podrida.de" className="text-[#DAA520] hover:underline">
+                        www.olla-podrida.de
+                      </a>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-2">
+                  <h3 className="font-macondo text-2xl text-[#DAA520]">Design, Konzept &amp; Webentwicklung</h3>
+                  <p className="text-xs sm:text-sm text-[#F5F5DC]">
+                    Gestaltung und Realisierung:
                   </p>
-                  <p>
-                    Web:{' '}
-                    <a href="https://www.olla-podrida.de" className="text-[#DAA520] hover:underline">
-                      www.olla-podrida.de
+                  <p className="font-medium text-[#F5F5DC]">
+                    Jan Dennis Brüning
+                  </p>
+                  <div className="flex flex-wrap gap-4 pt-1">
+                    <a
+                      href="https://www.janbruening.de"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-[#DAA520] hover:underline text-xs"
+                    >
+                      <span>www.janbruening.de</span>
+                      <ExternalLink size={12} className="ml-1" />
                     </a>
+                  </div>
+                  <p className="text-xs text-[#D1C7AC]/70">© Jan Dennis Brüning</p>
+                </div>
+
+                <div>
+                  <h3 className="font-macondo text-2xl text-[#F5F5DC] mb-2">Bildnachweise &amp; Schriften</h3>
+                  <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm">
+                    <li><strong className="text-[#F5F5DC]">Fotografie:</strong> © Jan Dennis Brüning</li>
+                    <li><strong className="text-[#F5F5DC]">Schriften (Webfonts):</strong> Macondo Swash Caps, Dosis, Roboto Slab – 100% lokal gehostet ohne Verbindung zu externen Servern (Google Fonts datenschutzkonform lokal eingebunden).</li>
+                    <li><strong className="text-[#F5F5DC]">Stockmedia &amp; Grafik:</strong> Licensed by Jan Dennis Brüning 2024 @ freepik.com (Premium Lizenz)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Haftung für Inhalte</h3>
+                  <p className="text-xs sm:text-sm text-justify">
+                    Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Haftung für Links</h3>
+                  <p className="text-xs sm:text-sm text-justify">
+                    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Urheberrecht</h3>
+                  <p className="text-xs sm:text-sm text-justify">
+                    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
                   </p>
                 </div>
               </div>
-
-              <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-2">
-                <h3 className="font-macondo text-2xl text-[#DAA520]">Design, Konzept &amp; Webentwicklung</h3>
-                <p className="text-xs sm:text-sm text-[#F5F5DC]">
-                  Gestaltung und Realisierung:
-                </p>
-                <p className="font-medium text-[#F5F5DC]">
-                  Jan Brüning
-                </p>
-                <div className="flex flex-wrap gap-4 pt-1">
-                  <a
-                    href="https://www.janbruening.de"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-[#DAA520] hover:underline text-xs"
-                  >
-                    <span>www.janbruening.de</span>
-                    <ExternalLink size={12} className="ml-1" />
-                  </a>
-                </div>
-                <p className="text-xs text-[#D1C7AC]/70">© Jan Dennis Brüning</p>
-              </div>
-
-              <div>
-                <h3 className="font-macondo text-2xl text-[#F5F5DC] mb-2">Bildnachweise &amp; Schriften</h3>
-                <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm">
-                  <li><strong className="text-[#F5F5DC]">Fotografie:</strong> © Jan Dennis Brüning</li>
-                  <li><strong className="text-[#F5F5DC]">Schriften (Webfonts):</strong> Macondo Swash Caps, Dosis, Roboto Slab – 100% lokal gehostet ohne Verbindung zu externen Servern (Google Fonts datenschutzkonform lokal eingebunden).</li>
-                  <li><strong className="text-[#F5F5DC]">Stockmedia &amp; Grafik:</strong> Licensed by Jan Dennis Brüning 2024 @ freepik.com (Premium Lizenz)</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Haftung für Inhalte</h3>
-                <p className="text-xs sm:text-sm text-justify">
-                  Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Haftung für Links</h3>
-                <p className="text-xs sm:text-sm text-justify">
-                  Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">Urheberrecht</h3>
-                <p className="text-xs sm:text-sm text-justify">
-                  Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
-                </p>
-              </div>
-            </div>
+            )
           )}
 
           {/* DATENSCHUTZERKLÄRUNG (DSGVO / DDG) */}
           {type === 'datenschutz' && (
+            legalConfig?.datenschutzHtml && legalConfig.datenschutzHtml.length > 100 ? (
+              <div 
+                className="space-y-4 text-xs sm:text-sm leading-relaxed text-[#D1C7AC] [&_h3]:font-macondo [&_h3]:text-2xl [&_h3]:text-[#F5F5DC] [&_h3]:mt-4 [&_h3]:mb-1 [&_h4]:font-semibold [&_h4]:text-[#DAA520] [&_h4]:text-sm [&_h4]:mt-3 [&_h4]:mb-1 [&_strong]:text-[#F5F5DC] [&_a]:text-[#DAA520] [&_a:hover]:underline [&_hr]:border-[#DAA520]/30 [&_hr]:my-4 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1"
+                dangerouslySetInnerHTML={{ __html: legalConfig.datenschutzHtml }}
+              />
+            ) : (
             <div className="space-y-6">
               <div className="p-4 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 text-xs text-[#DAA520]">
                 Datenschutzerklärung nach der EU-Datenschutz-Grundverordnung (DSGVO) und dem Digitale-Dienste-Gesetz (DDG)
@@ -312,6 +327,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                 </ul>
               </div>
             </div>
+            )
           )}
 
           {/* COOKIES INFO & ERKLÄRUNG */}

@@ -52,8 +52,8 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
             </div>
           </div>
 
-          <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1">
-            Willkommen, schön, dass du da bist!
+          <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1 leading-snug">
+            Willkommen, schön,<br />dass du da bist!
           </h2>
           <p className="font-serif text-xs sm:text-sm text-[#F5F5DC]/80 italic">
             Bevor du die Website betrittst, ein kurzer Hinweis zum Schutz deiner Privatsphäre:
@@ -63,9 +63,9 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
         {/* Core Transparency Points */}
         <div className="space-y-3 mb-6 bg-[#0a0503]/80 border border-[#DAA520]/25 rounded-xl p-4 text-xs sm:text-[0.8125rem] text-[#D1C7AC] leading-relaxed">
           <div className="flex items-start gap-2.5">
-            <ShieldCheck size={18} className="text-[#DAA520] shrink-0 mt-0.5" />
+            <Lock size={18} className="text-[#DAA520] shrink-0 mt-0.5" />
             <div>
-              <strong className="text-[#F5F5DC]">100% Tracking- und werbefrei:</strong> Wir setzen weder Marketing-Cookies noch Google Analytics oder werbliche Tracking-Dienste ein.
+              <strong className="text-[#F5F5DC]">Lokal &amp; sicher:</strong> Alle Schriftarten, Klänge und Bilder werden direkt und datenschutzkonform von unserem eigenen Server bereitgestellt.
             </div>
           </div>
 
@@ -77,9 +77,9 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </div>
 
           <div className="flex items-start gap-2.5">
-            <Lock size={18} className="text-[#DAA520] shrink-0 mt-0.5" />
+            <ShieldCheck size={18} className="text-[#DAA520] shrink-0 mt-0.5" />
             <div>
-              <strong className="text-[#F5F5DC]">Lokal &amp; sicher:</strong> Alle Schriftarten, Klänge und Bilder werden direkt und datenschutzkonform von unserem eigenen Server bereitgestellt.
+              <strong className="text-[#F5F5DC]">100% Tracking- und werbefrei:</strong> Wir setzen weder Marketing-Cookies noch Google Analytics oder werbliche Tracking-Dienste ein.
             </div>
           </div>
         </div>

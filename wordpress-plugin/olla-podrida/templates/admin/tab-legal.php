@@ -41,24 +41,43 @@ $legal = Olla_Podrida_Settings::get_section('legal');
 
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;" />
 
+            <?php
+            $defaults = Olla_Podrida_Settings::get_default_settings();
+            $impressum_val = $legal['impressum_html'] ?? '';
+            if (empty($impressum_val) || strlen(strip_tags($impressum_val)) < 150) {
+                $impressum_val = $defaults['legal']['impressum_html'];
+            }
+
+            $datenschutz_val = $legal['datenschutz_html'] ?? '';
+            if (empty($datenschutz_val) || strlen(strip_tags($datenschutz_val)) < 300) {
+                $datenschutz_val = $defaults['legal']['datenschutz_html'];
+            }
+            ?>
+
             <div class="olla-field-group">
                 <label for="impressum_html"><strong>Impressum-Text (Modal-Inhalt):</strong></label>
+                <p class="description" style="margin-bottom: 6px; color: #666;">
+                    Wird im modalen Fenster „Impressum“ auf der Website angezeigt.
+                </p>
                 <?php
                 wp_editor(
-                    $legal['impressum_html'] ?? '',
+                    $impressum_val,
                     'impressum_html',
-                    ['textarea_rows' => 8, 'media_buttons' => false, 'teeny' => true]
+                    ['textarea_rows' => 14, 'media_buttons' => false, 'teeny' => true]
                 );
                 ?>
             </div>
 
             <div class="olla-field-group" style="margin-top: 25px;">
                 <label for="datenschutz_html"><strong>Datenschutzerklärung (Modal-Inhalt):</strong></label>
+                <p class="description" style="margin-bottom: 6px; color: #666;">
+                    Vollständige Datenschutzerklärung (DSGVO / DDG mit 7 Kapiteln, inkl. IONOS AVV Art. 28 DSGVO). Änderungen hier werden 1:1 im modalen Fenster auf der Website übernommen.
+                </p>
                 <?php
                 wp_editor(
-                    $legal['datenschutz_html'] ?? '',
+                    $datenschutz_val,
                     'datenschutz_html',
-                    ['textarea_rows' => 8, 'media_buttons' => false, 'teeny' => true]
+                    ['textarea_rows' => 22, 'media_buttons' => false, 'teeny' => true]
                 );
                 ?>
             </div>
