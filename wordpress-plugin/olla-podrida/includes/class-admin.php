@@ -253,6 +253,25 @@ class Olla_Podrida_Admin {
                 Olla_Podrida_Settings::update_section('press', $data);
                 break;
 
+            case 'seo':
+                $data = [
+                    'meta_title' => sanitize_text_field($_POST['meta_title'] ?? ''),
+                    'meta_description' => sanitize_textarea_field($_POST['meta_description'] ?? ''),
+                    'meta_keywords' => sanitize_text_field($_POST['meta_keywords'] ?? ''),
+                    'canonical_url' => esc_url_raw($_POST['canonical_url'] ?? ''),
+                    'robots_index' => sanitize_text_field($_POST['robots_index'] ?? 'index, follow'),
+                    'og_title' => sanitize_text_field($_POST['og_title'] ?? ''),
+                    'og_description' => sanitize_textarea_field($_POST['og_description'] ?? ''),
+                    'og_image' => esc_url_raw($_POST['og_image'] ?? ''),
+                    'og_type' => sanitize_text_field($_POST['og_type'] ?? 'website'),
+                    'twitter_card' => sanitize_text_field($_POST['twitter_card'] ?? 'summary_large_image'),
+                    'schema_enabled' => !empty($_POST['schema_enabled']),
+                    'schema_type' => sanitize_text_field($_POST['schema_type'] ?? 'MusicGroup'),
+                    'schema_genre' => sanitize_text_field($_POST['schema_genre'] ?? 'Mittelaltermusik, Renaissancemusik, Alte Musik'),
+                ];
+                Olla_Podrida_Settings::update_section('seo', $data);
+                break;
+
             case 'roles':
                 if (current_user_can('manage_options')) {
                     $roles_permissions = [];

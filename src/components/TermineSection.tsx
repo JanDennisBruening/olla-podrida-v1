@@ -120,7 +120,14 @@ export const TermineSection: React.FC = () => {
                 {/* Top Section: Side-by-side on desktop (image right, text left), stacked on mobile/tablet */}
                 <div className="w-full flex flex-col lg:flex-row-reverse items-start gap-5 lg:gap-8 relative z-10">
                   {/* Image Column: Full-width landscape above content on Mobile & Tablet, strictly square on right on Desktop */}
-                  <div className="w-full lg:w-64 xl:w-72 aspect-[16/9] sm:aspect-[21/9] lg:aspect-square shrink-0 rounded-[0.75rem] overflow-hidden shadow-lg self-start">
+                  <div
+                    className="w-full lg:w-64 xl:w-72 aspect-[16/9] sm:aspect-[21/9] lg:aspect-square shrink-0 rounded-[0.75rem] overflow-hidden shadow-lg self-start transition-all duration-700 ease-out"
+                    style={{
+                      transform: isInView ? 'scale(1) translate3d(0, 0, 0)' : 'scale(0.95) translate3d(0, 20px, 0)',
+                      opacity: isInView ? 1 : 0,
+                      transitionDelay: `${staggerDelay + 100}ms`
+                    }}
+                  >
                     <img
                       src={event.imageSrc}
                       alt={event.title}
@@ -132,28 +139,66 @@ export const TermineSection: React.FC = () => {
                   {/* Content Column: 100% full width on Mobile and Tablet, flex-1 on Desktop */}
                   <div className="w-full flex-1 flex flex-col justify-start text-left">
                     {/* Category Badge matching .ue-grid-item-category a */}
-                    <div className="mb-2">
+                    <div
+                      className="mb-2 transition-all duration-500 ease-out"
+                      style={{
+                        transform: isInView ? 'translateY(0)' : 'translateY(12px)',
+                        opacity: isInView ? 1 : 0,
+                        transitionDelay: `${staggerDelay + 160}ms`
+                      }}
+                    >
                       <span className="inline-block bg-[#CD895B] group-hover:bg-[#DAA520] transition-colors duration-300 text-white font-roboto text-[0.7rem] font-semibold uppercase px-2.5 py-0.5 rounded-[0.2rem] tracking-wide shadow-sm">
                         {event.category}
                       </span>
                     </div>
 
                     {/* Title: enlarged on mobile viewport for proud presence */}
-                    <h3 className="font-macondo text-[1.85rem] sm:text-[2.1rem] md:text-[2.47rem] leading-tight md:leading-[2.75rem] font-normal mt-1 mb-4 text-[#D79951] group-hover:text-[#F3CE72] transition-colors duration-200 select-none">
+                    <h3
+                      className="font-macondo text-[1.85rem] sm:text-[2.1rem] md:text-[2.47rem] leading-tight md:leading-[2.75rem] font-normal mt-1 mb-4 text-[#D79951] group-hover:text-[#F3CE72] transition-all duration-600 ease-out select-none"
+                      style={{
+                        transform: isInView ? 'translateY(0)' : 'translateY(14px)',
+                        opacity: isInView ? 1 : 0,
+                        transitionDelay: `${staggerDelay + 220}ms`
+                      }}
+                    >
                       {event.title}
                     </h3>
 
-                    {/* Metadata matching .ue-grid-item-meta-data */}
-                    <div className="space-y-1 font-macondo text-lg sm:text-xl md:text-[1.4rem] md:leading-[2rem] text-[#F5F5DC] mb-4">
-                      <div className="flex items-center space-x-2">
+                    {/* Metadata matching .ue-grid-item-meta-data with individual staggered row reveals */}
+                    <div className="space-y-1.5 font-macondo text-lg sm:text-xl md:text-[1.4rem] md:leading-[2rem] text-[#F5F5DC] mb-4">
+                      {/* Date Item */}
+                      <div
+                        className="flex items-center space-x-2 transition-all duration-500 ease-out"
+                        style={{
+                          transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
+                          opacity: isInView ? 1 : 0,
+                          transitionDelay: `${staggerDelay + 280}ms`
+                        }}
+                      >
                         <span className="group-hover:scale-110 transition-transform duration-200">🗓️</span>
                         <span>{event.dateStr}</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      {/* Time Item */}
+                      <div
+                        className="flex items-center space-x-2 transition-all duration-500 ease-out"
+                        style={{
+                          transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
+                          opacity: isInView ? 1 : 0,
+                          transitionDelay: `${staggerDelay + 340}ms`
+                        }}
+                      >
                         <span className="group-hover:scale-110 transition-transform duration-200">🕐</span>
                         <span>{event.timeStr}</span>
                       </div>
-                      <div className="flex items-start space-x-2">
+                      {/* Location Item */}
+                      <div
+                        className="flex items-start space-x-2 transition-all duration-500 ease-out"
+                        style={{
+                          transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
+                          opacity: isInView ? 1 : 0,
+                          transitionDelay: `${staggerDelay + 400}ms`
+                        }}
+                      >
                         <span className="shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-200">📍</span>
                         <span>{event.locationStr}</span>
                       </div>
@@ -161,7 +206,12 @@ export const TermineSection: React.FC = () => {
 
                     {/* Description matching .uc_post_content */}
                     <div
-                      className="font-macondo text-sm sm:text-base md:text-[1.1rem] md:leading-[1.6rem] font-semibold text-[#F5F5DC] leading-relaxed"
+                      className="font-macondo text-sm sm:text-base md:text-[1.1rem] md:leading-[1.6rem] font-semibold text-[#F5F5DC] leading-relaxed transition-all duration-600 ease-out"
+                      style={{
+                        transform: isInView ? 'translateY(0)' : 'translateY(14px)',
+                        opacity: isInView ? 1 : 0,
+                        transitionDelay: `${staggerDelay + 460}ms`
+                      }}
                       dangerouslySetInnerHTML={{ __html: event.descriptionHtml }}
                     />
                   </div>
@@ -192,7 +242,13 @@ export const TermineSection: React.FC = () => {
                 </div>
 
                 {/* Accordion Toggle Bar with Chevron across bottom of card */}
-                <div className="w-full relative z-10 mt-4 pt-3 flex items-center justify-between border-t border-[#2a2825] group-hover:border-[#DAA520]/40 transition-colors">
+                <div
+                  className="w-full relative z-10 mt-4 pt-3 flex items-center justify-between border-t border-[#2a2825] group-hover:border-[#DAA520]/40 transition-all duration-500 ease-out"
+                  style={{
+                    opacity: isInView ? 1 : 0,
+                    transitionDelay: `${staggerDelay + 520}ms`
+                  }}
+                >
                   <span className="font-macondo text-base sm:text-lg text-[#DAA520] group-hover:text-[#F3CE72] flex items-center space-x-2">
                     <span>{isExpanded ? 'Weniger anzeigen' : 'Mehr Details & Programm anzeigen'}</span>
                   </span>

@@ -199,7 +199,7 @@ export const DEFAULT_ENSEMBLE_CONFIG: EnsembleConfig = {
 
 export const DEFAULT_AUDIO_CONFIG: AudioConfig = {
   enabled: true,
-  src: 'https://olla-podrida.de/wp-content/uploads/2024/07/Riu-riu-chiu-live-in-Atter.mp3',
+  src: '/Riu-riu-chiu-live-in-Atter.mp3',
   title: 'Riu Riu Chiu',
   subtitle: 'Live in Atter (Spanisches Renaissance-Villancico)',
   autoplay: true,
@@ -548,9 +548,19 @@ export const getEnsembleConfig = (): EnsembleConfig => {
 
 export const getAudioConfig = (): AudioConfig => {
   const wp = getWPData();
-  return {
+  const raw = {
     ...DEFAULT_AUDIO_CONFIG,
     ...(wp?.audio || {})
+  };
+  let src = raw.src || '';
+  if (src.includes('olla-podrida.de') && src.includes('Riu-riu-chiu-live-in-Atter.mp3')) {
+    src = resolveAssetUrl('/Riu-riu-chiu-live-in-Atter.mp3');
+  } else {
+    src = resolveAssetUrl(src);
+  }
+  return {
+    ...raw,
+    src
   };
 };
 

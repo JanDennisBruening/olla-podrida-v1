@@ -16,6 +16,7 @@ class Olla_Podrida_Roles {
             'contact'  => ['label' => 'Kontakt & Postfach',         'icon' => 'dashicons-email-alt'],
             'audio'    => ['label' => 'Hintergrundmusik & Player',  'icon' => 'dashicons-format-audio'],
             'press'    => ['label' => 'Presse & Medienmaterial',    'icon' => 'dashicons-format-gallery'],
+            'seo'      => ['label' => 'SEO & Metadaten',            'icon' => 'dashicons-search'],
             'legal'    => ['label' => 'Rechtliches & Footer',       'icon' => 'dashicons-shield'],
             'display'  => ['label' => 'Einbindung & Ausspielung',   'icon' => 'dashicons-admin-generic'],
             'roles'    => ['label' => 'Rollen & Berechtigungen',    'icon' => 'dashicons-admin-users'],

@@ -10,8 +10,9 @@ const pluginDir = path.join(rootDir, 'wordpress-plugin/olla-podrida');
 
 async function main() {
   const filesToDeploy = [
-    'assets/dist/assets/index-DOtmfcDc.js',
-    'assets/dist/assets/index-CpXvAJwi.css',
+    'assets/dist/assets/index-7-kD5QYG.js',
+    'assets/dist/assets/index-BI_6dcx3.css',
+    'assets/css/admin.css',
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',
@@ -23,13 +24,14 @@ async function main() {
     'includes/class-settings.php',
     'templates/canvas-page.php',
     'templates/admin/main.php',
+    'templates/admin/tab-seo.php',
     'templates/admin/tab-roles.php',
     'templates/admin/tab-contact.php',
     'templates/admin/tab-legal.php',
     'templates/admin/tab-press.php',
   ];
 
-  console.log('🚀 Deploying v1.1.1 to https://cms.janbruening.de...');
+  console.log('🚀 Deploying v1.1.2 to https://cms.janbruening.de...');
 
   for (const rel of filesToDeploy) {
     const full = path.join(pluginDir, rel);
@@ -57,12 +59,12 @@ async function main() {
 
   const cleanupForm = new URLSearchParams();
   cleanupForm.append('action', 'cleanup_dist');
-  cleanupForm.append('keep_js', 'index-DOtmfcDc.js');
-  cleanupForm.append('keep_css', 'index-CpXvAJwi.css');
+  cleanupForm.append('keep_js', 'index-7-kD5QYG.js');
+  cleanupForm.append('keep_css', 'index-BI_6dcx3.css');
   const cleanRes = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: cleanupForm });
   const cleanJson = await cleanRes.json();
   console.log('🧹 Cleanup:', cleanJson.deleted);
-  console.log('🎉 v1.1.1 live deployment complete!');
+  console.log('🎉 v1.1.2 live deployment complete!');
 }
 
 main().catch(err => { console.error('Deploy error:', err); process.exit(1); });

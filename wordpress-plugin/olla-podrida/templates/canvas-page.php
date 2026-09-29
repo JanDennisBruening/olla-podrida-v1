@@ -3,8 +3,39 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+$seo = Olla_Podrida_Settings::get_section('seo');
 $hero = Olla_Podrida_Settings::get_section('hero');
-$site_title = get_bloginfo('name') . ' - ' . ($hero['subtitle'] ?? 'Klangvielfalt aus Mittelalter und Renaissance');
+$meta_title = !empty($seo['meta_title']) ? $seo['meta_title'] : (get_bloginfo('name') . ' - ' . ($hero['subtitle'] ?? 'Klangvielfalt aus Mittelalter und Renaissance'));
+$meta_description = !empty($seo['meta_description']) ? $seo['meta_description'] : 'Das Ensemble Olla Podrida erweckt mit Krummhörnern, Harfe, Sackpfeifen, Flöten und Gesang historische Musik aus Mittelalter und Renaissance zu lebendigem neuem Leben.';
+$meta_keywords = !empty($seo['meta_keywords']) ? $seo['meta_keywords'] : '';
+$robots_index = !empty($seo['robots_index']) ? $seo['robots_index'] : 'index, follow';
+$canonical_url = !empty($seo['canonical_url']) ? $seo['canonical_url'] : home_url('/');
+
+// OpenGraph & Social Cards
+$og_title = !empty($seo['og_title']) ? $seo['og_title'] : $meta_title;
+$og_description = !empty($seo['og_description']) ? $seo['og_description'] : $meta_description;
+$og_image = !empty($seo['og_image']) ? $seo['og_image'] : ($assets_url . '2024_Vorschaubild_1zu1_sRGB.webp');
+$og_type = !empty($seo['og_type']) ? $seo['og_type'] : 'website';
+$twitter_card = !empty($seo['twitter_card']) ? $seo['twitter_card'] : 'summary_large_image';
+
+// Schema.org JSON-LD
+$schema_json = null;
+if (!empty($seo['schema_enabled'])) {
+    $schema_data = [
+        '@context' => 'https://schema.org',
+        '@type' => !empty($seo['schema_type']) ? $seo['schema_type'] : 'MusicGroup',
+        'name' => 'Ensemble Olla Podrida',
+        'description' => $meta_description,
+        'url' => home_url('/'),
+        'image' => $og_image,
+        'genre' => !empty($seo['schema_genre']) ? $seo['schema_genre'] : 'Mittelaltermusik, Renaissancemusik, Alte Musik',
+        'locationCreated' => [
+            '@type' => 'Place',
+            'name' => 'Landkreis Osnabrück / Diepholz, Deutschland'
+        ]
+    ];
+    $schema_json = wp_json_encode($schema_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
 $assets_url = OLLA_PODRIDA_URL . 'assets/dist/';
 
 $dist_dir = OLLA_PODRIDA_PATH . 'assets/dist/assets/';
@@ -32,8 +63,36 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo esc_html($site_title); ?></title>
-    <meta name="description" content="So lebendig wie damals - voller Kraft mit Krummhörner, Sackpfeifen und Trommeln, aber auch verspielt und anrührend mit Harfe, Psalter und Laute." />
+    <title><?php echo esc_html($meta_title); ?></title>
+    <meta name="description" content="<?php echo esc_attr($meta_description); ?>" />
+    <?php if (!empty($meta_keywords)): ?>
+        <meta name="keywords" content="<?php echo esc_attr($meta_keywords); ?>" />
+    <?php endif; ?>
+    <meta name="robots" content="<?php echo esc_attr($robots_index); ?>" />
+    <link rel="canonical" href="<?php echo esc_url($canonical_url); ?>" />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="<?php echo esc_attr($og_type); ?>" />
+    <meta property="og:url" content="<?php echo esc_url($canonical_url); ?>" />
+    <meta property="og:title" content="<?php echo esc_attr($og_title); ?>" />
+    <meta property="og:description" content="<?php echo esc_attr($og_description); ?>" />
+    <meta property="og:image" content="<?php echo esc_url($og_image); ?>" />
+    <meta property="og:site_name" content="Ensemble Olla Podrida" />
+    <meta property="og:locale" content="de_DE" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="<?php echo esc_attr($twitter_card); ?>" />
+    <meta name="twitter:url" content="<?php echo esc_url($canonical_url); ?>" />
+    <meta name="twitter:title" content="<?php echo esc_attr($og_title); ?>" />
+    <meta name="twitter:description" content="<?php echo esc_attr($og_description); ?>" />
+    <meta name="twitter:image" content="<?php echo esc_url($og_image); ?>" />
+
+    <?php if ($schema_json): ?>
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    <?php echo $schema_json; ?>
+    </script>
+    <?php endif; ?>
     <meta name="theme-color" content="#070202" />
     
     <link rel="icon" type="image/x-icon" href="<?php echo esc_url($assets_url . 'images/favicon.ico?v=' . OLLA_PODRIDA_VERSION); ?>" />

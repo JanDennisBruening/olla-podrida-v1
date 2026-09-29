@@ -12,45 +12,130 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #15110e;
+    background: linear-gradient(135deg, #1b1510 0%, #0d0a08 100%);
     color: #F5F5DC;
-    padding: 24px 30px;
-    border-radius: 8px;
+    padding: 22px 28px;
+    border-radius: 10px;
     border: 1px solid #DAA520;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    margin-bottom: 22px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(218, 165, 32, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.olla-admin-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #DAA520, #FFD700, #DAA520, transparent);
 }
 
 .olla-header-brand {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
 }
 
-.olla-logo-badge {
-    font-size: 38px;
-    background: #251d18;
-    border: 1px solid #DAA520;
-    width: 60px;
-    height: 60px;
+.olla-header-brand-logo {
+    width: 66px;
+    height: 66px;
+    min-width: 66px;
     border-radius: 50%;
+    background: radial-gradient(circle, #2a2018 0%, #15110e 100%);
+    border: 2px solid #DAA520;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 16px rgba(218, 165, 32, 0.35), inset 0 0 10px rgba(0,0,0,0.6);
+    padding: 8px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.olla-header-brand-logo:hover {
+    transform: scale(1.05);
+}
+
+.olla-header-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
 }
 
 .olla-header-brand h1 {
     color: #DAA520;
-    font-size: 26px;
-    margin: 0 0 4px 0;
+    font-size: 24px;
+    margin: 0 0 2px 0;
     font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.olla-version-tag {
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(218, 165, 32, 0.15);
+    border: 1px solid #DAA520;
+    color: #FFD700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
 }
 
 .olla-header-subtitle {
     margin: 0;
     color: #F5F5DC;
     opacity: 0.85;
+    font-size: 13.5px;
+}
+
+.olla-header-status-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.olla-mini-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: #d8ceb8;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(218, 165, 32, 0.25);
+    padding: 3px 9px;
+    border-radius: 4px;
+}
+
+.olla-mini-badge .dashicons {
     font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #DAA520;
+}
+
+.olla-preview-btn {
+    background: #251d18 !important;
+    border-color: #DAA520 !important;
+    color: #DAA520 !important;
+    font-weight: 600 !important;
+    padding: 6px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+    transition: all 0.2s ease !important;
+}
+
+.olla-preview-btn:hover {
+    background: #DAA520 !important;
+    color: #070202 !important;
+    box-shadow: 0 0 12px rgba(218, 165, 32, 0.5) !important;
 }
 
 /* Nav Tabs: Stable, non-jumping flex layout */

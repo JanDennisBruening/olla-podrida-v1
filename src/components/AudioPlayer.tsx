@@ -89,7 +89,7 @@ export const AudioPlayer: React.FC = () => {
       <audio
         ref={audioRef}
         src={audioSrc}
-        preload="metadata"
+        preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => {

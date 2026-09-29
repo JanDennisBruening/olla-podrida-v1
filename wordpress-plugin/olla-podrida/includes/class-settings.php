@@ -210,7 +210,7 @@ class Olla_Podrida_Settings {
             ],
             'audio' => [
                 'enabled' => true,
-                'src' => 'https://olla-podrida.de/wp-content/uploads/2024/07/Riu-riu-chiu-live-in-Atter.mp3',
+                'src' => $assets_url . 'Riu-riu-chiu-live-in-Atter.mp3',
                 'title' => 'Riu Riu Chiu',
                 'subtitle' => 'Live in Atter (Spanisches Renaissance-Villancico)',
                 'autoplay' => true,
@@ -243,8 +243,23 @@ class Olla_Podrida_Settings {
                 'photo4_url' => $assets_url . 'Hintergrund-Header-2-2-scaled.webp',
                 'photo4_title' => 'Bühnenkulisse & Instrumentarium',
             ],
+            'seo' => [
+                'meta_title' => 'Ensemble Olla Podrida | Musik aus Mittelalter & Renaissance',
+                'meta_description' => 'Das Ensemble Olla Podrida erweckt mit Krummhörnern, Harfe, Sackpfeifen, Flöten und Gesang historische Musik aus Mittelalter und Renaissance zu neuem Leben.',
+                'meta_keywords' => 'Ensemble Olla Podrida, Mittelaltermusik, Renaissancemusik, Alte Musik, Konzerte, Krummhorn, Harfe, Sackpfeife, Osnabrück, Susanne Hoffmann',
+                'canonical_url' => '',
+                'robots_index' => 'index, follow',
+                'og_title' => 'Ensemble Olla Podrida – Klangvielfalt aus Mittelalter und Renaissance',
+                'og_description' => 'Historische Musikinstrumente, Konzerte und lebendige Musikgeschichte. Tauchen Sie ein in die Klangwelt von Olla Podrida.',
+                'og_image' => $assets_url . '2024_Vorschaubild_1zu1_sRGB.webp',
+                'og_type' => 'website',
+                'twitter_card' => 'summary_large_image',
+                'schema_enabled' => true,
+                'schema_type' => 'MusicGroup',
+                'schema_genre' => 'Mittelaltermusik, Renaissancemusik, Alte Musik',
+            ],
             'roles' => [
-                'editor_sections' => ['hero', 'ensemble', 'events', 'contact', 'audio', 'legal', 'press'],
+                'editor_sections' => ['hero', 'ensemble', 'events', 'contact', 'audio', 'press', 'seo', 'legal'],
                 'author_sections' => ['events'],
             ],
             'display' => [

@@ -10,11 +10,18 @@ $tabs = [
     'events' => ['label' => '📅 Termine & Konzerte', 'icon' => 'dashicons-calendar-alt'],
     'contact' => ['label' => '✉️ Kontakt & Postfach', 'icon' => 'dashicons-email-alt'],
     'audio' => ['label' => '🎵 Musik & Player', 'icon' => 'dashicons-format-audio'],
-    'legal' => ['label' => '⚖️ Rechtliches & Footer', 'icon' => 'dashicons-shield'],
     'press' => ['label' => '📰 Presse & Medien', 'icon' => 'dashicons-format-gallery'],
+    'seo' => ['label' => '🔍 SEO & Metadaten', 'icon' => 'dashicons-search'],
+    'legal' => ['label' => '⚖️ Rechtliches & Footer', 'icon' => 'dashicons-shield'],
     'display' => ['label' => '⚙️ Einbindung', 'icon' => 'dashicons-admin-generic'],
     'roles' => ['label' => '👥 Rollen & Rechte', 'icon' => 'dashicons-admin-users'],
 ];
+
+// Quick metrics for admin header
+$all_events = Olla_Podrida_Events::get_all_events();
+$upcoming_events = array_filter($all_events, function($e) { return !empty($e['is_upcoming']); });
+$audio_config = Olla_Podrida_Settings::get_section('audio');
+$is_audio_active = !empty($audio_config['enabled']);
 
 // Filter tabs by allowed permissions
 $filtered_tabs = [];
@@ -28,15 +35,25 @@ foreach ($tabs as $key => $info) {
 <div class="wrap olla-podrida-admin-wrap">
     <div class="olla-admin-header">
         <div class="olla-header-brand">
-            <span class="olla-logo-badge">📯</span>
+            <div class="olla-header-brand-logo">
+                <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png'); ?>" alt="Ensemble Olla Podrida" class="olla-header-logo-img" />
+            </div>
             <div>
-                <h1>Ensemble Olla Podrida <span style="font-size: 13px; font-weight: 500; background: #251d18; border: 1px solid #DAA520; color: #DAA520; padding: 3px 9px; border-radius: 12px; margin-left: 8px; vertical-align: middle;">v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span></h1>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <h1 style="margin: 0; line-height: 1.2;">Ensemble Olla Podrida</h1>
+                    <span class="olla-version-tag">v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
+                </div>
                 <p class="olla-header-subtitle">Klangvielfalt aus Mittelalter und Renaissance · Content Management System</p>
+                <div class="olla-header-status-bar">
+                    <span class="olla-mini-badge"><span class="dashicons dashicons-calendar-alt"></span> <?php echo count($upcoming_events); ?> anstehende Termine</span>
+                    <span class="olla-mini-badge"><span class="dashicons dashicons-format-audio"></span> Musik: <?php echo $is_audio_active ? 'Aktiv' : 'Stumm'; ?></span>
+                    <span class="olla-mini-badge"><span class="dashicons dashicons-admin-users"></span> 7 Ensemble-Mitglieder</span>
+                </div>
             </div>
         </div>
         <div class="olla-header-actions">
-            <a href="<?php echo esc_url(home_url('?olla_canvas=1')); ?>" target="_blank" class="button button-secondary">
-                <span class="dashicons dashicons-external" style="margin-top:4px;"></span> Live-Vorschau ansehen
+            <a href="<?php echo esc_url(home_url('?olla_canvas=1')); ?>" target="_blank" class="button button-secondary olla-preview-btn">
+                <span class="dashicons dashicons-external"></span> Live-Vorschau ansehen
             </a>
         </div>
     </div>

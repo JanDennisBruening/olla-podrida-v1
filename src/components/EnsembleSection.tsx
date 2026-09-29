@@ -128,7 +128,7 @@ export const EnsembleSection: React.FC = () => {
               {musicians.map((musician, index) => {
                 const isHovered = hoveredMember === musician.id;
                 const targetScale = isHovered ? 1.08 : 1.0;
-                const entranceDelay = index * 70;
+                const entranceDelay = 150 + index * 125;
 
                 return (
                   <div
@@ -148,17 +148,17 @@ export const EnsembleSection: React.FC = () => {
                       <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-1.5 h-1.5 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
                     </div>
 
-                    {/* Figure Cutout */}
+                    {/* Figure Cutout with Distinct Stagger Wave */}
                     <div
                       className="h-36 xl:h-42 flex items-end justify-center overflow-visible"
                       style={{
                         transformOrigin: 'bottom center',
                         transform: isInView
                           ? `translateY(0) scale(${targetScale})`
-                          : 'translateY(1.5rem) scale(0.94)',
+                          : 'translateY(2.2rem) scale(0.90)',
                         opacity: isInView ? 1 : 0,
                         transitionProperty: 'opacity, transform, filter',
-                        transitionDuration: isHovered ? '250ms' : '650ms',
+                        transitionDuration: isHovered ? '250ms' : '750ms',
                         transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
                         transitionDelay: isHovered ? '0ms' : `${entranceDelay}ms`
                       }}
@@ -183,12 +183,12 @@ export const EnsembleSection: React.FC = () => {
             {/* 2. TABLET VIEWPORT (768px to 1023px): 4 + 3 COMPACT ROWS */}
             {/* ======================================================== */}
             <div className="hidden md:flex lg:hidden w-full my-6 overflow-visible flex-col items-center gap-4 md:gap-5">
-              {/* Row 1: 4 Musicians Centered (Simone, Klemens, Silke, Sandra) - slightly smaller & tighter gap */}
+              {/* Row 1: 4 Musicians Centered (Simone, Klemens, Silke, Sandra) */}
               <div className="w-full flex justify-center items-end gap-2.5 md:gap-3.5 overflow-visible">
                 {tabletRow1.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
-                  const entranceDelay = index * 70;
+                  const entranceDelay = 150 + index * 120;
 
                   return (
                     <div
@@ -213,10 +213,10 @@ export const EnsembleSection: React.FC = () => {
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
-                            : 'translateY(1.5rem) scale(0.94)',
+                            : 'translateY(2rem) scale(0.90)',
                           opacity: isInView ? 1 : 0,
                           transitionProperty: 'opacity, transform, filter',
-                          transitionDuration: isHovered ? '250ms' : '650ms',
+                          transitionDuration: isHovered ? '250ms' : '750ms',
                           transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
                           transitionDelay: isHovered ? '0ms' : `${entranceDelay}ms`
                         }}
@@ -237,12 +237,12 @@ export const EnsembleSection: React.FC = () => {
                 })}
               </div>
 
-              {/* Row 2: 3 Musicians Centered Underneath (Lutz, Susanne, Ruth) - slightly smaller & tighter gap */}
+              {/* Row 2: 3 Musicians Centered Underneath (Lutz, Susanne, Ruth) */}
               <div className="w-full flex justify-center items-end gap-2.5 md:gap-3.5 overflow-visible">
                 {tabletRow2.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
-                  const entranceDelay = (index + 4) * 70;
+                  const entranceDelay = 150 + (index + 4) * 120;
 
                   return (
                     <div
@@ -267,10 +267,10 @@ export const EnsembleSection: React.FC = () => {
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
-                            : 'translateY(1.5rem) scale(0.94)',
+                            : 'translateY(2rem) scale(0.90)',
                           opacity: isInView ? 1 : 0,
                           transitionProperty: 'opacity, transform, filter',
-                          transitionDuration: isHovered ? '250ms' : '650ms',
+                          transitionDuration: isHovered ? '250ms' : '750ms',
                           transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
                           transitionDelay: isHovered ? '0ms' : `${entranceDelay}ms`
                         }}
@@ -328,12 +328,12 @@ export const EnsembleSection: React.FC = () => {
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
-                            : 'translateY(1.5rem) scale(0.94)',
+                            : 'translateY(2rem) scale(0.90)',
                           opacity: isInView ? 1 : 0,
                           transitionProperty: 'opacity, transform, filter',
-                          transitionDuration: isHovered ? '250ms' : '650ms',
+                          transitionDuration: isHovered ? '250ms' : '750ms',
                           transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
-                          transitionDelay: `${index * 70}ms`
+                          transitionDelay: `${150 + index * 120}ms`
                         }}
                       >
                         <img
@@ -380,12 +380,12 @@ export const EnsembleSection: React.FC = () => {
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
-                            : 'translateY(1.5rem) scale(0.94)',
+                            : 'translateY(2rem) scale(0.90)',
                           opacity: isInView ? 1 : 0,
                           transitionProperty: 'opacity, transform, filter',
-                          transitionDuration: isHovered ? '250ms' : '650ms',
+                          transitionDuration: isHovered ? '250ms' : '750ms',
                           transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
-                          transitionDelay: `${(index + 3) * 70}ms`
+                          transitionDelay: `${150 + (index + 3) * 120}ms`
                         }}
                       >
                         <img
@@ -432,12 +432,12 @@ export const EnsembleSection: React.FC = () => {
                           transformOrigin: 'bottom center',
                           transform: isInView
                             ? `translateY(0) scale(${targetScale})`
-                            : 'translateY(1.5rem) scale(0.94)',
+                            : 'translateY(2rem) scale(0.90)',
                           opacity: isInView ? 1 : 0,
                           transitionProperty: 'opacity, transform, filter',
-                          transitionDuration: isHovered ? '250ms' : '650ms',
+                          transitionDuration: isHovered ? '250ms' : '750ms',
                           transitionTimingFunction: isHovered ? 'ease-out' : 'cubic-bezier(0.16, 1, 0.3, 1)',
-                          transitionDelay: '420ms'
+                          transitionDelay: `${150 + 6 * 120}ms`
                         }}
                       >
                         <img
