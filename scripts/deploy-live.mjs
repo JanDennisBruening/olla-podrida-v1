@@ -9,29 +9,46 @@ const rootDir = path.resolve(__dirname, '..');
 const pluginDir = path.join(rootDir, 'wordpress-plugin/olla-podrida');
 
 async function main() {
+  const assetsDir = path.join(pluginDir, 'assets/dist/assets');
+  let jsFile = '';
+  let cssFile = '';
+  if (fs.existsSync(assetsDir)) {
+    const distFiles = fs.readdirSync(assetsDir);
+    jsFile = distFiles.find(f => f.startsWith('index-') && f.endsWith('.js')) || '';
+    cssFile = distFiles.find(f => f.startsWith('index-') && f.endsWith('.css')) || '';
+  }
+
   const filesToDeploy = [
-    'assets/dist/assets/index-CxO1nb46.js',
-    'assets/dist/assets/index-hIkZP5m5.css',
+    jsFile ? `assets/dist/assets/${jsFile}` : '',
+    cssFile ? `assets/dist/assets/${cssFile}` : '',
     'assets/css/admin.css',
+    'assets/js/admin.js',
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',
     'olla-podrida.php',
     'includes/class-olla-podrida.php',
     'includes/class-roles.php',
+    'includes/class-events.php',
     'includes/class-contact.php',
     'includes/class-admin.php',
+    'includes/class-frontend.php',
     'includes/class-settings.php',
     'templates/canvas-page.php',
     'templates/admin/main.php',
+    'templates/admin/tab-settings.php',
+    'templates/admin/tab-hero.php',
+    'templates/admin/tab-ensemble.php',
+    'templates/admin/tab-events.php',
     'templates/admin/tab-seo.php',
     'templates/admin/tab-roles.php',
     'templates/admin/tab-contact.php',
     'templates/admin/tab-legal.php',
     'templates/admin/tab-press.php',
-  ];
+  ].filter(Boolean);
 
-  console.log('🚀 Deploying v1.1.3 to https://cms.janbruening.de...');
+  console.log('🚀 Deploying v1.1.4 to https://cms.janbruening.de...');
+  console.log(`📦 JS: ${jsFile}, CSS: ${cssFile}`);
 
   for (const rel of filesToDeploy) {
     const full = path.join(pluginDir, rel);
@@ -57,14 +74,16 @@ async function main() {
     }
   }
 
-  const cleanupForm = new URLSearchParams();
-  cleanupForm.append('action', 'cleanup_dist');
-  cleanupForm.append('keep_js', 'index-CxO1nb46.js');
-  cleanupForm.append('keep_css', 'index-hIkZP5m5.css');
-  const cleanRes = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: cleanupForm });
-  const cleanJson = await cleanRes.json();
-  console.log('🧹 Cleanup:', cleanJson.deleted);
-  console.log('🎉 v1.1.3 live deployment complete!');
+  if (jsFile && cssFile) {
+    const cleanupForm = new URLSearchParams();
+    cleanupForm.append('action', 'cleanup_dist');
+    cleanupForm.append('keep_js', jsFile);
+    cleanupForm.append('keep_css', cssFile);
+    const cleanRes = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: cleanupForm });
+    const cleanJson = await cleanRes.json();
+    console.log('🧹 Cleanup:', cleanJson.deleted);
+  }
+  console.log('🎉 v1.1.4 live deployment complete!');
 }
 
 main().catch(err => { console.error('Deploy error:', err); process.exit(1); });

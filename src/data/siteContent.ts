@@ -16,6 +16,11 @@ export interface EnsembleMember {
     desktop: { left: string; top: string; width: string; zIndex: number };
     mobile: { left: string; top: string; width: string; zIndex: number };
   };
+  showHero?: boolean;
+  showEnsemble?: boolean;
+  showPress?: boolean;
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface ConcertEvent {
@@ -31,6 +36,7 @@ export interface ConcertEvent {
   imageUrl: string;
   isUpcoming: boolean;
   ticketInfo?: string;
+  contactRegistration?: string;
 }
 
 export interface AudioConfig {
@@ -240,44 +246,24 @@ export const DEFAULT_PRESS_CONFIG: PressConfig = {
   pressNote: 'Die hier bereitgestellten Pressefotos und Grafiken dürfen im Rahmen redaktioneller Berichterstattung über das Ensemble Olla Podrida sowie zur Ankündigung von Veranstaltungen unter Nennung der Quelle honorarfrei verwendet werden.',
   logos: [
     {
-      id: 'logo-emblem',
-      title: 'Ensemble-Wappen (Topf-Emblem)',
-      subtitle: 'Freigestellt mit transparentem Hintergrund',
-      category: 'logo',
-      imageUrl: '/images/logo-pot.png',
-      downloadUrl: '/images/logo-pot.png',
-      format: 'PNG (Freigestellt)',
-      fileSize: '381 KB'
-    },
-    {
-      id: 'logo-banner',
-      title: 'Offizieller Schriftzug & Banner',
-      subtitle: 'Logo mit historischen Zierelementen',
+      id: 'logo-main',
+      title: 'Ensemble-Logo Olla Podrida',
+      subtitle: 'Offizielles Logo mit Zierelement (Hell & Dunkel PNG)',
       category: 'logo',
       imageUrl: '/images/2024_07_15_Logo_Olla-Podrida_V1_1.png',
       downloadUrl: '/images/2024_07_15_Logo_Olla-Podrida_V1_1.png',
-      format: 'PNG (Transparenz)',
+      format: 'PNG (Freigestellt)',
       fileSize: '128 KB'
     },
     {
       id: 'logo-seal',
-      title: 'Historisches Rundsiegel',
-      subtitle: 'Ziersiegel für Programmhefte & Plakate',
+      title: 'Ensemble-Wappen (Rundsiegel)',
+      subtitle: 'Historisches Ziersiegel & Wappenmarke für Programmhefte & Plakate',
       category: 'logo',
       imageUrl: '/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png',
       downloadUrl: '/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png',
       format: 'PNG (1024x1024)',
       fileSize: '193 KB'
-    },
-    {
-      id: 'logo-print',
-      title: 'Druckfähiges Ensemble-Logo',
-      subtitle: 'RGB / High-Resolution Grafik',
-      category: 'logo',
-      imageUrl: '/images/Logo1.jpg',
-      downloadUrl: '/images/Logo1.jpg',
-      format: 'JPG (Druckqualität)',
-      fileSize: '891 KB'
     }
   ],
   photos: [
@@ -636,6 +622,58 @@ export const getConcertEvents = (): ConcertEvent[] => {
     ...ev,
     imageUrl: resolveAssetUrl(ev.imageUrl)
   }));
+};
+
+/**
+ * Checks whether an event's date and time have passed.
+ * Supports DD.MM.YYYY and YYYY-MM-DD formats with optional time (e.g. "14.00 Uhr" or "18:00").
+ */
+export function isEventExpired(dateStr?: string, timeStr?: string): boolean {
+  if (!dateStr) return false;
+  let day = 0, month = 0, year = 0;
+  const dotParts = dateStr.trim().split('.');
+  if (dotParts.length === 3) {
+    day = parseInt(dotParts[0], 10);
+    month = parseInt(dotParts[1], 10) - 1;
+    year = parseInt(dotParts[2], 10);
+  } else {
+    const dashParts = dateStr.trim().split('-');
+    if (dashParts.length === 3) {
+      year = parseInt(dashParts[0], 10);
+      month = parseInt(dashParts[1], 10) - 1;
+      day = parseInt(dashParts[2], 10);
+    }
+  }
+
+  if (!year || isNaN(month) || !day) return false;
+
+  let hours = 23, minutes = 59;
+  if (timeStr) {
+    const timeMatch = timeStr.match(/(\d{1,2})[:.](\d{2})/);
+    if (timeMatch) {
+      hours = parseInt(timeMatch[1], 10);
+      minutes = parseInt(timeMatch[2], 10);
+    }
+  }
+
+  const eventDate = new Date(year, month, day, hours, minutes, 0);
+  return eventDate.getTime() < Date.now();
+}
+
+/**
+ * Returns all upcoming events that have not expired yet.
+ */
+export const getUpcomingEvents = (): ConcertEvent[] => {
+  const all = getConcertEvents();
+  return all.filter((ev) => ev.isUpcoming && !isEventExpired(ev.date, ev.time));
+};
+
+/**
+ * Returns all past/archive events (explicitly marked or automatically expired).
+ */
+export const getPastEvents = (): ConcertEvent[] => {
+  const all = getConcertEvents();
+  return all.filter((ev) => !ev.isUpcoming || isEventExpired(ev.date, ev.time));
 };
 
 // Backwards-compatible constants for components that import them directly

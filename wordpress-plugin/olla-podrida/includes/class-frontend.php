@@ -118,13 +118,19 @@ class Olla_Podrida_Frontend {
                 'stagePosition' => $m['stage_position'] ?? [
                     'desktop' => ['left' => '30%', 'top' => '30%', 'width' => '25rem', 'zIndex' => 5],
                     'mobile' => ['left' => '20%', 'top' => '25%', 'width' => '45vw', 'zIndex' => 5],
-                ]
+                ],
+                'showHero' => !isset($m['show_hero']) || !empty($m['show_hero']),
+                'showEnsemble' => !isset($m['show_ensemble']) || !empty($m['show_ensemble']),
+                'showPress' => !isset($m['show_press']) || !empty($m['show_press']),
+                'offsetX' => intval($m['offset_x'] ?? 0),
+                'offsetY' => intval($m['offset_y'] ?? 0),
             ];
         }
 
         // Format events for React
         $formatted_events = [];
         foreach ($events as $ev) {
+            $is_expired = Olla_Podrida_Events::is_event_expired($ev);
             $formatted_events[] = [
                 'id' => $ev['id'],
                 'title' => $ev['title'],
@@ -136,8 +142,9 @@ class Olla_Podrida_Frontend {
                 'description' => $ev['description'],
                 'link' => $ev['link'] ?? '',
                 'imageUrl' => $ev['image_url'] ?? '',
-                'isUpcoming' => !empty($ev['is_upcoming']),
+                'isUpcoming' => !empty($ev['is_upcoming']) && !$is_expired,
                 'ticketInfo' => $ev['ticket_info'] ?? '',
+                'contactRegistration' => $ev['contact_registration'] ?? '',
             ];
         }
 
@@ -204,44 +211,24 @@ class Olla_Podrida_Frontend {
                 'pressNote' => $press['press_note'] ?? '',
                 'logos' => [
                     [
-                        'id' => 'logo-emblem',
-                        'title' => 'Ensemble-Wappen (Topf-Emblem)',
-                        'subtitle' => 'Freigestellt mit transparentem Hintergrund',
+                        'id' => 'logo-main',
+                        'title' => 'Ensemble-Logo Olla Podrida',
+                        'subtitle' => 'Offizielles Logo mit Zierelement (Hell & Dunkel PNG)',
                         'category' => 'logo',
-                        'imageUrl' => $press['logo_pot'] ?? '',
-                        'downloadUrl' => $press['logo_pot'] ?? '',
+                        'imageUrl' => $press['logo_banner'] ?: (OLLA_PODRIDA_URL . 'assets/dist/images/2024_07_15_Logo_Olla-Podrida_V1_1.png'),
+                        'downloadUrl' => $press['logo_banner'] ?: (OLLA_PODRIDA_URL . 'assets/dist/images/2024_07_15_Logo_Olla-Podrida_V1_1.png'),
                         'format' => 'PNG (Freigestellt)',
-                        'fileSize' => '381 KB',
-                    ],
-                    [
-                        'id' => 'logo-banner',
-                        'title' => 'Offizieller Schriftzug & Banner',
-                        'subtitle' => 'Logo mit historischen Zierelementen',
-                        'category' => 'logo',
-                        'imageUrl' => $press['logo_banner'] ?? '',
-                        'downloadUrl' => $press['logo_banner'] ?? '',
-                        'format' => 'PNG (Transparenz)',
                         'fileSize' => '128 KB',
                     ],
                     [
                         'id' => 'logo-seal',
-                        'title' => 'Historisches Rundsiegel',
-                        'subtitle' => 'Ziersiegel für Programmhefte & Plakate',
+                        'title' => 'Ensemble-Wappen (Rundsiegel)',
+                        'subtitle' => 'Historisches Ziersiegel & Wappenmarke für Programmhefte & Plakate',
                         'category' => 'logo',
-                        'imageUrl' => $press['logo_seal'] ?? '',
-                        'downloadUrl' => $press['logo_seal'] ?? '',
+                        'imageUrl' => $press['logo_seal'] ?: (OLLA_PODRIDA_URL . 'assets/dist/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png'),
+                        'downloadUrl' => $press['logo_seal'] ?: (OLLA_PODRIDA_URL . 'assets/dist/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png'),
                         'format' => 'PNG (1024x1024)',
                         'fileSize' => '193 KB',
-                    ],
-                    [
-                        'id' => 'logo-print',
-                        'title' => 'Druckfähiges Ensemble-Logo',
-                        'subtitle' => 'RGB / High-Resolution Grafik',
-                        'category' => 'logo',
-                        'imageUrl' => $press['logo_print'] ?? '',
-                        'downloadUrl' => $press['logo_print'] ?? '',
-                        'format' => 'JPG (Druckqualität)',
-                        'fileSize' => '891 KB',
                     ],
                 ],
                 'photos' => [
@@ -291,12 +278,16 @@ class Olla_Podrida_Frontend {
         $is_explicit_param = (isset($_GET['olla_canvas']) && $_GET['olla_canvas'] === '1');
         $is_query_var = (get_query_var('olla_podrida_route') == '1');
 
+        $settings = Olla_Podrida_Settings::get_section('settings');
+        $universal_dominance = !empty($settings['universal_dominance']);
+
         // Direct URL slug check for /olla-podrida regardless of permalink cache status
         $raw_uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
         $trimmed_uri = trim($raw_uri, '/');
         $is_direct_slug = ($trimmed_uri === 'olla-podrida' || preg_match('/(^|\/)olla-podrida$/i', $trimmed_uri));
+        $is_front_page_domination = ($universal_dominance && (is_front_page() || is_home()));
 
-        if ($is_direct_slug || $is_query_var || $is_target_page || $is_explicit_param) {
+        if ($is_front_page_domination || $is_direct_slug || $is_query_var || $is_target_page || $is_explicit_param) {
             status_header(200);
             $template = OLLA_PODRIDA_PATH . 'templates/canvas-page.php';
             if (file_exists($template)) {

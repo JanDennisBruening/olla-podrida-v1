@@ -46,6 +46,7 @@ class Olla_Podrida_Events {
             'image_url' => esc_url_raw($event_data['image_url'] ?? ''),
             'is_upcoming' => !empty($event_data['is_upcoming']),
             'ticket_info' => sanitize_text_field($event_data['ticket_info'] ?? ''),
+            'contact_registration' => sanitize_text_field($event_data['contact_registration'] ?? ''),
         ];
 
         $found = false;
@@ -63,6 +64,44 @@ class Olla_Podrida_Events {
 
         self::save_events($events);
         return $clean_event;
+    }
+
+    public static function is_event_expired($event) {
+        $date_str = trim($event['date'] ?? '');
+        if (empty($date_str)) {
+            return false;
+        }
+
+        $day = 0; $month = 0; $year = 0;
+        $dot_parts = explode('.', $date_str);
+        if (count($dot_parts) === 3) {
+            $day = intval($dot_parts[0]);
+            $month = intval($dot_parts[1]);
+            $year = intval($dot_parts[2]);
+        } else {
+            $dash_parts = explode('-', $date_str);
+            if (count($dash_parts) === 3) {
+                $year = intval($dash_parts[0]);
+                $month = intval($dash_parts[1]);
+                $day = intval($dash_parts[2]);
+            }
+        }
+
+        if (!$year || !$month || !$day) {
+            return false;
+        }
+
+        $hour = 23;
+        $minute = 59;
+        $time_str = trim($event['time'] ?? '');
+        if (!empty($time_str) && preg_match('/(\d{1,2})[:.](\d{2})/', $time_str, $matches)) {
+            $hour = intval($matches[1]);
+            $minute = intval($matches[2]);
+        }
+
+        $event_ts = mktime($hour, $minute, 0, $month, $day, $year);
+        $current_ts = current_time('timestamp');
+        return ($event_ts !== false && $event_ts < $current_ts);
     }
 
     public static function delete_event($id) {

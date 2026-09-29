@@ -63,14 +63,16 @@ $musicians = Olla_Podrida_Settings::get_section('musicians');
         </div>
 
         <div class="olla-card-body">
-            <div class="olla-musicians-accordion">
+            <div class="olla-musicians-accordion" id="olla-musicians-list">
                 <?php foreach ($musicians as $idx => $m): ?>
                     <div class="olla-musician-item">
                         <div class="olla-musician-header" onclick="this.parentElement.classList.toggle('is-open');">
                             <span class="olla-musician-drag-icon">☰</span>
                             <strong><?php echo esc_html($m['name']); ?></strong>
                             <span class="olla-musician-subrole">— <?php echo esc_html($m['role']); ?></span>
+                            
                             <span class="dashicons dashicons-arrow-down-alt2 olla-accordion-arrow" style="float: right;"></span>
+                            <button type="button" class="button button-link-delete button-small" style="float: right; margin-right: 12px;" onclick="event.stopPropagation(); if (confirm('Diesen Musiker wirklich aus dem Ensemble entfernen?')) { this.closest('.olla-musician-item').remove(); }">Löschen</button>
                         </div>
 
                         <div class="olla-musician-content">
@@ -89,7 +91,7 @@ $musicians = Olla_Podrida_Settings::get_section('musicians');
 
                             <div class="olla-field-group">
                                 <label><strong>Gespielte Instrumente (Komma-getrennt):</strong></label>
-                                <input type="text" name="musicians[<?php echo $idx; ?>][instruments]" value="<?php echo esc_attr($m['instruments']); ?>" class="large-text" />
+                                <input type="text" name="musicians[<?php echo $idx; ?>][instruments]" value="<?php echo esc_attr(is_array($m['instruments'] ?? null) ? implode(', ', $m['instruments']) : ($m['instruments'] ?? '')); ?>" class="large-text" />
                             </div>
 
                             <div class="olla-field-group">
@@ -102,7 +104,37 @@ $musicians = Olla_Podrida_Settings::get_section('musicians');
                                 <input type="text" name="musicians[<?php echo $idx; ?>][tooltip]" value="<?php echo esc_attr($m['tooltip'] ?? $m['name']); ?>" class="regular-text" />
                             </div>
 
-                            <div class="olla-grid-2">
+                            <!-- Visibility Toggles -->
+                            <div class="olla-field-group" style="background:#faf8f5; border:1px solid #e2d7c5; border-radius:6px; padding:10px 14px; margin-top:10px;">
+                                <label style="display:block; margin-bottom:6px;"><strong>Sichtbarkeit in den Sektionen:</strong></label>
+                                <div style="display:flex; gap:18px; flex-wrap:wrap;">
+                                    <label><input type="checkbox" name="musicians[<?php echo $idx; ?>][show_hero]" value="1" <?php checked(!isset($m['show_hero']) || !empty($m['show_hero'])); ?> /> 🏰 Hero-Bühne (Oben)</label>
+                                    <label><input type="checkbox" name="musicians[<?php echo $idx; ?>][show_ensemble]" value="1" <?php checked(!isset($m['show_ensemble']) || !empty($m['show_ensemble'])); ?> /> 📜 Ensemble-Galerie (Mitte)</label>
+                                    <label><input type="checkbox" name="musicians[<?php echo $idx; ?>][show_press]" value="1" <?php checked(!isset($m['show_press']) || !empty($m['show_press'])); ?> /> 📰 Pressematerial (Download)</label>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Nudge Position Controls -->
+                            <div class="olla-field-group" style="background:#f0ede6; border:1px solid #d4c8b2; border-radius:6px; padding:10px 14px; margin-top:10px;">
+                                <label style="display:block; margin-bottom:6px;"><strong>Positionierung &amp; Feinjustierung (Bühnen-Offset in Pixeln):</strong></label>
+                                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:12px; font-weight:600;">X (Horizontal):</span>
+                                        <input type="number" name="musicians[<?php echo $idx; ?>][offset_x]" value="<?php echo intval($m['offset_x'] ?? 0); ?>" class="small-text olla-offset-x" style="width:60px;" />
+                                        <button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="-5" title="5px nach links">◄</button>
+                                        <button type="button" class="button button-small olla-nudge-btn" data-axis="x" data-dir="5" title="5px nach rechts">►</button>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:12px; font-weight:600;">Y (Vertikal):</span>
+                                        <input type="number" name="musicians[<?php echo $idx; ?>][offset_y]" value="<?php echo intval($m['offset_y'] ?? 0); ?>" class="small-text olla-offset-y" style="width:60px;" />
+                                        <button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="-5" title="5px nach oben">▲</button>
+                                        <button type="button" class="button button-small olla-nudge-btn" data-axis="y" data-dir="5" title="5px nach unten">▼</button>
+                                    </div>
+                                    <button type="button" class="button button-small olla-nudge-reset" title="Auf 0 zurücksetzen">↺ Reset</button>
+                                </div>
+                            </div>
+
+                            <div class="olla-grid-2" style="margin-top:10px;">
                                 <div class="olla-field-group olla-media-field">
                                     <label><strong>Bühnenbild / Freisteller (HeroStage):</strong></label>
                                     <div class="olla-media-row">
@@ -132,6 +164,12 @@ $musicians = Olla_Podrida_Settings::get_section('musicians');
                         </div>
                     </div>
                 <?php endforeach; ?>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="button" class="button button-secondary" id="olla-add-musician-btn">
+                    <span class="dashicons dashicons-plus-alt" style="margin-top: 3px;"></span> Weiteren Musiker hinzufügen
+                </button>
             </div>
         </div>
 

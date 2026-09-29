@@ -39,8 +39,9 @@ unset($all_sections['roles']);
                         <tr>
                             <th style="width: 240px; font-weight: 700;">Bereich / Menüpunkt</th>
                             <th style="width: 140px; text-align: center;">Administrator</th>
+                            <th style="width: 140px; text-align: center;">👑 Großmeister</th>
                             <?php foreach ($all_wp_roles as $role_slug => $role_name): ?>
-                                <?php if ($role_slug === 'administrator') continue; ?>
+                                <?php if ($role_slug === 'administrator' || $role_slug === 'olla_grossmeister') continue; ?>
                                 <th style="text-align: center; font-weight: 600;">
                                     <?php echo esc_html(translate_user_role($role_name)); ?><br/>
                                     <span style="font-weight: normal; font-size: 11px; opacity: 0.7;">(<?php echo esc_html($role_slug); ?>)</span>
@@ -59,9 +60,13 @@ unset($all_sections['roles']);
                                     <span class="dashicons dashicons-yes" style="color: #46b450; font-size: 22px;"></span>
                                     <span style="font-size: 11px; display: block; color: #777;">Immer aktiv</span>
                                 </td>
+                                <td style="text-align: center;">
+                                    <span class="dashicons dashicons-yes" style="color: #46b450; font-size: 22px;"></span>
+                                    <span style="font-size: 11px; display: block; color: #777;">Vollzugriff</span>
+                                </td>
                                 <?php foreach ($all_wp_roles as $role_slug => $role_name): ?>
                                     <?php
-                                    if ($role_slug === 'administrator') continue;
+                                    if ($role_slug === 'administrator' || $role_slug === 'olla_grossmeister') continue;
                                     $allowed_for_role = Olla_Podrida_Roles::get_sections_for_role($role_slug);
                                     $is_checked = in_array($sec_key, $allowed_for_role, true);
                                     ?>
@@ -82,8 +87,9 @@ unset($all_sections['roles']);
                         <tr>
                             <td><em>Schnellwahl:</em></td>
                             <td style="text-align: center;">—</td>
+                            <td style="text-align: center;">—</td>
                             <?php foreach ($all_wp_roles as $role_slug => $role_name): ?>
-                                <?php if ($role_slug === 'administrator') continue; ?>
+                                <?php if ($role_slug === 'administrator' || $role_slug === 'olla_grossmeister') continue; ?>
                                 <td style="text-align: center; font-size: 11px;">
                                     <button type="button" class="button button-small" onclick="document.querySelectorAll('.role-cb-<?php echo esc_attr($role_slug); ?>').forEach(c => c.checked = true);">Alle</button>
                                     <button type="button" class="button button-small" onclick="document.querySelectorAll('.role-cb-<?php echo esc_attr($role_slug); ?>').forEach(c => c.checked = false);">Keine</button>

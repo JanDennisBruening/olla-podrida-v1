@@ -19,9 +19,10 @@ class Olla_Podrida {
     }
 
     private function init_hooks() {
+        add_action('init', ['Olla_Podrida_Roles', 'register_custom_roles']);
         add_action('rest_api_init', ['Olla_Podrida_Contact', 'register_routes']);
 
-        // Inject favicon site-wide (frontend, admin, login) as long as plugin is active
+        // Inject favicon site-wide (frontend, admin, login) as long as plugin is active and enabled
         add_action('wp_head', [$this, 'inject_favicon'], 1);
         add_action('admin_head', [$this, 'inject_favicon'], 1);
         add_action('login_head', [$this, 'inject_favicon'], 1);
@@ -35,8 +36,16 @@ class Olla_Podrida {
      * Outputs <link rel="icon"> pointing to the pure transparent pot logo (no background, no text).
      */
     public function inject_favicon() {
-        $icon_url = OLLA_PODRIDA_URL . 'assets/dist/images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION;
+        $settings = Olla_Podrida_Settings::get_section('settings');
+        if (isset($settings['favicon_enabled']) && empty($settings['favicon_enabled'])) {
+            return;
+        }
+
+        $icon_url = !empty($settings['favicon_url']) 
+            ? $settings['favicon_url'] 
+            : (OLLA_PODRIDA_URL . 'assets/dist/images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION);
         $ico_url = OLLA_PODRIDA_URL . 'assets/dist/images/favicon.ico?v=' . OLLA_PODRIDA_VERSION;
+
         echo '<link rel="icon" type="image/x-icon" href="' . esc_url($ico_url) . '" />' . "\n";
         echo '<link rel="icon" type="image/png" sizes="512x512" href="' . esc_url($icon_url) . '" />' . "\n";
         echo '<link rel="shortcut icon" type="image/png" href="' . esc_url($icon_url) . '" />' . "\n";
@@ -47,10 +56,20 @@ class Olla_Podrida {
      * Fallback for themes that use get_site_icon_url().
      */
     public function filter_site_icon_url($url) {
-        return OLLA_PODRIDA_URL . 'assets/dist/images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION;
+        $settings = Olla_Podrida_Settings::get_section('settings');
+        if (isset($settings['favicon_enabled']) && empty($settings['favicon_enabled'])) {
+            return $url;
+        }
+
+        return !empty($settings['favicon_url']) 
+            ? $settings['favicon_url'] 
+            : (OLLA_PODRIDA_URL . 'assets/dist/images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION);
     }
 
     public static function activate() {
+        // Register custom medieval roles
+        Olla_Podrida_Roles::register_custom_roles();
+
         // Create DB table for contact inquiries
         Olla_Podrida_Contact::create_table();
 

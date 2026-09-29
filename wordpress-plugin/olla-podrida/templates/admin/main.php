@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $tab = $active_tab;
 $tabs = [
+    'settings' => ['label' => '👑 Allgemein & System', 'icon' => 'dashicons-admin-settings'],
     'hero' => ['label' => '🏰 Start & Hero', 'icon' => 'dashicons-format-image'],
     'ensemble' => ['label' => '📜 Ensemble & Musiker', 'icon' => 'dashicons-groups'],
     'events' => ['label' => '📅 Termine & Konzerte', 'icon' => 'dashicons-calendar-alt'],

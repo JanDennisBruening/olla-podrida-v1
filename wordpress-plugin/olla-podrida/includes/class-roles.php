@@ -10,6 +10,7 @@ class Olla_Podrida_Roles {
      */
     public static function get_all_sections() {
         return [
+            'settings' => ['label' => 'Allgemein & System',         'icon' => 'dashicons-admin-settings'],
             'hero'     => ['label' => 'Start & Hero-Bühne',        'icon' => 'dashicons-format-image'],
             'ensemble' => ['label' => 'Ensemble & Musiker',         'icon' => 'dashicons-groups'],
             'events'   => ['label' => 'Termine & Konzerte',         'icon' => 'dashicons-calendar-alt'],
@@ -21,6 +22,37 @@ class Olla_Podrida_Roles {
             'display'  => ['label' => 'Einbindung & Ausspielung',   'icon' => 'dashicons-admin-generic'],
             'roles'    => ['label' => 'Rollen & Berechtigungen',    'icon' => 'dashicons-admin-users'],
         ];
+    }
+
+    /**
+     * Register medieval atmospheric roles for Olla Podrida.
+     */
+    public static function register_custom_roles() {
+        if (!function_exists('add_role')) {
+            return;
+        }
+
+        add_role('olla_grossmeister', '👑 Großmeister des mächtigen Topfes (Admin)', [
+            'read' => true,
+            'manage_options' => true,
+            'upload_files' => true,
+            'edit_posts' => true,
+        ]);
+
+        add_role('olla_hofkapellmeister', '🎵 Hofkapellmeister des Ensembles (Manager)', [
+            'read' => true,
+            'upload_files' => true,
+            'edit_posts' => true,
+        ]);
+
+        add_role('olla_schreiber', '📜 Schreiber der Chronik (Termine & Presse)', [
+            'read' => true,
+            'upload_files' => true,
+        ]);
+
+        add_role('olla_spielmann', '🎭 Fahrender Spielmann / Troubadour (Gast)', [
+            'read' => true,
+        ]);
     }
 
     /**
@@ -38,23 +70,40 @@ class Olla_Podrida_Roles {
      * Get allowed sections configured for a specific role slug.
      */
     public static function get_sections_for_role($role_slug) {
-        if ($role_slug === 'administrator') {
+        if ($role_slug === 'administrator' || $role_slug === 'olla_grossmeister') {
             return array_keys(self::get_all_sections());
         }
 
         $roles_config = Olla_Podrida_Settings::get_section('roles');
         
-        // Check new universal structure: $roles_config['roles_permissions'][$role_slug]
+        // Check universal structure: $roles_config['roles_permissions'][$role_slug]
         if (isset($roles_config['roles_permissions'][$role_slug]) && is_array($roles_config['roles_permissions'][$role_slug])) {
             return $roles_config['roles_permissions'][$role_slug];
         }
 
-        // Backwards compatibility with legacy keys
-        if ($role_slug === 'editor' && !empty($roles_config['editor_sections'])) {
-            return (array) $roles_config['editor_sections'];
+        // Atmospheric Defaults for custom roles
+        if ($role_slug === 'olla_hofkapellmeister') {
+            return ['settings', 'hero', 'ensemble', 'events', 'contact', 'audio', 'press'];
         }
-        if ($role_slug === 'author' && !empty($roles_config['author_sections'])) {
-            return (array) $roles_config['author_sections'];
+        if ($role_slug === 'olla_schreiber') {
+            return ['events', 'press'];
+        }
+        if ($role_slug === 'olla_spielmann') {
+            return [];
+        }
+
+        // Backwards compatibility with standard WP roles
+        if ($role_slug === 'editor') {
+            if (!empty($roles_config['editor_sections'])) {
+                return (array) $roles_config['editor_sections'];
+            }
+            return ['settings', 'hero', 'ensemble', 'events', 'contact', 'audio', 'press', 'seo', 'legal'];
+        }
+        if ($role_slug === 'author') {
+            if (!empty($roles_config['author_sections'])) {
+                return (array) $roles_config['author_sections'];
+            }
+            return ['events'];
         }
 
         return [];

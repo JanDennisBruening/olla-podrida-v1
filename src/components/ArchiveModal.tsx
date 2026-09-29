@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { getConcertEvents, ConcertEvent } from '../data/siteContent';
-import { X, Calendar, MapPin, Clock, ExternalLink, Music } from 'lucide-react';
+import { getConcertEvents, isEventExpired, ConcertEvent } from '../data/siteContent';
+import { X, Calendar, MapPin, Clock, ExternalLink, Music, Mail } from 'lucide-react';
 
 interface ArchiveModalProps {
   isOpen: boolean;
@@ -69,7 +69,9 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {concertEvents.map((event) => (
+            {concertEvents.map((event) => {
+              const isPast = !event.isUpcoming || isEventExpired(event.date, event.time);
+              return (
               <div
                 key={event.id}
                 className="bg-[#1A100B] border border-[#DAA520]/30 rounded-xl p-5 shadow-lg flex flex-col justify-between hover:border-[#DAA520] transition-colors"
@@ -79,8 +81,8 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
                     <span className="text-[0.6875rem] font-macondo uppercase px-2.5 py-0.5 rounded bg-[#DAA520] text-[#070202] font-bold">
                       {event.category}
                     </span>
-                    <span className={`text-xs px-2 py-0.5 rounded ${event.isUpcoming ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' : 'bg-stone-800 text-stone-300'}`}>
-                      {event.isUpcoming ? 'Kommend' : 'Archiv'}
+                    <span className={`text-xs px-2 py-0.5 rounded font-mono ${!isPast ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' : 'bg-stone-800 text-stone-300'}`}>
+                      {!isPast ? 'Kommend' : 'Archiv'}
                     </span>
                   </div>
 
@@ -96,6 +98,12 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
                       <span className="text-[#DAA520]">📍</span>
                       <span>{event.location}</span>
                     </div>
+                    {event.contactRegistration && (
+                      <div className="flex items-start space-x-2 text-amber-300/90 pt-1">
+                        <span className="text-[#DAA520]">✉️</span>
+                        <span>{event.contactRegistration}</span>
+                      </div>
+                    )}
                   </div>
 
                   <p className="text-xs text-[#D1C7AC]/80 leading-relaxed mb-4">
@@ -115,7 +123,8 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
                   </a>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

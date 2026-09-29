@@ -57,6 +57,9 @@ $events = Olla_Podrida_Events::get_all_events();
                                     <small style="color: #666;">
                                         📍 <?php echo esc_html($event['location']); ?> (<?php echo esc_html($event['city']); ?>)
                                     </small>
+                                    <?php if (!empty($event['contact_registration'])): ?>
+                                        <br/><small style="color: #8c6d1f;">✉️ <?php echo esc_html($event['contact_registration']); ?></small>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="olla-badge-category"><?php echo esc_html($event['category'] ?: 'Konzert'); ?></span>
@@ -141,6 +144,12 @@ $events = Olla_Podrida_Events::get_all_events();
                     <div class="olla-field-group">
                         <label for="event_ticket_info"><strong>Eintritt &amp; Ticket-Information:</strong></label>
                         <input type="text" id="event_ticket_info" name="ticket_info" placeholder="z. B. Eintritt frei, Spende erbeten" class="large-text" />
+                    </div>
+
+                    <div class="olla-field-group">
+                        <label for="event_contact_registration"><strong>✉️ Kontakt &amp; Anmeldung (optional):</strong></label>
+                        <input type="text" id="event_contact_registration" name="contact_registration" placeholder="z. B. Voranmeldung unter info@stiftung.de oder Tel. 0541/12345" class="large-text" />
+                        <span class="description" style="font-size: 11px; color: #666;">Wird nur auf der Veranstaltungskarte und im PDF-Druck angezeigt, wenn ausgefüllt.</span>
                     </div>
 
                     <div class="olla-field-group">

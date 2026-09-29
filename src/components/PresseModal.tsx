@@ -12,10 +12,8 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
   const [activeTab, setActiveTab] = useState<'text' | 'logos' | 'photos' | 'contact'>('text');
   const [copied, setCopied] = useState(false);
   const [logoBgs, setLogoBgs] = useState<Record<string, 'light' | 'dark'>>({
-    'logo-banner': 'light',
-    'logo-emblem': 'dark',
+    'logo-main': 'light',
     'logo-seal': 'dark',
-    'logo-print': 'dark',
   });
 
   useEffect(() => {

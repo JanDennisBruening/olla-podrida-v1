@@ -38,12 +38,43 @@ class Olla_Podrida_Contact {
             $params = $request->get_body_params();
         }
 
+        $contact_settings = Olla_Podrida_Settings::get_section('contact');
+
+        // 1. Honeypot check: If invisible honeypot field is filled, reject immediately
+        $honeypot = trim($params['hp_website'] ?? $params['website_check'] ?? '');
+        if (!empty($honeypot)) {
+            // Silently return success to mislead bots, or 400
+            return new WP_REST_Response([
+                'success' => true,
+                'message' => 'Vielen Dank für Ihre Anfrage.'
+            ], 200);
+        }
+
+        // 2. Timing check: reject submissions under 2.5 seconds (human impossible)
+        $form_ts = intval($params['_form_ts'] ?? 0);
+        if ($form_ts > 0 && (time() - $form_ts < 2)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Die Anfrage wurde zu schnell versendet. Bitte versuchen Sie es erneut.'
+            ], 400);
+        }
+
+        // 3. IP Rate Limiting via WordPress Transients (max 5 submissions per 10 minutes)
+        $ip = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+        $rate_key = 'olla_rate_' . md5($ip);
+        $attempts = (int) get_transient($rate_key);
+        if ($attempts >= 5) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Zu viele Anfragen in kurzer Zeit. Bitte warten Sie einige Minuten vor dem nächsten Versuch.'
+            ], 429);
+        }
+        set_transient($rate_key, $attempts + 1, 10 * MINUTE_IN_SECONDS);
+
         $name = sanitize_text_field($params['name'] ?? '');
         $email = sanitize_email($params['email'] ?? '');
         $message = sanitize_textarea_field($params['message'] ?? '');
         $acceptance = !empty($params['acceptance']);
-
-        $contact_settings = Olla_Podrida_Settings::get_section('contact');
 
         if (empty($name) || empty($email) || !is_email($email) || !$acceptance) {
             return new WP_REST_Response([

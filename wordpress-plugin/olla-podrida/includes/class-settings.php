@@ -9,6 +9,17 @@ class Olla_Podrida_Settings {
         $assets_url = OLLA_PODRIDA_URL . 'assets/dist/images/';
 
         return [
+            'settings' => [
+                'site_title' => 'Ensemble Olla Podrida',
+                'site_tagline' => 'Klangvielfalt aus Mittelalter und Renaissance',
+                'favicon_enabled' => true,
+                'favicon_url' => $assets_url . 'Favicon-transparent.png',
+                'universal_dominance' => true,
+                'auto_expire_events' => true,
+                'bot_protection_enabled' => true,
+                'min_submit_seconds' => 2,
+                'rate_limit_submissions' => 5,
+            ],
             'hero' => [
                 'slogan' => 'Ensemble Olla Podrida',
                 'subtitle' => 'Klangvielfalt aus Mittelalter und Renaissance',

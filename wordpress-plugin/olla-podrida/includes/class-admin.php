@@ -143,6 +143,21 @@ class Olla_Podrida_Admin {
         }
 
         switch ($section) {
+            case 'settings':
+                $data = [
+                    'site_title' => sanitize_text_field($_POST['site_title'] ?? ''),
+                    'site_tagline' => sanitize_text_field($_POST['site_tagline'] ?? ''),
+                    'favicon_enabled' => !empty($_POST['favicon_enabled']),
+                    'favicon_url' => esc_url_raw($_POST['favicon_url'] ?? ''),
+                    'universal_dominance' => !empty($_POST['universal_dominance']),
+                    'auto_expire_events' => !empty($_POST['auto_expire_events']),
+                    'bot_protection_enabled' => !empty($_POST['bot_protection_enabled']),
+                    'min_submit_seconds' => intval($_POST['min_submit_seconds'] ?? 2),
+                    'rate_limit_submissions' => intval($_POST['rate_limit_submissions'] ?? 5),
+                ];
+                Olla_Podrida_Settings::update_section('settings', $data);
+                break;
+
             case 'hero':
                 $data = [
                     'slogan' => sanitize_text_field($_POST['slogan'] ?? ''),
@@ -179,6 +194,11 @@ class Olla_Podrida_Admin {
                             'tooltip' => sanitize_text_field($m['tooltip'] ?? ''),
                             'stage_image' => esc_url_raw($m['stage_image'] ?? ''),
                             'portrait_image' => esc_url_raw($m['portrait_image'] ?? ''),
+                            'show_hero' => !empty($m['show_hero']),
+                            'show_ensemble' => !empty($m['show_ensemble']),
+                            'show_press' => !empty($m['show_press']),
+                            'offset_x' => intval($m['offset_x'] ?? 0),
+                            'offset_y' => intval($m['offset_y'] ?? 0),
                         ];
                     }
                     Olla_Podrida_Settings::update_section('musicians', $musicians);
@@ -301,7 +321,7 @@ class Olla_Podrida_Admin {
                 break;
         }
 
-        $redirect_page = ($section === 'hero') ? 'olla-podrida' : 'olla-podrida-' . $section;
+        $redirect_page = ($section === 'settings' || $section === 'hero') ? 'olla-podrida' : 'olla-podrida-' . $section;
         wp_redirect(add_query_arg([
             'page' => $redirect_page,
             'tab' => $section,
