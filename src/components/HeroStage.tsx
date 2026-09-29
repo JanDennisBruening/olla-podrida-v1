@@ -129,12 +129,18 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
     const triggerEntrance = () => {
       if (!triggered) {
         triggered = true;
-        setIsLoaded(true);
+        setTimeout(() => setIsLoaded(true), 120);
       }
     };
 
     window.addEventListener('preloader-finish', triggerEntrance);
-    const timer = setTimeout(triggerEntrance, 1000);
+    window.addEventListener('preloader-removed', () => {
+      if (!triggered) {
+        triggered = true;
+        setIsLoaded(true);
+      }
+    });
+    const timer = setTimeout(triggerEntrance, 2000);
 
     return () => {
       window.removeEventListener('preloader-finish', triggerEntrance);
@@ -155,16 +161,17 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
           : 'min(72svh, 42rem)'
       }}
     >
-      {/* Stone Hall Backdrop strictly for the Hero Stage – Fades in slowly from black */}
+      {/* Stone Hall Backdrop strictly for the Hero Stage – Fades in slowly from dark */}
       <div
         className="hidden md:block absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none -z-10"
         style={{
           backgroundImage: `url(${heroConfig.bgDesktop || assets.heroBackgroundDesktop})`,
           backgroundPosition: 'center top',
           backgroundSize: '100% auto',
-          transition: 'opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1), transform 2200ms cubic-bezier(0.16, 1, 0.3, 1)',
-          opacity: isLoaded ? 0.95 : 0,
-          transform: isLoaded ? 'scale(1)' : 'scale(1.03)'
+          transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+          opacity: isLoaded ? 0.98 : 0,
+          transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+          filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
         }}
       />
       <div
@@ -173,11 +180,56 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
           backgroundImage: `url(${heroConfig.bgMobile || assets.heroBackgroundMobile})`,
           backgroundPosition: 'center top',
           backgroundSize: 'cover',
-          transition: 'opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1), transform 2200ms cubic-bezier(0.16, 1, 0.3, 1)',
-          opacity: isLoaded ? 0.95 : 0,
-          transform: isLoaded ? 'scale(1)' : 'scale(1.03)'
+          transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+          opacity: isLoaded ? 0.98 : 0,
+          transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+          filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
         }}
       />
+
+      {/* Atmospheric Torch / Candle Glow points illuminating the stone hall arches on left and right */}
+      <div
+        className={`absolute top-[22%] left-[6%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 -z-5 ${
+          isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+        }`}
+        style={{ animationDuration: '3.6s' }}
+      />
+      <div
+        className={`absolute top-[22%] right-[6%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 -z-5 ${
+          isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+        }`}
+        style={{ animationDuration: '4.4s', animationDelay: '1.2s' }}
+      />
+
+      {/* Warm Ambient Center Stage Glow illuminating the figures and stone hall from behind */}
+      <div
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-2000 -z-6 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+          background: 'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(218, 165, 32, 0.14) 0%, rgba(184, 115, 51, 0.06) 50%, transparent 80%)'
+        }}
+      />
+
+      {/* Top navbar blend gradient so navbar floats smoothly over the stone hall backdrop */}
+      <div className="absolute top-0 inset-x-0 h-24 md:h-32 bg-gradient-to-b from-[#070202]/85 via-[#070202]/40 to-transparent pointer-events-none -z-4" />
+
+      {/* Drifting Stage Mist / Smoke Layer across the floor */}
+      {heroConfig.smokeEnabled && (
+        <div
+          className={`absolute bottom-0 inset-x-0 h-28 md:h-36 pointer-events-none overflow-hidden transition-opacity duration-2000 -z-5 ${
+            isLoaded ? 'opacity-35' : 'opacity-0'
+          }`}
+        >
+          <img
+            src={assets.smokeBottom || assets.smokeAlt}
+            alt=""
+            className="w-full h-full object-cover object-bottom mix-blend-screen scale-105"
+            style={{ filter: 'brightness(110%) contrast(115%)' }}
+          />
+        </div>
+      )}
+
       {/* Bottom fade into pure #070202 */}
       <div className="absolute bottom-0 inset-x-0 h-12 md:h-16 bg-gradient-to-b from-transparent to-[#070202] pointer-events-none -z-10" />
 

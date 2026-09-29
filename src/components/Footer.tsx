@@ -45,17 +45,20 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
       </div>
 
       <div
-        className={`relative z-10 max-w-[80rem] mx-auto px-[5.5%] flex flex-col items-center transition-all duration-700 ease-out ${
-          isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-        }`}
+        className="relative z-10 max-w-[80rem] mx-auto px-[5.5%] flex flex-col items-center"
       >
         
         {/* Seal Emblem .elementor-element-195d87f2 with generous breathing space above */}
-        <div className="mt-2 mb-6 sm:mb-8 transition-transform duration-300 hover:scale-110 cursor-pointer" onClick={() => scrollTo('Start')}>
+        <div
+          className={`mt-2 mb-6 sm:mb-8 cursor-pointer transition-all duration-800 ease-out transform ${
+            isInView ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 -rotate-6'
+          }`}
+          onClick={() => scrollTo('Start')}
+        >
           <img
             src={assets.footerSeal}
             alt="Olla Podrida"
-            className="w-28 h-28 md:w-32 md:h-32 object-contain p-1 overflow-visible"
+            className="w-28 h-28 md:w-32 md:h-32 object-contain p-1 overflow-visible hover:scale-110 transition-transform duration-300 drop-shadow-[0_4px_12px_rgba(218,165,32,0.3)]"
             loading="lazy"
           />
         </div>
@@ -64,7 +67,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
         <div className="w-full flex flex-col items-center gap-y-1 sm:gap-y-1.5 mb-4 font-macondo text-[0.92rem] sm:text-[1.02rem] md:text-[1.12rem] font-medium text-[#F5F5DC] text-center">
           
           {/* Main sections row */}
-          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8">
+          <div
+            className={`flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8 transition-all duration-700 delay-150 ease-out transform ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
             <button
               onClick={() => scrollTo('ensemble')}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
@@ -92,7 +99,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
           </div>
 
           {/* Legal, press and cookies row */}
-          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8">
+          <div
+            className={`flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 md:gap-x-8 transition-all duration-700 delay-250 ease-out transform ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
             <button
               onClick={onOpenPresse}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
@@ -134,7 +145,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
         </div>
 
         {/* Divider with Center "O" matching .elementor-element-6e50220f */}
-        <div className="w-full max-w-xl my-4 flex items-center justify-center">
+        <div
+          className={`w-full max-w-xl my-4 flex items-center justify-center transition-all duration-1000 delay-350 ease-out transform ${
+            isInView ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-50'
+          }`}
+        >
           <div className="flex-1 h-[1px] bg-[#DAA520]/40" />
           <div className="mx-4 text-[#DAA520] font-macondo text-xl font-bold">
             O
@@ -143,7 +158,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
         </div>
 
         {/* Dynamic Current Year with JavaScript (new Date().getFullYear()) & Headline Font (font-macondo) */}
-        <div className="text-center text-xs sm:text-sm text-[#F5F5DC]/80 font-normal space-y-1.5 mt-2">
+        <div
+          className={`text-center text-xs sm:text-sm text-[#F5F5DC]/80 font-normal space-y-1.5 mt-2 transition-all duration-700 delay-450 ease-out transform ${
+            isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
           <p className="font-macondo text-lg sm:text-xl md:text-2xl text-[#F5F5DC] tracking-wide">
             {currentYear} © Ensemble Olla Podrida
           </p>

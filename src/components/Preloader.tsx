@@ -32,6 +32,10 @@ export const Preloader: React.FC = () => {
         }
         setTimeout(() => {
           setIsRemoved(true);
+          if (typeof window !== 'undefined') {
+            (window as any).__OLLA_PAGE_READY__ = true;
+            window.dispatchEvent(new CustomEvent('preloader-removed'));
+          }
         }, 650);
       }
     };

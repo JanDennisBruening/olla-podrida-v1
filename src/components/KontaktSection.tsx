@@ -9,6 +9,8 @@ interface KontaktSectionProps {
 export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy }) => {
   const contactConfig = getContactConfig();
   const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
+  const { ref: portraitRef, isInView: portraitInView } = useInView<HTMLDivElement>({ threshold: 0.15, rootMargin: '0px 0px -30px 0px', triggerOnce: true });
+  const { ref: formRef, isInView: formInView } = useInView<HTMLDivElement>({ threshold: 0.08, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,8 +55,8 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
           
           {/* Left Column: Heading + Text extending right up to the contact form + Susanne underneath */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-800 delay-100 ease-out z-20 ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+            className={`md:col-span-6 lg:col-span-6 flex flex-col text-left transition-all duration-800 ease-out z-20 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
             {/* Heading */}
@@ -63,7 +65,11 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </h2>
 
             {/* Desktop Intro Text - Spans broadly right up to the contact card */}
-            <div className="w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-left pr-0 md:pr-2 lg:pr-4">
+            <div
+              className={`w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-left pr-0 md:pr-2 lg:pr-4 transition-all duration-700 delay-150 ease-out ${
+                isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}
+            >
               <p className="w-full">
                 {contactConfig.introParagraph1 || 'Wir freuen uns auf Ihre Nachrichten und Anfragen. Ob Lob, Kritik oder einfach nur ein Gruß – Ihre Worte sind uns wichtig.'}
               </p>
@@ -78,13 +84,20 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
               </p>
             </div>
 
-            {/* Susanne figure: positioned cleanly underneath the intro text on desktop & tablet */}
-            <div className="w-full flex justify-start items-center mt-5 sm:mt-6 md:mt-8 z-30 pointer-events-none">
-              <div className="w-32 sm:w-40 md:w-44 lg:w-52 transition-transform duration-500 hover:scale-105">
+            {/* Susanne figure: with its own dedicated observer for a graceful entrance */}
+            <div
+              ref={portraitRef}
+              className="w-full flex justify-start items-center mt-5 sm:mt-6 md:mt-8 z-30 pointer-events-none"
+            >
+              <div
+                className={`w-32 sm:w-40 md:w-44 lg:w-52 transition-all duration-800 ease-out transform ${
+                  portraitInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-90'
+                }`}
+              >
                 <img
                   src={contactConfig.portrait || resolveAssetUrl('/images/Susanne_klein.webp')}
                   alt="Susanne spielt vergnügt auf der Flöte"
-                  className="w-full h-auto object-contain drop-shadow-md"
+                  className="w-full h-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-300 pointer-events-auto"
                   loading="lazy"
                 />
               </div>
@@ -93,12 +106,17 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
 
           {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-800 delay-200 ease-out z-10 ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-14'
+            ref={formRef}
+            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative -mt-3 sm:-mt-4 md:mt-0 transition-all duration-900 ease-out z-10 ${
+              formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.97]'
             }`}
           >
             {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned on top of form */}
-            <div className="hidden md:block absolute -top-14 sm:-top-18 md:-top-22 lg:-top-24 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[24rem]">
+            <div
+              className={`hidden md:block absolute -top-14 sm:-top-18 md:-top-22 lg:-top-24 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[24rem] transition-all duration-800 delay-200 ease-out transform ${
+                formInView ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 -translate-y-4 rotate-2'
+              }`}
+            >
               <img
                 src={resolveAssetUrl('/images/musiknoten-banner.png')}
                 alt="Musiknoten Pergament"
