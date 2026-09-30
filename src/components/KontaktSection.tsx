@@ -107,23 +107,23 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     >
       <div className="max-w-[70rem] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
 
-        {/* Two-Column Layout (.elementor-element-29fca19) - tightly connected without black voids */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Layout: Single-column on mobile & tablet (<1024px), Two-Column on desktop (>=1024px) to prevent squished fields and overlapping elements */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Left Column: Heading + Text extending right up to the contact form + Susanne underneath */}
           <div
-            className={`md:col-span-6 lg:col-span-6 flex flex-col text-center md:text-left items-center md:items-start transition-all duration-800 ease-out z-20 ${
+            className={`w-full lg:col-span-6 flex flex-col text-center lg:text-left items-center lg:items-start transition-all duration-800 ease-out z-20 ${
               isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
             {/* Heading */}
-            <h2 className="font-macondo text-[2.2rem] min-[380px]:text-[2.5rem] sm:text-[3rem] md:text-[3rem] lg:text-[3.8rem] text-[#DAA520] font-normal tracking-wide text-center md:text-left mb-3 sm:mb-4 md:mb-5 leading-tight">
+            <h2 className="font-macondo text-[2.2rem] min-[380px]:text-[2.5rem] sm:text-[3rem] md:text-[3.2rem] lg:text-[3.8rem] text-[#DAA520] font-normal tracking-wide text-center lg:text-left mb-3 sm:mb-4 md:mb-5 leading-tight">
               Kontakt &amp; Anfragen
             </h2>
 
             {/* Desktop & Mobile Intro Text */}
             <div
-              className={`w-full space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-center md:text-left pr-0 md:pr-2 lg:pr-4 transition-all duration-700 delay-150 ease-out ${
+              className={`w-full max-w-2xl mx-auto lg:mx-0 space-y-3 sm:space-y-4 font-macondo text-[0.95rem] sm:text-[1.1rem] md:text-[1.18rem] lg:text-[1.28rem] font-semibold text-[#F5F5DC] leading-snug sm:leading-relaxed md:leading-[1.85rem] text-center lg:text-left pr-0 lg:pr-4 transition-all duration-700 delay-150 ease-out ${
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
             >
@@ -141,13 +141,13 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
               </p>
             </div>
 
-            {/* Susanne figure: centered on mobile, enlarged by 30%, slightly hovering over top edge of contact form on mobile */}
+            {/* Susanne figure: centered on mobile & tablet, hovering over top edge of contact form, positioned left on desktop */}
             <div
               ref={portraitRef}
-              className="w-full flex justify-center md:justify-start items-center mt-6 sm:mt-8 md:mt-8 mb-[-3rem] min-[380px]:mb-[-3.6rem] sm:mb-[-4.2rem] md:mb-0 z-30 pointer-events-none"
+              className="w-full flex justify-center lg:justify-start items-center mt-6 sm:mt-8 md:mt-8 mb-[-3rem] min-[380px]:mb-[-3.6rem] sm:mb-[-4.2rem] md:mb-[-4.8rem] lg:mb-0 z-30 pointer-events-none"
             >
               <div
-                className={`w-[10.5rem] min-[380px]:w-[11.8rem] sm:w-[13.5rem] md:w-44 lg:w-52 transition-all duration-800 ease-out transform ${
+                className={`w-[10.5rem] min-[380px]:w-[11.8rem] sm:w-[13.5rem] md:w-[14.5rem] lg:w-48 xl:w-52 transition-all duration-800 ease-out transform ${
                   portraitInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-90'
                 }`}
               >
@@ -161,16 +161,16 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </div>
           </div>
 
-          {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png + extra horizontal margin on mobile */}
+          {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
             ref={formRef}
-            className={`md:col-span-6 lg:col-span-6 flex justify-center md:justify-end relative mt-0 px-3 min-[400px]:px-5 sm:px-8 md:px-0 transition-all duration-900 ease-out z-10 ${
+            className={`w-full lg:col-span-6 flex justify-center lg:justify-end relative mt-0 px-3 min-[400px]:px-5 sm:px-8 md:px-12 lg:px-0 transition-all duration-900 ease-out z-10 ${
               formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.97]'
             }`}
           >
-            {/* Ornamental Musiknoten Banner Graphic (.elementor-element-a3831ca) positioned on top of form */}
+            {/* Ornamental Musiknoten Banner Graphic: only on desktop (lg:block) to prevent covering the Name field on tablet */}
             <div
-              className={`hidden md:block absolute -top-14 sm:-top-18 md:-top-22 lg:-top-24 right-[-0.5rem] md:right-[-1rem] lg:right-[-1.5rem] pointer-events-none z-20 w-[19rem] sm:w-[22rem] lg:w-[24rem] transition-all duration-800 delay-200 ease-out transform ${
+              className={`hidden lg:block absolute -top-16 lg:-top-20 xl:-top-24 right-[-0.5rem] lg:right-[-1rem] xl:right-[-1.5rem] pointer-events-none z-20 w-[18rem] lg:w-[21rem] xl:w-[24rem] transition-all duration-800 delay-200 ease-out transform ${
                 formInView ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 -translate-y-4 rotate-2'
               }`}
             >
@@ -183,7 +183,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </div>
 
             <div
-              className="relative w-full max-w-[42rem] min-h-[38rem] sm:min-h-[42rem] md:min-h-[44rem] px-7 sm:px-12 md:px-16 py-12 sm:py-14 md:py-16 flex flex-col justify-center transition-all duration-300 z-10 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)]"
+              className="relative w-full max-w-[28rem] min-[420px]:max-w-[32rem] sm:max-w-[36rem] md:max-w-[40rem] lg:max-w-[42rem] min-h-[38rem] sm:min-h-[42rem] lg:min-h-[44rem] px-6 min-[400px]:px-8 sm:px-12 md:px-14 lg:px-16 py-12 sm:py-14 lg:py-16 flex flex-col justify-center transition-all duration-300 z-10 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)]"
               style={{
                 backgroundImage: `url("${resolveAssetUrl('/images/hintergrundbild2.png')}")`,
                 backgroundPosition: 'center center',
@@ -192,7 +192,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
               }}
             >
               {/* Contact Form 7 container (.ue_contact_form_7) with generous presence and padding */}
-              <form onSubmit={handleSubmit} className="w-full max-w-[21rem] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto flex flex-col gap-3.5 sm:gap-4.5">
+              <form onSubmit={handleSubmit} className="w-full max-w-[21rem] min-[420px]:max-w-[24rem] sm:max-w-[28rem] md:max-w-[32rem] lg:max-w-xl mx-auto flex flex-col gap-3.5 sm:gap-4.5">
                 
                 {/* Honeypot anti-bot protection */}
                 <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
