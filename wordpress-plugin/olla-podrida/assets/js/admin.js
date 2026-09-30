@@ -9,6 +9,7 @@
         initEventManagement();
         initMessageManagement();
         initMusicianManagement();
+        initImportManagement();
     });
 
     /**
@@ -407,6 +408,228 @@
             '</div>';
             $('#olla-musicians-list').append(html);
         });
+    }
+
+    /**
+     * Kontaktformular-Import Management
+     * Step 1: Detect installed form plugins
+     * Step 2: Choose source plugin + specific form
+     * Step 3: Preview entries
+     * Step 4: Execute import
+     */
+    function initImportManagement() {
+        var $detectBtn = $('#olla-import-detect-btn');
+        if (!$detectBtn.length) return; // not on contact tab
+
+        var importNonce = OllaPodridaAdmin.import_nonce || '';
+        var currentSource = '';
+        var currentFormId = '';
+
+        // Step 1: Detect Sources
+        $detectBtn.on('click', function(e) {
+            e.preventDefault();
+            var $spinner = $('#olla-import-detect-spinner');
+            $spinner.addClass('is-active');
+            $detectBtn.prop('disabled', true);
+            $('#olla-import-no-sources').hide();
+            $('#olla-import-step-select').hide();
+            $('#olla-import-step-preview').hide();
+            $('#olla-import-step-result').hide();
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_detect',
+                _nonce: importNonce
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                $detectBtn.prop('disabled', false);
+
+                if (!res.success || !res.data || Object.keys(res.data).length === 0) {
+                    $('#olla-import-no-sources').fadeIn(200);
+                    return;
+                }
+
+                // Populate source dropdown
+                var $sourceSelect = $('#olla-import-source');
+                $sourceSelect.find('option:not(:first)').remove();
+                $.each(res.data, function(key, label) {
+                    $sourceSelect.append('<option value="' + key + '">' + label + '</option>');
+                });
+
+                $('#olla-import-step-select').fadeIn(200);
+                $detectBtn.text('✅ ' + Object.keys(res.data).length + ' Plugin(s) gefunden').addClass('button-primary');
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $detectBtn.prop('disabled', false);
+                alert('Fehler bei der Erkennung. Bitte versuchen Sie es erneut.');
+            });
+        });
+
+        // Step 2a: Source changed → load forms
+        $('#olla-import-source').on('change', function() {
+            currentSource = $(this).val();
+            var $formSelect = $('#olla-import-form');
+            var $formSpinner = $('#olla-import-form-spinner');
+
+            $formSelect.prop('disabled', true).html('<option value="">— Lade Formulare… —</option>');
+            $('#olla-import-step-preview').hide();
+            $('#olla-import-step-result').hide();
+
+            if (!currentSource) {
+                $formSelect.html('<option value="">— Erst Plugin wählen —</option>');
+                return;
+            }
+
+            $formSpinner.addClass('is-active');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_forms',
+                _nonce: importNonce,
+                source: currentSource
+            }, function(res) {
+                $formSpinner.removeClass('is-active');
+
+                if (!res.success || !res.data || res.data.length === 0) {
+                    $formSelect.html('<option value="">Keine Formulare mit Einträgen gefunden</option>');
+                    return;
+                }
+
+                $formSelect.html('<option value="">— Formular auswählen —</option>');
+                $.each(res.data, function(i, form) {
+                    $formSelect.append(
+                        '<option value="' + form.id + '">' +
+                        form.label + ' (' + form.count + ' Einträge)' +
+                        '</option>'
+                    );
+                });
+                $formSelect.prop('disabled', false);
+            }).fail(function() {
+                $formSpinner.removeClass('is-active');
+                $formSelect.html('<option value="">Fehler beim Laden</option>');
+            });
+        });
+
+        // Step 2b: Form selected → preview
+        $('#olla-import-form').on('change', function() {
+            currentFormId = $(this).val();
+            $('#olla-import-step-preview').hide();
+            $('#olla-import-step-result').hide();
+
+            if (!currentFormId || !currentSource) return;
+
+            var $previewInfo = $('#olla-import-preview-info');
+            var $previewTable = $('#olla-import-preview-table');
+
+            $previewInfo.html('<em>Lade Vorschau…</em>');
+            $previewTable.empty();
+            $('#olla-import-step-preview').fadeIn(200);
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_preview',
+                _nonce: importNonce,
+                source: currentSource,
+                form_id: currentFormId
+            }, function(res) {
+                if (!res.success) {
+                    $previewInfo.html('<strong style="color:#d63638;">Fehler:</strong> Vorschau konnte nicht geladen werden.');
+                    return;
+                }
+
+                var d = res.data;
+                $previewInfo.html(
+                    '<strong>📊 ' + d.count + ' Einträge</strong> gefunden. ' +
+                    (d.count > 0 ? 'Vorschau der letzten ' + Math.min(d.count, d.sample.length) + ' Einträge:' : 'Keine Einträge zum Importieren.')
+                );
+
+                if (d.sample && d.sample.length > 0) {
+                    var tableHtml = '<table class="wp-list-table widefat fixed striped" style="margin-top: 8px;">' +
+                        '<thead><tr>' +
+                        '<th style="width:130px;">Datum</th>' +
+                        '<th style="width:160px;">Name</th>' +
+                        '<th style="width:180px;">E-Mail</th>' +
+                        '<th>Nachricht (Auszug)</th>' +
+                        '</tr></thead><tbody>';
+
+                    $.each(d.sample, function(i, entry) {
+                        var msgPreview = (entry.message || '').substring(0, 80);
+                        if ((entry.message || '').length > 80) msgPreview += '…';
+                        tableHtml += '<tr>' +
+                            '<td>' + escHtml(entry.date || '—') + '</td>' +
+                            '<td>' + escHtml(entry.name || '—') + '</td>' +
+                            '<td>' + escHtml(entry.email || '—') + '</td>' +
+                            '<td style="font-size:12px; color:#555;">' + escHtml(msgPreview || '—') + '</td>' +
+                            '</tr>';
+                    });
+                    tableHtml += '</tbody></table>';
+                    $previewTable.html(tableHtml);
+                }
+
+                if (d.count === 0) {
+                    $('#olla-import-execute-btn').prop('disabled', true);
+                } else {
+                    $('#olla-import-execute-btn').prop('disabled', false)
+                        .text('✅ ' + d.count + ' Einträge jetzt importieren');
+                }
+            });
+        });
+
+        // Step 3: Execute Import
+        $('#olla-import-execute-btn').on('click', function(e) {
+            e.preventDefault();
+            if (!currentSource || !currentFormId) return;
+
+            if (!confirm('Möchten Sie die Einträge jetzt importieren? Bereits importierte Einträge werden automatisch übersprungen.')) {
+                return;
+            }
+
+            var $btn = $(this);
+            var $spinner = $('#olla-import-execute-spinner');
+            $btn.prop('disabled', true);
+            $spinner.addClass('is-active');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_execute',
+                _nonce: importNonce,
+                source: currentSource,
+                form_id: currentFormId
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+
+                var $result = $('#olla-import-result-box');
+                if (res.success && res.data) {
+                    var d = res.data;
+                    var bgColor = d.imported > 0 ? '#ecfdf5' : '#fef9e7';
+                    var borderColor = d.imported > 0 ? '#10b981' : '#daa520';
+                    $result.css({
+                        'background': bgColor,
+                        'border-left': '4px solid ' + borderColor
+                    }).html(
+                        '<strong>Import abgeschlossen!</strong><br>' +
+                        '✅ <strong>' + d.imported + '</strong> Einträge erfolgreich importiert' +
+                        (d.skipped > 0 ? '<br>⏭️ <strong>' + d.skipped + '</strong> Einträge übersprungen (Duplikate oder ungültig)' : '') +
+                        '<br><br><a href="' + window.location.href + '" class="button button-secondary" style="font-weight:600;">🔄 Seite neu laden</a>'
+                    );
+                } else {
+                    $result.css({
+                        'background': '#fef2f2',
+                        'border-left': '4px solid #d63638'
+                    }).html('<strong style="color:#d63638;">Fehler beim Import.</strong> Bitte versuchen Sie es erneut.');
+                }
+
+                $('#olla-import-step-result').fadeIn(200);
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+                alert('Import fehlgeschlagen. Bitte versuchen Sie es erneut.');
+            });
+        });
+
+        // Utility: escape HTML
+        function escHtml(str) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
     }
 
 

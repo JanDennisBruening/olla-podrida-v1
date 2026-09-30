@@ -112,6 +112,7 @@ class Olla_Podrida_Admin {
         wp_localize_script('olla-podrida-admin-script', 'OllaPodridaAdmin', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('olla_podrida_admin_nonce'),
+            'import_nonce' => wp_create_nonce('olla_podrida_import'),
             'choose_image' => 'Bild aus Mediathek wählen',
             'use_image' => 'Dieses Bild verwenden',
             'choose_audio' => 'Audiodatei aus Mediathek wählen',

@@ -34,6 +34,7 @@ class Olla_Podrida {
 
         Olla_Podrida_Admin::init();
         Olla_Podrida_Frontend::init();
+        Olla_Podrida_Import::init();
     }
 
     /**

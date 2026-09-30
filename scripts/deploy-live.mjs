@@ -26,11 +26,11 @@ async function main() {
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',
-    'olla-podrida.php',
     'includes/class-olla-podrida.php',
     'includes/class-roles.php',
     'includes/class-events.php',
     'includes/class-contact.php',
+    'includes/class-import.php',
     'includes/class-admin.php',
     'includes/class-frontend.php',
     'includes/class-settings.php',
@@ -45,6 +45,9 @@ async function main() {
     'templates/admin/tab-contact.php',
     'templates/admin/tab-legal.php',
     'templates/admin/tab-press.php',
+    'templates/admin/tab-display.php',
+    'templates/admin/tab-audio.php',
+    'olla-podrida.php', // Must be last to prevent fatal errors when new includes are added
   ].filter(Boolean);
 
   const phpCode = fs.readFileSync(path.join(pluginDir, 'olla-podrida.php'), 'utf8');

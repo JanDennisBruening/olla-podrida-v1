@@ -78,7 +78,72 @@ $total_messages = count($messages);
         </div>
     </div>
 
-    <!-- 2. KONTAKTFORMULAR-EINSTELLUNGEN (Unten platziert) -->
+    <!-- 2. IMPORT: Kontaktformular-Einträge importieren -->
+    <div class="olla-card" style="margin-bottom: 30px;">
+        <div class="olla-card-header">
+            <h2>📂 Kontaktformular-Einträge importieren</h2>
+            <p>Importiere vorhandene Kontaktformular-Einträge aus anderen WordPress-Plugins (Elementor Forms, WPForms, Contact Form 7 / Flamingo, Gravity Forms, Fluent Forms, Ninja Forms) in den Olla Podrida Posteingang.</p>
+        </div>
+
+        <div class="olla-card-body" id="olla-import-section">
+
+            <!-- Step 1: Detect Sources -->
+            <div id="olla-import-step-detect" style="padding: 16px 0;">
+                <button type="button" id="olla-import-detect-btn" class="button button-secondary" style="font-weight: 600;">
+                    🔍 Installierte Formular-Plugins suchen
+                </button>
+                <span id="olla-import-detect-spinner" class="spinner" style="float: none; margin-left: 8px;"></span>
+                <div id="olla-import-no-sources" style="display: none; margin-top: 12px; padding: 14px 18px; background: #fef9e7; border-left: 4px solid #daa520; border-radius: 4px; font-size: 13px; color: #555;">
+                    ⚠️ Keine unterstützten Formular-Plugins gefunden. Unterstützt werden: Elementor Pro Forms, WPForms, Contact Form 7 (Flamingo), Gravity Forms, Fluent Forms und Ninja Forms.
+                </div>
+            </div>
+
+            <!-- Step 2: Choose Source + Form -->
+            <div id="olla-import-step-select" style="display: none; padding: 16px 0; border-top: 1px solid #f0f0f1;">
+                <div class="olla-grid-2" style="margin-bottom: 14px;">
+                    <div class="olla-field-group">
+                        <label for="olla-import-source"><strong>Formular-Plugin auswählen:</strong></label>
+                        <select id="olla-import-source" class="regular-text" style="width: 100%; max-width: 360px;">
+                            <option value="">— Bitte wählen —</option>
+                        </select>
+                    </div>
+                    <div class="olla-field-group">
+                        <label for="olla-import-form"><strong>Formular auswählen:</strong></label>
+                        <select id="olla-import-form" class="regular-text" style="width: 100%; max-width: 360px;" disabled>
+                            <option value="">— Erst Plugin wählen —</option>
+                        </select>
+                        <span id="olla-import-form-spinner" class="spinner" style="float: none; margin-left: 8px;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Preview + Execute -->
+            <div id="olla-import-step-preview" style="display: none; padding: 16px 0; border-top: 1px solid #f0f0f1;">
+                <div id="olla-import-preview-info" style="margin-bottom: 14px; padding: 12px 16px; background: #f0f6fc; border-left: 4px solid #2271b1; border-radius: 4px;">
+                    <!-- Filled by JS -->
+                </div>
+                <div id="olla-import-preview-table" style="margin-bottom: 14px;">
+                    <!-- Sample entries table filled by JS -->
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <button type="button" id="olla-import-execute-btn" class="button button-primary" style="font-weight: 600;">
+                        ✅ Einträge jetzt importieren
+                    </button>
+                    <span id="olla-import-execute-spinner" class="spinner" style="float: none;"></span>
+                </div>
+            </div>
+
+            <!-- Step 4: Result -->
+            <div id="olla-import-step-result" style="display: none; padding: 16px 0; border-top: 1px solid #f0f0f1;">
+                <div id="olla-import-result-box" style="padding: 14px 18px; border-radius: 4px; font-size: 13px;">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. KONTAKTFORMULAR-EINSTELLUNGEN (Unten platziert) -->
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="olla-form-box">
         <input type="hidden" name="action" value="olla_podrida_save_settings" />
         <input type="hidden" name="section" value="contact" />

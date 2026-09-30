@@ -10,13 +10,14 @@ class Olla_Podrida_Contact {
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        $sql = "CREATE TABLE $table_name (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             email varchar(255) NOT NULL,
             message text NOT NULL,
             created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
             is_read tinyint(1) DEFAULT 0 NOT NULL,
+            source varchar(100) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         ) $charset_collate;";
 
