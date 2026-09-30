@@ -33,6 +33,12 @@ class Olla_Podrida_Roles {
             return;
         }
 
+        add_role('olla_ensemble_leitung', 'Ensemble-Leitung', [
+            'read' => true,
+            'upload_files' => true,
+            'edit_posts' => true,
+        ]);
+
         add_role('olla_grossmeister', '👑 Großmeister des mächtigen Topfes (Admin)', [
             'read' => true,
             'manage_options' => true,
@@ -82,7 +88,10 @@ class Olla_Podrida_Roles {
             return $roles_config['roles_permissions'][$role_slug];
         }
 
-        // Atmospheric Defaults for custom roles
+        // Defaults for custom roles
+        if ($role_slug === 'olla_ensemble_leitung') {
+            return ['events', 'contact', 'consent', 'legal', 'seo', 'press', 'audio', 'ensemble'];
+        }
         if ($role_slug === 'olla_hofkapellmeister') {
             return ['settings', 'hero', 'ensemble', 'events', 'contact', 'audio', 'press'];
         }

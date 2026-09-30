@@ -25,6 +25,8 @@ async function main() {
     'assets/js/admin.js',
     'assets/dist/bottom_paper.png',
     'assets/dist/images/bottom_paper.png',
+    'assets/dist/logo-pot.png',
+    'assets/dist/images/logo-pot.png',
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',

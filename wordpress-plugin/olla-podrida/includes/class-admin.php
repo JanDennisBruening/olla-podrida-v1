@@ -14,6 +14,7 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_event', [__CLASS__, 'handle_ajax_delete_event']);
         add_action('wp_ajax_olla_podrida_toggle_event', [__CLASS__, 'handle_ajax_toggle_event']);
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
+        add_action('admin_bar_menu', [__CLASS__, 'customize_admin_bar_logo'], 11);
         add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
     }
 
@@ -87,42 +88,239 @@ class Olla_Podrida_Admin {
         );
     }
 
+    /**
+     * Replace WordPress admin bar logo with Ensemble Stew Pot Logo
+     * and redirect link to Olla Podrida dashboard.
+     */
+    public static function customize_admin_bar_logo($wp_admin_bar) {
+        $node = $wp_admin_bar->get_node('wp-logo');
+        if ($node) {
+            $node->title = '<span class="ab-icon olla-admin-bar-pot"></span><span class="screen-reader-text">Ensemble Olla Podrida</span>';
+            $node->href = admin_url('admin.php?page=olla-podrida');
+            $wp_admin_bar->add_node($node);
+        }
+
+        // Remove default external WordPress.org sub-links
+        $wp_admin_bar->remove_node('about');
+        $wp_admin_bar->remove_node('wporg');
+        $wp_admin_bar->remove_node('documentation');
+        $wp_admin_bar->remove_node('support-forums');
+        $wp_admin_bar->remove_node('feedback');
+
+        // Add Ensemble quick access sub-links
+        $wp_admin_bar->add_node([
+            'id'     => 'olla-bar-dashboard',
+            'parent' => 'wp-logo',
+            'title'  => '🍲 Olla Podrida Übersicht',
+            'href'   => admin_url('admin.php?page=olla-podrida'),
+        ]);
+        $wp_admin_bar->add_node([
+            'id'     => 'olla-bar-frontend',
+            'parent' => 'wp-logo',
+            'title'  => '🌐 Website ansehen',
+            'href'   => home_url('/?olla_canvas=1'),
+            'meta'   => ['target' => '_blank'],
+        ]);
+    }
+
     public static function render_sidebar_styles() {
+        $pot_logo = esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png');
         ?>
         <style id="olla-podrida-admin-sidebar-css">
-            /* Medieval Gold Accent for Olla Podrida in WordPress Admin Sidebar */
+            /* ======================================================== */
+            /* 1. TOP-LEFT ADMIN BAR: Ensemble Stew Pot Logo Replacement */
+            /* ======================================================== */
+            #wpadminbar #wp-admin-bar-wp-logo > .ab-item {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0 8px !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon,
+            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .olla-admin-bar-pot {
+                background-image: url('<?php echo $pot_logo; ?>') !important;
+                background-size: contain !important;
+                background-repeat: no-repeat !important;
+                background-position: center !important;
+                width: 24px !important;
+                height: 24px !important;
+                display: inline-block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: relative !important;
+                top: 0 !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon:before {
+                display: none !important;
+                content: "" !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo:hover > .ab-item {
+                background: #1c140f !important;
+            }
+
+            /* Admin Bar Dark Medieval Accent */
+            #wpadminbar {
+                background: #140e0b !important;
+                border-bottom: 1px solid #2a1e16 !important;
+            }
+            #wpadminbar .menupop .ab-sub-wrapper,
+            #wpadminbar .shortlink-input {
+                background: #18120d !important;
+                border: 1px solid #DAA520 !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+            }
+            #wpadminbar .ab-submenu .ab-item {
+                color: #e0d8c7 !important;
+            }
+            #wpadminbar .ab-submenu .ab-item:hover {
+                color: #FFD700 !important;
+                background: #281c14 !important;
+            }
+
+            /* ======================================================== */
+            /* 2. PERMANENTLY EXPANDED SUBMENU FOR OLLA PODRIDA         */
+            /* ======================================================== */
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu {
+                display: block !important;
+                position: static !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                box-shadow: none !important;
+                border-left: 3px solid #DAA520 !important;
+                background: #160e0a !important;
+                margin: 0 !important;
+                padding: 4px 0 !important;
+                float: none !important;
+                width: auto !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li {
+                display: block !important;
+                margin: 0 !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                display: block !important;
+                padding: 6px 12px 6px 22px !important;
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+                color: #cfc4ac !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
+                color: #FFD700 !important;
+                background: #251912 !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
+                font-weight: 700 !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
+                display: none !important;
+            }
+
+            /* Olla Podrida Top-Level Highlight */
             #adminmenu #toplevel_page_olla-podrida {
                 border-left: 4px solid #DAA520 !important;
-                background: #181412 !important;
+                background: #1c140f !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida > a {
+                color: #FFD700 !important;
+                font-weight: 700 !important;
             }
             #adminmenu #toplevel_page_olla-podrida .wp-menu-image:before {
                 color: #DAA520 !important;
             }
-            #adminmenu #toplevel_page_olla-podrida:hover,
-            #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu,
-            #adminmenu #toplevel_page_olla-podrida.current {
-                background: #241c16 !important;
+
+            /* ======================================================== */
+            /* 3. COMPLETE WORDPRESS SIDEBAR MEDIEVAL DARK PALETTE      */
+            /* ======================================================== */
+            #adminmenuback, #adminmenuwrap, #adminmenu {
+                background: #120b08 !important;
             }
-            #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu > a,
-            #adminmenu #toplevel_page_olla-podrida.current > a,
-            #adminmenu #toplevel_page_olla-podrida:hover > a {
+            #adminmenu li.menu-top {
+                background: #120b08 !important;
+            }
+            #adminmenu a.menu-top,
+            #adminmenu .wp-submenu-head {
+                color: #d1c7ac !important;
+            }
+            #adminmenu a.menu-top:hover,
+            #adminmenu li.menu-top:hover,
+            #adminmenu li.opensub > a.menu-top,
+            #adminmenu li > a.menu-top:focus {
+                background: #1f140f !important;
                 color: #FFD700 !important;
             }
-            #adminmenu #toplevel_page_olla-podrida .wp-submenu {
-                background: #181412 !important;
-                border-left: 2px solid #DAA520 !important;
+            #adminmenu li.current a.menu-top,
+            #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu {
+                background: #241711 !important;
+                color: #DAA520 !important;
+                font-weight: 600 !important;
             }
-            #adminmenu #toplevel_page_olla-podrida .wp-submenu li a {
-                color: #e0d8c7 !important;
-                transition: all 0.15s ease-in-out;
+            #adminmenu .wp-submenu {
+                background: #1a110c !important;
             }
-            #adminmenu #toplevel_page_olla-podrida .wp-submenu li a:hover,
-            #adminmenu #toplevel_page_olla-podrida .wp-submenu li.current a {
+            #adminmenu .wp-submenu a {
+                color: #c4b99e !important;
+            }
+            #adminmenu .wp-submenu a:hover,
+            #adminmenu .wp-submenu a:focus {
                 color: #FFD700 !important;
-                background: #2a2018 !important;
+                background: #241711 !important;
             }
-            #adminmenu #toplevel_page_olla-podrida .wp-submenu li.current a {
-                font-weight: 700 !important;
+            #adminmenu .wp-submenu li.current a {
+                color: #DAA520 !important;
+                font-weight: 600 !important;
+            }
+            #collapse-menu {
+                color: #a89f8d !important;
+            }
+            #collapse-menu:hover,
+            #collapse-button:hover {
+                color: #FFD700 !important;
+                background: #1f140f !important;
+            }
+            #adminmenu div.separator {
+                border-top: 1px solid #221610 !important;
+                border-bottom: 1px solid #0d0705 !important;
+            }
+
+            /* ======================================================== */
+            /* 4. UNIFORM ICON SIZING ACROSS ALL SIDEBAR MENU ITEMS     */
+            /* ======================================================== */
+            #adminmenu .wp-menu-image {
+                width: 36px !important;
+                height: 34px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                float: left !important;
+            }
+            #adminmenu .wp-menu-image:before {
+                font-size: 20px !important;
+                width: 20px !important;
+                height: 20px !important;
+                line-height: 20px !important;
+                text-align: center !important;
+                display: inline-block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                color: #a89f8d !important;
+            }
+            #adminmenu li.menu-top:hover .wp-menu-image:before,
+            #adminmenu li.current .wp-menu-image:before,
+            #adminmenu li.wp-has-current-submenu .wp-menu-image:before {
+                color: #DAA520 !important;
+            }
+            #adminmenu .wp-menu-image img {
+                width: 20px !important;
+                height: 20px !important;
+                max-width: 20px !important;
+                max-height: 20px !important;
+                object-fit: contain !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: inline-block !important;
             }
         </style>
         <?php

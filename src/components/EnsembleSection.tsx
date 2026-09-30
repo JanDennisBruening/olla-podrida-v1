@@ -60,7 +60,7 @@ export const EnsembleSection: React.FC = () => {
           }}
         >
           {/* Content directly below the ribbon: padding-top places headline right underneath the ribbon banner */}
-          <div className="w-full pt-[31vw] sm:pt-[29vw] md:pt-[26vw] lg:pt-[17rem] xl:pt-[19rem] pb-20 sm:pb-24 md:pb-28 lg:pb-32 px-[12vw] sm:px-[11%] md:px-[12%] lg:px-[13%] xl:px-[14%] flex flex-col items-start text-left">
+          <div className="w-full pt-[31vw] sm:pt-[29vw] md:pt-[26vw] lg:pt-[17rem] xl:pt-[19rem] pb-3 sm:pb-4 md:pb-5 lg:pb-6 px-[12vw] sm:px-[11%] md:px-[12%] lg:px-[13%] xl:px-[14%] flex flex-col items-start text-left">
             
             {/* Title matching .elementor-element-7bd36bc3 - Appears directly after the ribbon banner */}
             <h2
@@ -482,7 +482,7 @@ export const EnsembleSection: React.FC = () => {
 
           {/* Authentic Deckle Torn Bottom Edge */}
           <div
-            className="absolute left-0 right-0 -bottom-[1px] translate-y-[82%] w-full pointer-events-none select-none z-10"
+            className="absolute left-0 right-0 -bottom-[1px] translate-y-[76%] w-full pointer-events-none select-none z-10"
             aria-hidden="true"
           >
             <img

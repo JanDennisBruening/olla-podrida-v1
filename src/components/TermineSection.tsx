@@ -535,7 +535,7 @@ export const TermineSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="termine"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-12 sm:pt-16 md:pt-24 lg:pt-44 pb-16 select-none"
+      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-16 sm:pt-20 md:pt-28 lg:pt-36 pb-16 select-none"
     >
       <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
         
