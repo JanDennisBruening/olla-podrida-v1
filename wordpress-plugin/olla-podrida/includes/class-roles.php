@@ -11,15 +11,15 @@ class Olla_Podrida_Roles {
     public static function get_all_sections() {
         return [
             'settings' => ['label' => 'Allgemein & System',         'icon' => 'dashicons-admin-settings'],
-            'hero'     => ['label' => 'Start & Hero-Bühne',        'icon' => 'dashicons-format-image'],
-            'ensemble' => ['label' => 'Ensemble & Musiker',         'icon' => 'dashicons-groups'],
             'events'   => ['label' => 'Termine & Konzerte',         'icon' => 'dashicons-calendar-alt'],
             'contact'  => ['label' => 'Kontakt & Postfach',         'icon' => 'dashicons-email-alt'],
-            'audio'    => ['label' => 'Hintergrundmusik & Player',  'icon' => 'dashicons-format-audio'],
+            'consent'  => ['label' => 'Cookie & Consent',          'icon' => 'dashicons-privacy'],
             'press'    => ['label' => 'Presse & Medienmaterial',    'icon' => 'dashicons-format-gallery'],
+            'audio'    => ['label' => 'Hintergrundmusik & Player',  'icon' => 'dashicons-format-audio'],
+            'ensemble' => ['label' => 'Ensemble & Musiker',         'icon' => 'dashicons-groups'],
+            'hero'     => ['label' => 'Start & Hero-Bühne',        'icon' => 'dashicons-format-image'],
             'seo'      => ['label' => 'SEO & Metadaten',            'icon' => 'dashicons-search'],
             'legal'    => ['label' => 'Rechtliches & Footer',       'icon' => 'dashicons-shield'],
-            'consent'  => ['label' => 'Cookie & Consent',          'icon' => 'dashicons-privacy'],
             'display'  => ['label' => 'Einbindung & Ausspielung',   'icon' => 'dashicons-admin-generic'],
             'roles'    => ['label' => 'Rollen & Berechtigungen',    'icon' => 'dashicons-admin-users'],
         ];
@@ -90,7 +90,7 @@ class Olla_Podrida_Roles {
 
         // Defaults for custom roles
         if ($role_slug === 'olla_ensemble_leitung') {
-            return ['events', 'contact', 'consent', 'legal', 'seo', 'press', 'audio', 'ensemble'];
+            return ['events', 'contact', 'consent', 'press', 'audio', 'ensemble', 'seo', 'legal'];
         }
         if ($role_slug === 'olla_hofkapellmeister') {
             return ['settings', 'hero', 'ensemble', 'events', 'contact', 'audio', 'press'];

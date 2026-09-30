@@ -44,12 +44,12 @@ $legal = Olla_Podrida_Settings::get_section('legal');
             <?php
             $defaults = Olla_Podrida_Settings::get_defaults();
             $impressum_val = $legal['impressum_html'] ?? '';
-            if (empty($impressum_val) || strlen(strip_tags($impressum_val)) < 150) {
+            if (empty($impressum_val) || strlen(strip_tags($impressum_val)) < 300) {
                 $impressum_val = $defaults['legal']['impressum_html'];
             }
 
             $datenschutz_val = $legal['datenschutz_html'] ?? '';
-            if (empty($datenschutz_val) || strlen(strip_tags($datenschutz_val)) < 300) {
+            if (empty($datenschutz_val) || strlen(strip_tags($datenschutz_val)) < 1200) {
                 $datenschutz_val = $defaults['legal']['datenschutz_html'];
             }
             ?>

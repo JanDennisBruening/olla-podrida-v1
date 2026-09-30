@@ -395,6 +395,15 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
             return !empty($unique) ? $unique : ($defaults[$section] ?? []);
         }
 
+        if ($section === 'legal' && is_array($stored)) {
+            if (empty($stored['impressum_html']) || strlen(strip_tags($stored['impressum_html'])) < 300) {
+                $stored['impressum_html'] = $defaults['legal']['impressum_html'];
+            }
+            if (empty($stored['datenschutz_html']) || strlen(strip_tags($stored['datenschutz_html'])) < 1200) {
+                $stored['datenschutz_html'] = $defaults['legal']['datenschutz_html'];
+            }
+        }
+
         if (isset($defaults[$section]) && is_array($defaults[$section])) {
             return wp_parse_args($stored, $defaults[$section]);
         }
@@ -418,5 +427,24 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
             $data = $unique;
         }
         return update_option('olla_podrida_' . $section, $data);
+    }
+
+    public static function maybe_sync_legal_options() {
+        $legal = get_option('olla_podrida_legal');
+        if (is_array($legal)) {
+            $updated = false;
+            $defaults = self::get_defaults()['legal'];
+            if (empty($legal['impressum_html']) || strlen(strip_tags($legal['impressum_html'])) < 300) {
+                $legal['impressum_html'] = $defaults['impressum_html'];
+                $updated = true;
+            }
+            if (empty($legal['datenschutz_html']) || strlen(strip_tags($legal['datenschutz_html'])) < 1200) {
+                $legal['datenschutz_html'] = $defaults['datenschutz_html'];
+                $updated = true;
+            }
+            if ($updated) {
+                update_option('olla_podrida_legal', $legal);
+            }
+        }
     }
 }

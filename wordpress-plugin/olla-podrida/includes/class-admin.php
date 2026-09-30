@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 class Olla_Podrida_Admin {
 
     public static function init() {
+        Olla_Podrida_Settings::maybe_sync_legal_options();
         add_action('admin_menu', [__CLASS__, 'register_admin_menu']);
         add_action('admin_menu', [__CLASS__, 'cleanup_unwanted_menus'], 999);
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_admin_assets']);
@@ -46,10 +47,11 @@ class Olla_Podrida_Admin {
         // Register submenus for each section the current user is permitted to see
         $sections = Olla_Podrida_Roles::get_all_sections();
         
-        foreach ($sections as $key => $info) {
-            if (!in_array($key, $allowed, true)) {
+        foreach ($allowed as $key) {
+            if (!isset($sections[$key])) {
                 continue;
             }
+            $info = $sections[$key];
 
             add_submenu_page(
                 'olla-podrida',
@@ -69,8 +71,16 @@ class Olla_Podrida_Admin {
      * Remove redundant duplicate menu items and unwanted items for specific roles
      */
     public static function cleanup_unwanted_menus() {
+        global $submenu;
         // Remove the duplicate first item ("Olla Podrida") from the Olla Podrida submenu
         remove_submenu_page('olla-podrida', 'olla-podrida');
+        if (isset($submenu['olla-podrida'])) {
+            foreach ($submenu['olla-podrida'] as $idx => $item) {
+                if (isset($item[2]) && $item[2] === 'olla-podrida') {
+                    unset($submenu['olla-podrida'][$idx]);
+                }
+            }
+        }
 
         // For non-admin roles (specifically Ensemble-Leitung), remove Kommentare (Comments)
         if (!current_user_can('manage_options')) {
@@ -87,8 +97,9 @@ class Olla_Podrida_Admin {
      */
     public static function customize_admin_bar_logo($wp_admin_bar) {
         $node = $wp_admin_bar->get_node('wp-logo');
+        $pot_logo = esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png');
         if ($node) {
-            $node->title = '<span class="ab-icon olla-admin-bar-pot"></span><span class="screen-reader-text">Ensemble Olla Podrida</span>';
+            $node->title = '<span class="olla-admin-bar-badge"><img src="' . $pot_logo . '" alt="Olla Podrida" class="olla-admin-bar-pot-img" /></span><span class="olla-admin-bar-title">Olla Podrida</span>';
             $node->href = admin_url('admin.php?page=olla-podrida');
             $wp_admin_bar->add_node($node);
         }
@@ -121,40 +132,68 @@ class Olla_Podrida_Admin {
         ?>
         <style id="olla-podrida-admin-sidebar-css">
             /* ======================================================== */
-            /* 1. TOP-LEFT ADMIN BAR: Ensemble Stew Pot Logo Replacement */
+            /* 1. TOP-LEFT ADMIN BAR: Glowing Emblem & Warm Medieval Bar */
             /* ======================================================== */
+            #wpadminbar {
+                background: linear-gradient(90deg, #180f0a 0%, #29180f 40%, #29180f 60%, #180f0a 100%) !important;
+                border-bottom: 2px solid #DAA520 !important;
+                box-shadow: 0 3px 12px rgba(0,0,0,0.6) !important;
+            }
+            #wpadminbar .ab-item, 
+            #wpadminbar a.ab-item,
+            #wpadminbar #wp-admin-bar-my-account .ab-item {
+                color: #f5f5dc !important;
+                transition: color 0.15s ease, background 0.15s ease !important;
+            }
+            #wpadminbar:not(.mobile) .ab-top-menu > li > .ab-item:focus, 
+            #wpadminbar:not(.mobile) .ab-top-menu > li:hover > .ab-item, 
+            #wpadminbar:not(.mobile) .ab-top-menu > li.hover > .ab-item {
+                background: #3a2316 !important;
+                color: #FFD700 !important;
+            }
             #wpadminbar #wp-admin-bar-wp-logo > .ab-item {
                 display: flex !important;
                 align-items: center !important;
-                justify-content: center !important;
-                padding: 0 8px !important;
+                padding: 0 12px 0 10px !important;
+                height: 32px !important;
             }
-            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon,
-            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .olla-admin-bar-pot {
-                background-image: url('<?php echo $pot_logo; ?>') !important;
-                background-size: contain !important;
-                background-repeat: no-repeat !important;
-                background-position: center !important;
-                width: 24px !important;
-                height: 24px !important;
-                display: inline-block !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                position: relative !important;
-                top: 0 !important;
-            }
-            #wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon:before {
+            #wpadminbar #wp-admin-bar-wp-logo .ab-icon,
+            #wpadminbar #wp-admin-bar-wp-logo .ab-icon:before {
                 display: none !important;
                 content: "" !important;
             }
-            #wpadminbar #wp-admin-bar-wp-logo:hover > .ab-item {
-                background: #1c140f !important;
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-badge {
+                width: 25px !important;
+                height: 25px !important;
+                border-radius: 50% !important;
+                background: radial-gradient(circle, #fffaf0 0%, #faecd0 70%, #dfb547 100%) !important;
+                border: 1.5px solid #FFD700 !important;
+                box-shadow: 0 0 6px rgba(218, 165, 32, 0.7), inset 0 0 3px rgba(0,0,0,0.25) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                overflow: hidden !important;
+                flex-shrink: 0 !important;
+                transition: transform 0.2s ease, box-shadow 0.2s ease !important;
             }
-
-            /* Admin Bar Dark Medieval Accent */
-            #wpadminbar {
-                background: #140e0b !important;
-                border-bottom: 1px solid #2a1e16 !important;
+            #wpadminbar #wp-admin-bar-wp-logo:hover .olla-admin-bar-badge {
+                transform: scale(1.08) !important;
+                box-shadow: 0 0 12px rgba(255, 215, 0, 1) !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-pot-img {
+                width: 21px !important;
+                height: 21px !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-title {
+                color: #FFD700 !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                letter-spacing: 0.04em !important;
+                margin-left: 8px !important;
+                display: inline-block !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
             }
             #wpadminbar .menupop .ab-sub-wrapper,
             #wpadminbar .shortlink-input {
@@ -207,7 +246,23 @@ class Olla_Podrida_Admin {
                 max-width: 100% !important;
                 box-sizing: border-box !important;
             }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li {
+
+            /* STRICTLY HIDE WordPress auto-generated submenu-head and duplicate Olla Podrida link */
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.wp-submenu-head,
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu .wp-submenu-head,
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu > li:first-child.wp-submenu-head,
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:has(a[href$="page=olla-podrida"]),
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.wp-first-item:has(a[href$="page=olla-podrida"]),
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a[href="admin.php?page=olla-podrida"] {
+                display: none !important;
+                height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
                 display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
