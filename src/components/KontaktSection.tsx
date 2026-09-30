@@ -105,7 +105,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
       id="kontakt"
       className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none scroll-mt-24 md:scroll-mt-32"
     >
-      <div className="max-w-[70rem] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+      <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
 
         {/* Layout: Single-column on mobile & tablet (<1024px), Two-Column on desktop (>=1024px) to prevent squished fields and overlapping elements */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -164,13 +164,13 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
           {/* Right Column (.elementor-element-8e91fcb): Contact Card with hintergrundbild2.png */}
           <div
             ref={formRef}
-            className={`w-full lg:col-span-6 flex justify-center lg:justify-end relative mt-0 px-3 min-[400px]:px-5 sm:px-8 md:px-12 lg:px-0 transition-all duration-900 ease-out z-10 ${
+            className={`w-full lg:col-span-6 flex justify-center lg:justify-end relative mt-0 px-0 transition-all duration-900 ease-out z-10 ${
               formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.97]'
             }`}
           >
-            {/* Ornamental Musiknoten Banner Graphic: only on desktop (lg:block) to prevent covering the Name field on tablet */}
+            {/* Ornamental Musiknoten Banner Graphic: only on desktop (lg:block) within container bounds */}
             <div
-              className={`hidden lg:block absolute -top-16 lg:-top-20 xl:-top-24 right-[-0.5rem] lg:right-[-1rem] xl:right-[-1.5rem] pointer-events-none z-20 w-[18rem] lg:w-[21rem] xl:w-[24rem] transition-all duration-800 delay-200 ease-out transform ${
+              className={`hidden lg:block absolute -top-16 lg:-top-20 xl:-top-24 right-0 pointer-events-none z-20 w-[18rem] lg:w-[21rem] xl:w-[23rem] transition-all duration-800 delay-200 ease-out transform ${
                 formInView ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 -translate-y-4 rotate-2'
               }`}
             >
@@ -183,7 +183,7 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
             </div>
 
             <div
-              className="relative w-full max-w-[28rem] min-[420px]:max-w-[32rem] sm:max-w-[36rem] md:max-w-[40rem] lg:max-w-[42rem] min-h-[38rem] sm:min-h-[42rem] lg:min-h-[44rem] px-6 min-[400px]:px-8 sm:px-12 md:px-14 lg:px-16 py-12 sm:py-14 lg:py-16 flex flex-col justify-center transition-all duration-300 z-10 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)]"
+              className="relative w-full max-w-[28rem] min-[420px]:max-w-[32rem] sm:max-w-[36rem] md:max-w-[38rem] lg:max-w-[40rem] min-h-[38rem] sm:min-h-[42rem] lg:min-h-[44rem] px-6 min-[400px]:px-8 sm:px-12 md:px-14 lg:px-16 py-12 sm:py-14 lg:py-16 flex flex-col justify-center transition-all duration-300 z-10 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)]"
               style={{
                 backgroundImage: `url("${resolveAssetUrl('/images/hintergrundbild2.png')}")`,
                 backgroundPosition: 'center center',

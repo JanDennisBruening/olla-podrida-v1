@@ -14,6 +14,7 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_event', [__CLASS__, 'handle_ajax_delete_event']);
         add_action('wp_ajax_olla_podrida_toggle_event', [__CLASS__, 'handle_ajax_toggle_event']);
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
+        add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
     }
 
     public static function register_admin_menu() {
@@ -26,7 +27,7 @@ class Olla_Podrida_Admin {
             return;
         }
 
-        // Main top-level menu page
+        // Main top-level menu page - Position 3 (directly after Dashboard which is position 2)
         add_menu_page(
             'Ensemble Olla Podrida',
             'Olla Podrida',
@@ -34,7 +35,7 @@ class Olla_Podrida_Admin {
             'olla-podrida',
             [__CLASS__, 'render_admin_page'],
             'dashicons-format-audio',
-            28
+            3
         );
 
         // Register submenus for each section the current user is permitted to see
@@ -84,6 +85,47 @@ class Olla_Podrida_Admin {
                 self::render_admin_page();
             }
         );
+    }
+
+    public static function render_sidebar_styles() {
+        ?>
+        <style id="olla-podrida-admin-sidebar-css">
+            /* Medieval Gold Accent for Olla Podrida in WordPress Admin Sidebar */
+            #adminmenu #toplevel_page_olla-podrida {
+                border-left: 4px solid #DAA520 !important;
+                background: #181412 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida .wp-menu-image:before {
+                color: #DAA520 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida:hover,
+            #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu,
+            #adminmenu #toplevel_page_olla-podrida.current {
+                background: #241c16 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu > a,
+            #adminmenu #toplevel_page_olla-podrida.current > a,
+            #adminmenu #toplevel_page_olla-podrida:hover > a {
+                color: #FFD700 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida .wp-submenu {
+                background: #181412 !important;
+                border-left: 2px solid #DAA520 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida .wp-submenu li a {
+                color: #e0d8c7 !important;
+                transition: all 0.15s ease-in-out;
+            }
+            #adminmenu #toplevel_page_olla-podrida .wp-submenu li a:hover,
+            #adminmenu #toplevel_page_olla-podrida .wp-submenu li.current a {
+                color: #FFD700 !important;
+                background: #2a2018 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida .wp-submenu li.current a {
+                font-weight: 700 !important;
+            }
+        </style>
+        <?php
     }
 
     public static function enqueue_admin_assets($hook) {

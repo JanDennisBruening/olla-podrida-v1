@@ -106,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
               Presse
             </button>
 
-            {/* Cookies button with Premium Tooltip */}
+            {/* Cookies und Consent button with Premium Tooltip */}
             <div className="relative inline-block py-0.5">
               <button
                 onClick={onOpenCookies}
@@ -114,11 +114,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
                 onMouseLeave={() => setCookieTooltip(false)}
                 className="hover:text-[#DAA520] transition-colors cursor-pointer"
               >
-                Cookies
+                Cookies und Consent
               </button>
               {cookieTooltip && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-sm whitespace-nowrap shadow-2xl z-50 pointer-events-none">
-                  Nur essenzielle Cookies und Musik aus alten Zeiten!
+                  Nur essenzielle Cookies &amp; Consent-Speicherung für Musik aus alten Zeiten!
                   <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
                 </div>
               )}
@@ -162,7 +162,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             {currentYear} © Ensemble Olla Podrida
           </p>
           <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
-            Design, Konzept und Webentwicklung: Jan Dennis Brüning ·{' '}
+            Design, Konzept und Webentwicklung ·{' '}
             <a
               href="https://www.janbruening.de"
               target="_blank"

@@ -20,18 +20,22 @@ export const AudioPlayer: React.FC = () => {
     audioManager.toggle();
   };
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (!config.enabled) {
     return null;
   }
 
   return (
     <div
-      className="audio-player fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[10030] select-none"
+      className="audio-player fixed bottom-5 right-4 sm:bottom-7 sm:right-6 md:bottom-9 md:right-8 z-[10030] select-none flex flex-col items-center gap-1.5"
     >
       <button
         type="button"
         onClick={togglePlay}
-        className="relative group cursor-pointer flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-transform duration-300 hover:scale-105 active:scale-95 bg-transparent border-none p-0 focus:outline-none"
+        className="relative group cursor-pointer flex items-center justify-center w-16 h-16 md:w-[4.8rem] md:h-[4.8rem] transition-transform duration-300 hover:scale-105 active:scale-95 bg-transparent border-none p-0 focus:outline-none"
         aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'}
         title={config.title ? `${config.title} - ${isPlaying ? 'Pausieren' : 'Abspielen'}` : (isPlaying ? 'Musik pausieren' : 'Musik abspielen')}
       >
@@ -57,7 +61,7 @@ export const AudioPlayer: React.FC = () => {
             />
           </defs>
           <text
-            className="font-macondo font-bold text-[9.5px] md:text-[10px] tracking-[0.22em] uppercase transition-colors duration-300"
+            className="font-macondo font-bold text-[9px] md:text-[9.5px] tracking-[0.2em] uppercase transition-colors duration-300"
             fill={isPlaying ? '#FFD700' : '#DAA520'}
             style={{
               filter: isPlaying
@@ -76,17 +80,17 @@ export const AudioPlayer: React.FC = () => {
           </text>
         </svg>
 
-        {/* Inner Round Button with musical note and golden loop glow */}
+        {/* Inner Round Button with musical note and golden loop glow (20% smaller) */}
         <div
           id="play-pause-button"
-          className={`relative z-10 w-11 h-11 md:w-13 md:h-13 rounded-full flex items-center justify-center transition-all duration-300 shadow-md pointer-events-none ${
+          className={`relative z-10 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-md pointer-events-none ${
             isPlaying
               ? 'bg-[#221812] text-[#FFD700] border border-[#DAA520] animate-gold-glow-loop'
               : 'bg-[#151210] text-[#DAA520]/80 hover:text-[#DAA520] border border-[#DAA520]/40'
           }`}
         >
           <span
-            className={`text-xl md:text-2xl transition-transform duration-300 ${
+            className={`text-base md:text-lg transition-transform duration-300 ${
               isPlaying
                 ? 'scale-110 drop-shadow-[0_0_8px_rgba(218,165,32,0.9)] animate-pulse text-[#FFD700]'
                 : 'group-hover:scale-110 text-[#DAA520]'
@@ -100,6 +104,18 @@ export const AudioPlayer: React.FC = () => {
             <span className="absolute -inset-0.5 rounded-full border border-[#DAA520]/50 animate-ping opacity-60 pointer-events-none" />
           )}
         </div>
+      </button>
+
+      {/* Nach oben (Scroll-to-top) Button directly below the music button */}
+      <button
+        type="button"
+        onClick={handleScrollToTop}
+        className="group flex items-center justify-center gap-1 px-2.5 py-1 rounded-full bg-[#070202]/90 border border-[#DAA520]/60 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[11px] sm:text-xs font-macondo tracking-wider shadow-[0_4px_12px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+        title="Zurück zum Seitenanfang scrollen"
+        aria-label="Nach oben scrollen"
+      >
+        <span className="text-[10px] sm:text-xs transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
+        <span className="font-semibold whitespace-nowrap">Nach oben</span>
       </button>
     </div>
   );

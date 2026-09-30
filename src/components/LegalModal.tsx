@@ -5,9 +5,11 @@ interface LegalModalProps {
   type: 'impressum' | 'datenschutz' | 'cookies' | null;
   onClose: () => void;
   onSwitchType: (type: 'impressum' | 'datenschutz' | 'cookies') => void;
+  onRevokeConsent?: () => void;
+  sessionId?: string;
 }
 
-export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchType }) => {
+export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchType, onRevokeConsent, sessionId }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -46,7 +48,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
             <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
               {type === 'impressum' && 'Impressum'}
               {type === 'datenschutz' && 'Datenschutzerklärung'}
-              {type === 'cookies' && 'Cookie-Informationen'}
+              {type === 'cookies' && 'Cookies und Consent'}
             </h2>
           </div>
 
@@ -85,7 +87,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
               type === 'cookies' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
             }`}
           >
-            Cookies
+            Cookies und Consent
           </button>
         </div>
 
@@ -292,7 +294,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
               <div>
                 <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">6. Cookies und lokale Speicherung</h3>
                 <p className="text-xs sm:text-sm text-justify">
-                  Unsere Website verzichtet vollständig auf Tracking-, Marketing- und Werbe-Cookies. Wir setzen ausschließlich technisch erforderliche Speicherfunktionen (z. B. den lokalen Browserspeicher „LocalStorage“) ein, um Ihre persönlichen Komfort-Einstellungen wie die Stummschaltung oder Lautstärke unseres Musikplayers zu speichern. Diese Daten verbleiben auf Ihrem Gerät und werden nicht an uns oder Dritte übertragen. Nähere Details finden Sie im Reiter „Cookies“.
+                  Unsere Website verzichtet vollständig auf Tracking-, Marketing- und Werbe-Cookies. Wir setzen ausschließlich technisch erforderliche Speicherfunktionen (z. B. den lokalen Browserspeicher „LocalStorage“) ein, um Ihre persönlichen Komfort-Einstellungen wie die Stummschaltung oder Lautstärke unseres Musikplayers zu speichern. Diese Daten verbleiben auf Ihrem Gerät und werden nicht an uns oder Dritte übertragen. Nähere Details finden Sie im Reiter „Cookies und Consent“.
                 </p>
               </div>
 
@@ -315,6 +317,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           )}
 
           {/* COOKIES INFO & ERKLÄRUNG */}
+          {/* COOKIES & CONSENT */}
           {type === 'cookies' && (
             <div className="space-y-6 py-2">
               <div className="text-center space-y-3">
@@ -322,25 +325,104 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                   <Cookie size={44} />
                 </div>
                 <h3 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
-                  Nur essenzielle Funktionen und Musik aus alten Zeiten!
+                  Cookies und Consent
                 </h3>
                 <p className="max-w-2xl mx-auto text-[#D1C7AC] text-sm sm:text-base leading-relaxed">
-                  Wir schätzen Ihre Privatsphäre genauso sehr wie die Musik aus Mittelalter und Renaissance. Erfahren Sie hier verständlich und transparent, was Cookies sind und wie wir auf dieser Website damit umgehen.
+                  Wir schätzen Ihre Privatsphäre genauso sehr wie die Musik aus Mittelalter und Renaissance. Erfahren Sie hier verständlich und transparent, welche Cookies und lokalen Speichertechniken eingesetzt werden, wie Ihre Einwilligung dokumentiert wird und wie Sie diese jederzeit widerrufen können.
                 </p>
               </div>
 
-              {/* Box 1: Was sind Cookies überhaupt? */}
-              <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-2">
-                <h4 className="font-macondo text-xl text-[#F5F5DC]">1. Was sind Cookies eigentlich?</h4>
-                <p className="text-xs sm:text-sm text-[#D1C7AC] leading-relaxed text-justify">
-                  Cookies sind kleine Textdateien, die beim Besuch einer Internetseite von Ihrem Webbrowser auf Ihrem Endgerät (Computer, Laptop, Tablet oder Smartphone) abgelegt und gespeichert werden. Cookies richten auf Ihrem Endgerät keinen Schaden an, können keine Programme ausführen und enthalten keine Computerviren.
-                </p>
-                <p className="text-xs sm:text-sm text-[#D1C7AC] leading-relaxed text-justify">
-                  Sie dienen im modernen Web hauptsächlich zwei Zwecken: Zum einen ermöglichen sie es einer Website, grundlegende Funktionen bereitzustellen und sich Benutzereinstellungen (z. B. Spracheinstellungen oder die Lautstärke eines Musikplayers) für Ihren nächsten Besuch zu merken. Zum anderen werden Cookies im Internet häufig von Werbetreibenden eingesetzt, um das Surfverhalten von Nutzern über viele Websites hinweg zu verfolgen (Tracking).
-                </p>
+              {/* Box 0: Ihre persönliche Consent-Session-ID (DSGVO-Nachweis) */}
+              <div className="p-4 sm:p-5 rounded-xl bg-[#1A100B] border-2 border-[#DAA520]/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-center sm:text-left space-y-1">
+                  <span className="text-[11px] sm:text-xs uppercase tracking-wider text-[#DAA520] font-bold block">
+                    Ihre persönliche Consent-Session-ID
+                  </span>
+                  <div className="font-mono text-base sm:text-lg font-bold text-[#F5F5DC] bg-[#090503] px-3 py-1.5 rounded-lg border border-[#DAA520]/40 inline-block select-all tracking-wider">
+                    {sessionId || 'OP-C87F42A1D0'}
+                  </div>
+                  <p className="text-[11px] text-[#D1C7AC]/75 leading-tight">
+                    Nachweis Ihrer erteilten Einwilligung gemäß Art. 7 Abs. 1 DSGVO · Vollständig anonymisiert ohne Nutzerprofil.
+                  </p>
+                </div>
+                <div className="shrink-0 flex flex-col items-center sm:items-end gap-1.5">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-600/70 text-emerald-300 text-xs font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Gültigkeit: 30 Tage aktiv
+                  </span>
+                </div>
               </div>
 
-              {/* Box 2: Essenzielle vs. Optionale Cookies */}
+              {/* Box 1: Übersicht der verwendeten Cookies & Speicherungen */}
+              <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-3">
+                <h4 className="font-macondo text-xl text-[#F5F5DC]">1. Übersicht aller genutzten Speicherungen &amp; Cookies</h4>
+                <p className="text-xs sm:text-sm text-[#D1C7AC] leading-relaxed">
+                  Nachfolgend finden Sie eine vollständige Auflistung sämtlicher lokaler Speicherfunktionen, die von dieser Website gesetzt werden:
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-[#D1C7AC] border-collapse min-w-[500px]">
+                    <thead>
+                      <tr className="border-b border-[#DAA520]/40 text-[#DAA520] font-macondo text-sm">
+                        <th className="py-2 pr-3">Name / Variable</th>
+                        <th className="py-2 px-3">Speicherort</th>
+                        <th className="py-2 px-3">Zweck</th>
+                        <th className="py-2 px-3">Gültigkeit</th>
+                        <th className="py-2 pl-3">Typ</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#DAA520]/15">
+                      <tr>
+                        <td className="py-2.5 pr-3 font-mono text-[#F5F5DC] font-semibold">olla_cookie_consent</td>
+                        <td className="py-2.5 px-3">Cookie &amp; LocalStorage</td>
+                        <td className="py-2.5 px-3">Speichert, dass der Willkommens- und Cookie-Banner bestätigt wurde.</td>
+                        <td className="py-2.5 px-3 whitespace-nowrap">30 Tage</td>
+                        <td className="py-2.5 pl-3"><span className="text-emerald-400 font-semibold">Essenziell</span></td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 pr-3 font-mono text-[#F5F5DC] font-semibold">olla_consent_session_id</td>
+                        <td className="py-2.5 px-3">LocalStorage</td>
+                        <td className="py-2.5 px-3">Eindeutige Nachweis-ID zur datenschutzkonformen Protokollierung (Art. 7 DSGVO).</td>
+                        <td className="py-2.5 px-3 whitespace-nowrap">30 Tage</td>
+                        <td className="py-2.5 pl-3"><span className="text-emerald-400 font-semibold">Dokumentation</span></td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 pr-3 font-mono text-[#F5F5DC] font-semibold">olla_audio_muted</td>
+                        <td className="py-2.5 px-3">LocalStorage</td>
+                        <td className="py-2.5 px-3">Merkt sich Ihre Lautstärke- bzw. Stummschaltungs-Präferenz des Musik-Players.</td>
+                        <td className="py-2.5 px-3 whitespace-nowrap">Permanent</td>
+                        <td className="py-2.5 pl-3"><span className="text-[#DAA520] font-semibold">Komfort</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Box 2: Manuelle Löschung & Widerruf der Einwilligung */}
+              <div className="p-5 rounded-xl bg-gradient-to-r from-red-950/40 via-[#1A100B] to-red-950/40 border border-red-700/50 space-y-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div className="space-y-1">
+                  <h4 className="font-macondo text-xl text-red-300 flex items-center justify-center sm:justify-start gap-2">
+                    <span className="text-xl">🗑️</span>
+                    <span>Cookies &amp; Einwilligung zurücksetzen</span>
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#D1C7AC] max-w-md">
+                    Entfernt sofort alle gesetzten Cookies und lokalen Einstellungen von Ihrem Gerät. Beim nächsten Laden der Website erscheint der Cookie-Banner wieder.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onRevokeConsent) {
+                      onRevokeConsent();
+                    }
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-red-900/90 hover:bg-red-800 border border-red-500 text-white font-macondo text-sm font-semibold tracking-wide shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-2"
+                >
+                  <span>🗑️</span>
+                  <span>Einwilligung jetzt löschen</span>
+                </button>
+              </div>
+
+              {/* Box 3: Essenzielle vs. Optionale Cookies */}
               <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-3">
                 <h4 className="font-macondo text-xl text-[#F5F5DC]">2. Welche Unterschiede gibt es bei Cookies?</h4>
                 
@@ -367,7 +449,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                 </div>
               </div>
 
-              {/* Box 3: Das Prinzip von Olla Podrida */}
+              {/* Box 4: Unser Versprechen: 100% Tracking-frei */}
               <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-2">
                 <h4 className="font-macondo text-xl text-[#DAA520]">3. Unser Versprechen: 100% Tracking-frei</h4>
                 <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-[#D1C7AC]">
@@ -377,7 +459,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                 </ul>
               </div>
 
-              {/* Box 4: Wie Sie Cookies im Browser kontrollieren können */}
+              {/* Box 5: Wie Sie Cookies im Browser kontrollieren können */}
               <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-2">
                 <h4 className="font-macondo text-xl text-[#F5F5DC]">4. Wie können Sie Cookies in Ihrem Browser verwalten?</h4>
                 <p className="text-xs sm:text-sm text-[#D1C7AC] leading-relaxed text-justify">

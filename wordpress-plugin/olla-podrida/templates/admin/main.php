@@ -10,6 +10,7 @@ $tabs = [
     'ensemble' => ['label' => '📜 Ensemble & Musiker', 'icon' => 'dashicons-groups'],
     'events' => ['label' => '📅 Termine & Konzerte', 'icon' => 'dashicons-calendar-alt'],
     'contact' => ['label' => '✉️ Kontakt & Postfach', 'icon' => 'dashicons-email-alt'],
+    'consent' => ['label' => '🛡️ Cookie & Consent', 'icon' => 'dashicons-privacy'],
     'audio' => ['label' => '🎵 Musik & Player', 'icon' => 'dashicons-format-audio'],
     'press' => ['label' => '📰 Presse & Medien', 'icon' => 'dashicons-format-gallery'],
     'seo' => ['label' => '🔍 SEO & Metadaten', 'icon' => 'dashicons-search'],

@@ -19,6 +19,7 @@ class Olla_Podrida_Roles {
             'press'    => ['label' => 'Presse & Medienmaterial',    'icon' => 'dashicons-format-gallery'],
             'seo'      => ['label' => 'SEO & Metadaten',            'icon' => 'dashicons-search'],
             'legal'    => ['label' => 'Rechtliches & Footer',       'icon' => 'dashicons-shield'],
+            'consent'  => ['label' => 'Cookie & Consent',          'icon' => 'dashicons-privacy'],
             'display'  => ['label' => 'Einbindung & Ausspielung',   'icon' => 'dashicons-admin-generic'],
             'roles'    => ['label' => 'Rollen & Berechtigungen',    'icon' => 'dashicons-admin-users'],
         ];
@@ -97,7 +98,7 @@ class Olla_Podrida_Roles {
             if (!empty($roles_config['editor_sections'])) {
                 return (array) $roles_config['editor_sections'];
             }
-            return ['settings', 'hero', 'ensemble', 'events', 'contact', 'audio', 'press', 'seo', 'legal'];
+            return ['settings', 'hero', 'ensemble', 'events', 'contact', 'consent', 'audio', 'press', 'seo', 'legal'];
         }
         if ($role_slug === 'author') {
             if (!empty($roles_config['author_sections'])) {

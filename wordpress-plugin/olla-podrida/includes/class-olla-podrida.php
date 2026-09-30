@@ -32,9 +32,18 @@ class Olla_Podrida {
         // Security HTTP Headers (anti-sniffing, framing, referrer)
         add_action('send_headers', [$this, 'send_security_headers']);
 
-        Olla_Podrida_Admin::init();
-        Olla_Podrida_Frontend::init();
-        Olla_Podrida_Import::init();
+        if (class_exists('Olla_Podrida_Admin')) {
+            Olla_Podrida_Admin::init();
+        }
+        if (class_exists('Olla_Podrida_Frontend')) {
+            Olla_Podrida_Frontend::init();
+        }
+        if (class_exists('Olla_Podrida_Import')) {
+            Olla_Podrida_Import::init();
+        }
+        if (class_exists('Olla_Podrida_Consent')) {
+            Olla_Podrida_Consent::init();
+        }
     }
 
     /**
@@ -99,16 +108,27 @@ class Olla_Podrida {
 
     public static function activate() {
         // Register custom medieval roles
-        Olla_Podrida_Roles::register_custom_roles();
+        if (class_exists('Olla_Podrida_Roles')) {
+            Olla_Podrida_Roles::register_custom_roles();
+        }
 
         // Create DB table for contact inquiries
-        Olla_Podrida_Contact::create_table();
+        if (class_exists('Olla_Podrida_Contact')) {
+            Olla_Podrida_Contact::create_table();
+        }
+
+        // Create DB table for cookie consent audit logs
+        if (class_exists('Olla_Podrida_Consent')) {
+            Olla_Podrida_Consent::create_table();
+        }
 
         // Initialize default settings in wp_options if not present
-        $defaults = Olla_Podrida_Settings::get_defaults();
-        foreach ($defaults as $section => $data) {
-            if (get_option('olla_podrida_' . $section) === false) {
-                update_option('olla_podrida_' . $section, $data);
+        if (class_exists('Olla_Podrida_Settings')) {
+            $defaults = Olla_Podrida_Settings::get_defaults();
+            foreach ($defaults as $section => $data) {
+                if (get_option('olla_podrida_' . $section) === false) {
+                    update_option('olla_podrida_' . $section, $data);
+                }
             }
         }
     }

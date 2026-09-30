@@ -57,17 +57,80 @@ function checkHasConsent(): boolean {
   return false;
 }
 
-function saveConsent() {
+function getOrCreateConsentSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    let id = localStorage.getItem('olla_consent_session_id');
+    if (!id) {
+      const rand = Math.random().toString(36).substring(2, 8).toUpperCase() + Math.random().toString(36).substring(2, 8).toUpperCase();
+      id = `OP-${rand}`;
+      localStorage.setItem('olla_consent_session_id', id);
+    }
+    return id;
+  } catch {
+    return 'OP-ANONYM';
+  }
+}
+
+function saveConsent(audio: boolean = true) {
   if (typeof window === 'undefined') return;
 
   // Set 30-day cookie
   const maxAgeSeconds = 30 * 24 * 60 * 60;
   document.cookie = `olla_cookie_consent=true; max-age=${maxAgeSeconds}; path=/; SameSite=Lax`;
 
+  const sessionId = getOrCreateConsentSessionId();
+
   // Set localStorage backup with timestamp
   try {
     localStorage.setItem('olla_cookie_consent', 'true');
     localStorage.setItem('olla_cookie_consent_time', Date.now().toString());
+  } catch {}
+
+  // Log to WordPress REST API
+  try {
+    const restBase = (window as unknown as { OLLA_DATA?: { restUrl?: string } }).OLLA_DATA?.restUrl;
+    const endpoint = restBase ? `${restBase}olla-podrida/v1/consent` : '/wp-json/olla-podrida/v1/consent';
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId,
+        action: 'grant',
+        essential: true,
+        audio: audio,
+        duration_days: 30
+      })
+    }).catch(() => {});
+  } catch {}
+}
+
+function revokeConsent() {
+  if (typeof window === 'undefined') return;
+  document.cookie = 'olla_cookie_consent=; max-age=0; path=/;';
+
+  let sessionId = '';
+  try {
+    sessionId = localStorage.getItem('olla_consent_session_id') || '';
+    localStorage.removeItem('olla_cookie_consent');
+    localStorage.removeItem('olla_cookie_consent_time');
+    localStorage.removeItem('olla_consent_session_id');
+  } catch {}
+
+  // Log revocation to WordPress REST API
+  try {
+    const restBase = (window as unknown as { OLLA_DATA?: { restUrl?: string } }).OLLA_DATA?.restUrl;
+    const endpoint = restBase ? `${restBase}olla-podrida/v1/consent` : '/wp-json/olla-podrida/v1/consent';
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId || 'OP-REVOKED',
+        action: 'revoke',
+        essential: false,
+        audio: false
+      })
+    }).catch(() => {});
   } catch {}
 }
 
@@ -78,10 +141,18 @@ export default function App() {
 
   // Cookie consent: stored as a 30-day cookie. If already accepted within 30 days, preloader starts immediately.
   const [hasConsent, setHasConsent] = useState(checkHasConsent);
+  const [sessionId, setSessionId] = useState(() => getOrCreateConsentSessionId());
 
-  const handleAcceptCookies = () => {
-    saveConsent();
+  const handleAcceptCookies = (audio: boolean = true) => {
+    saveConsent(audio);
     setHasConsent(true);
+  };
+
+  const handleRevokeConsent = () => {
+    revokeConsent();
+    setHasConsent(false);
+    setLegalModalType(null);
+    setSessionId(getOrCreateConsentSessionId());
   };
 
   useEffect(() => {
@@ -200,11 +271,13 @@ export default function App() {
       {/* 1:1 Floating Audio Player (♫ bottom-right) */}
       <AudioPlayer />
 
-      {/* Legal Modals (Impressum, Datenschutz, Cookies) */}
+      {/* Legal Modals (Impressum, Datenschutz, Cookies und Consent) */}
       <LegalModal
         type={legalModalType}
         onClose={handleCloseLegal}
         onSwitchType={setLegalModalType}
+        onRevokeConsent={handleRevokeConsent}
+        sessionId={sessionId}
       />
 
       {/* Concert Chronicle & Archive Modal */}
