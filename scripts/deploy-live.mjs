@@ -23,6 +23,8 @@ async function main() {
     cssFile ? `assets/dist/assets/${cssFile}` : '',
     'assets/css/admin.css',
     'assets/js/admin.js',
+    'assets/dist/bottom_paper.png',
+    'assets/dist/images/bottom_paper.png',
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',

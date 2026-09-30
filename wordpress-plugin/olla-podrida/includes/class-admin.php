@@ -291,6 +291,7 @@ class Olla_Podrida_Admin {
                     'title' => sanitize_text_field($_POST['title'] ?? ''),
                     'subtitle' => sanitize_text_field($_POST['subtitle'] ?? ''),
                     'autoplay' => !empty($_POST['autoplay']),
+                    'loop' => !empty($_POST['loop']),
                     'volume' => intval($_POST['volume'] ?? 50),
                     'button_text' => sanitize_text_field($_POST['button_text'] ?? '• Musik an / aus • Musik an / aus'),
                 ];

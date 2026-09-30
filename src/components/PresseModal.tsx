@@ -11,10 +11,6 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
   const pressConfig = getPressConfig();
   const [activeTab, setActiveTab] = useState<'text' | 'logos' | 'photos' | 'contact'>('text');
   const [copied, setCopied] = useState(false);
-  const [logoBgs, setLogoBgs] = useState<Record<string, 'light' | 'dark'>>({
-    'logo-main': 'light',
-    'logo-seal': 'dark',
-  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -204,19 +200,18 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
           {activeTab === 'logos' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                {pressConfig.logos.map((logo) => {
-                  const currentBg = logoBgs[logo.id] || (logo.id === 'logo-banner' ? 'light' : 'dark');
-                  const isLight = currentBg === 'light';
+                {pressConfig.logos.map((logo, index) => {
+                  const isLight = index === 0;
 
                   return (
                     <div
-                      key={logo.id}
+                      key={logo.id || index}
                       className="bg-[#1A100B] border border-[#DAA520]/30 rounded-xl p-4 flex flex-col justify-between hover:border-[#DAA520] transition-colors"
                     >
                       <div>
-                        {/* Logo Display Container with interactive dark/light background preview */}
+                        {/* Logo Display Container: Left = Light (#FAF6EE), Right = Dark (#070202) */}
                         <div
-                          className={`h-44 sm:h-48 rounded-lg flex items-center justify-center p-4 mb-3 border overflow-hidden relative transition-colors duration-200 ${
+                          className={`h-44 sm:h-48 rounded-lg flex items-center justify-center p-4 mb-3 border overflow-hidden relative ${
                             isLight
                               ? 'bg-[#FAF6EE] border-[#DAA520]/40 shadow-inner'
                               : 'bg-[#070202] border-[#DAA520]/25'
@@ -229,24 +224,16 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
                             loading="lazy"
                           />
 
-                          {/* Background contrast toggle button */}
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setLogoBgs((prev) => ({
-                                ...prev,
-                                [logo.id]: isLight ? 'dark' : 'light',
-                              }))
-                            }
-                            className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[0.65rem] font-macondo transition-all flex items-center space-x-1 cursor-pointer border ${
+                          {/* Static background indicator badge (non-clickable) */}
+                          <div
+                            className={`absolute top-2 right-2 px-2.5 py-0.5 rounded text-[0.65rem] font-macondo flex items-center space-x-1 select-none pointer-events-none border ${
                               isLight
-                                ? 'bg-[#1C120D] text-[#DAA520] border-[#DAA520]/50 hover:bg-[#2A1B14]'
-                                : 'bg-[#FAF6EE] text-[#1C120D] border-stone-300 hover:bg-white font-bold'
+                                ? 'bg-[#1C120D] text-[#DAA520] border-[#DAA520]/50'
+                                : 'bg-[#FAF6EE] text-[#1C120D] border-stone-300 font-bold'
                             }`}
-                            title="Hintergrund Hell/Dunkel umschalten"
                           >
-                            <span>{isLight ? '🌙 Dunkel' : '☀️ Hell'}</span>
-                          </button>
+                            <span>{isLight ? '☀️ Hell' : '🌙 Dunkel'}</span>
+                          </div>
                         </div>
 
                         <div className="flex items-center justify-between gap-2 mb-1">

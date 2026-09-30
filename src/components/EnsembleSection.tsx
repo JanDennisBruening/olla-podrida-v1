@@ -38,7 +38,7 @@ export const EnsembleSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[13vw] lg:-mt-[10rem] xl:-mt-[11.5rem] pt-0 pb-0 select-none z-20"
+      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[13vw] lg:-mt-[10rem] xl:-mt-[11.5rem] pt-0 pb-10 sm:pb-14 md:pb-16 lg:pb-20 select-none z-20"
     >
       {/* Centered Parchment Container - Reduced side borders by half, perfectly centered */}
       <div className="w-full flex flex-col items-center justify-center px-0 relative z-10">
@@ -478,6 +478,19 @@ export const EnsembleSection: React.FC = () => {
             </p>
           </div>
 
+          </div>
+
+          {/* Authentic Deckle Torn Bottom Edge */}
+          <div
+            className="absolute left-0 right-0 -bottom-[1px] translate-y-[82%] w-full pointer-events-none select-none z-10"
+            aria-hidden="true"
+          >
+            <img
+              src={resolveAssetUrl('/bottom_paper.png')}
+              alt=""
+              className="w-full h-auto block select-none pointer-events-none"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

@@ -136,7 +136,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
             onClick={handleEssential}
             className="w-full sm:w-auto py-2 sm:py-2.5 px-4 rounded-xl border border-[#DAA520]/40 text-[#D1C7AC] hover:text-[#F5F5DC] hover:border-[#DAA520] font-macondo text-sm transition-all cursor-pointer text-center"
           >
-            Nur essenzielle Cookies &amp; Consent
+            Nur essenzielle Cookie &amp; Consent
           </button>
         </div>
       </div>

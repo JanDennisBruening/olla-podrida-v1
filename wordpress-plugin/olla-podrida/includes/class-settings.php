@@ -225,6 +225,7 @@ class Olla_Podrida_Settings {
                 'title' => 'Riu Riu Chiu',
                 'subtitle' => 'Live in Atter (Spanisches Renaissance-Villancico)',
                 'autoplay' => true,
+                'loop' => false,
                 'volume' => 50,
                 'button_text' => '• Musik an / aus • Musik an / aus',
             ],
@@ -336,7 +337,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
                 'photo1_url' => $assets_url . '2024_Vorschaubild_1zu1_sRGB.webp',
                 'photo1_title' => 'Ensemble Olla Podrida Gesamtansicht',
                 'photo4_url' => $assets_url . 'Hintergrund-Header-2-2-scaled.webp',
-                'photo4_title' => 'Bühnenkulisse & Instrumentarium',
+                'photo4_title' => 'Bühnenkulisse im Instrumentarium',
             ],
             'seo' => [
                 'meta_title' => 'Ensemble Olla Podrida | Musik aus Mittelalter & Renaissance',

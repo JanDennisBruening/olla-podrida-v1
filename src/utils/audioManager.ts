@@ -18,12 +18,15 @@ class GlobalAudioManager {
       const audio = new Audio();
       audio.src = src;
       audio.preload = 'auto';
-      audio.loop = true;
+      audio.loop = !!config.loop;
       audio.volume = typeof config.volume === 'number' ? config.volume : 0.4;
 
       audio.addEventListener('play', () => this.notify(true));
       audio.addEventListener('pause', () => this.notify(false));
-      audio.addEventListener('ended', () => this.notify(false));
+      audio.addEventListener('ended', () => {
+        // Automatically turns off when playback finishes (if not loop)
+        this.notify(false);
+      });
       audio.addEventListener('error', (e) => {
         console.warn('Audio playback error:', e);
         this.notify(false);
@@ -65,8 +68,9 @@ class GlobalAudioManager {
     const audio = this.initAudio();
     if (!audio) return Promise.resolve(false);
 
-    // Ensure volume is set
+    // Ensure volume and loop are synchronized with config
     const config = getAudioConfig();
+    audio.loop = !!config.loop;
     if (typeof config.volume === 'number') {
       audio.volume = config.volume;
     }

@@ -68,30 +68,30 @@ $press = Olla_Podrida_Settings::get_section('press');
             <p class="description">Gemäß Vorgabe stehen hier exakt zwei offizielle Grafiken zur Verfügung: Das offizielle Ensemble-Logo und das historische Rundsiegel-Wappen.</p>
 
             <div class="olla-grid-2" style="margin-top: 12px;">
-                <!-- 1. Offizielles Ensemble-Logo -->
+                <!-- 1. Offizielles Ensemble-Logo (Hell) -->
                 <div class="olla-field-group olla-media-field" style="background:#faf8f5; border:1px solid #e2dac8; padding:15px; border-radius:8px;">
-                    <label><strong>1. Ensemble-Logo Olla Podrida (Hell &amp; Dunkel PNG):</strong></label>
-                    <span class="description" style="display:block; margin-bottom:6px;">Freigestellte Bildmarke mit Zierschmuck. Eignet sich für helle und dunkle Hintergründe.</span>
+                    <label><strong>1. Ensemble Logo Olla Podrida (Hell, PNG):</strong></label>
+                    <span class="description" style="display:block; margin-bottom:6px;">Offizielles Emblem für helle Hintergründe. Freigestellte Bildmarke mit Zierschmuck.</span>
                     <div class="olla-media-row">
                         <input type="text" name="logo_banner" id="logo_banner" value="<?php echo esc_url($press['logo_banner'] ?? ''); ?>" class="regular-text olla-media-input" />
                         <button type="button" class="button olla-media-upload-btn" data-target="#logo_banner" data-preview="#logo_banner_preview">Wählen</button>
                     </div>
-                    <div class="olla-media-preview" id="logo_banner_preview" style="background:#251811; padding:6px; border-radius:6px; margin-top:6px; display:inline-block;">
+                    <div class="olla-media-preview" id="logo_banner_preview" style="background:#FAF6EE; padding:6px; border-radius:6px; margin-top:6px; display:inline-block; border:1px solid #d4c8b2;">
                         <?php if (!empty($press['logo_banner'])): ?>
                             <img src="<?php echo esc_url($press['logo_banner']); ?>" style="max-height: 60px;" />
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- 2. Rundsiegel / Wappen -->
+                <!-- 2. Offizielles Ensemble-Logo (Dunkel) -->
                 <div class="olla-field-group olla-media-field" style="background:#faf8f5; border:1px solid #e2dac8; padding:15px; border-radius:8px;">
-                    <label><strong>2. Ensemble-Wappen (Historisches Rundsiegel, PNG):</strong></label>
-                    <span class="description" style="display:block; margin-bottom:6px;">Historische Ziersiegel-Marke für Programmhefte, Notenmappen und Plakate.</span>
+                    <label><strong>2. Ensemble Logo Olla Podrida (Dunkel, PNG):</strong></label>
+                    <span class="description" style="display:block; margin-bottom:6px;">Offizielles Emblem für dunkle Hintergründe. Freigestellte Bildmarke mit Zierschmuck.</span>
                     <div class="olla-media-row">
                         <input type="text" name="logo_seal" id="logo_seal" value="<?php echo esc_url($press['logo_seal'] ?? ''); ?>" class="regular-text olla-media-input" />
                         <button type="button" class="button olla-media-upload-btn" data-target="#logo_seal" data-preview="#logo_seal_preview">Wählen</button>
                     </div>
-                    <div class="olla-media-preview" id="logo_seal_preview" style="background:#251811; padding:6px; border-radius:6px; margin-top:6px; display:inline-block;">
+                    <div class="olla-media-preview" id="logo_seal_preview" style="background:#070202; padding:6px; border-radius:6px; margin-top:6px; display:inline-block; border:1px solid #332;">
                         <?php if (!empty($press['logo_seal'])): ?>
                             <img src="<?php echo esc_url($press['logo_seal']); ?>" style="max-height: 60px;" />
                         <?php endif; ?>
@@ -152,7 +152,7 @@ $press = Olla_Podrida_Settings::get_section('press');
                 <!-- Foto 4 -->
                 <div class="olla-field-group olla-media-field" style="background:#fdfcf7; border:1px solid #e2dac8; padding:15px; border-radius:8px;">
                     <label><strong>Pressefoto 4: Kulisse / Instrumentarium / Detailaufnahme</strong></label>
-                    <input type="text" name="photo4_title" value="<?php echo esc_attr($press['photo4_title'] ?? 'Bühnenkulisse & Instrumentarium'); ?>" placeholder="Bildtitel / Bildunterschrift" class="large-text" style="margin-bottom:8px;" />
+                    <input type="text" name="photo4_title" value="<?php echo esc_attr($press['photo4_title'] ?? 'Bühnenkulisse im Instrumentarium'); ?>" placeholder="Bildtitel / Bildunterschrift" class="large-text" style="margin-bottom:8px;" />
                     <div class="olla-media-row">
                         <input type="text" name="photo4_url" id="photo4_url" value="<?php echo esc_url($press['photo4_url'] ?? ''); ?>" class="regular-text olla-media-input" />
                         <button type="button" class="button olla-media-upload-btn" data-target="#photo4_url" data-preview="#photo4_preview">Aus Mediathek</button>

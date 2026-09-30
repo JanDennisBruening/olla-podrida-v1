@@ -106,15 +106,15 @@ export const AudioPlayer: React.FC = () => {
         </div>
       </button>
 
-      {/* Nach oben (Scroll-to-top) Button directly below the music button */}
+      {/* Nach oben (Scroll-to-top) Button directly below the music button (-20% size) */}
       <button
         type="button"
         onClick={handleScrollToTop}
-        className="group flex items-center justify-center gap-1 px-2.5 py-1 rounded-full bg-[#070202]/90 border border-[#DAA520]/60 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[11px] sm:text-xs font-macondo tracking-wider shadow-[0_4px_12px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+        className="group flex items-center justify-center gap-1 px-2 py-0.5 rounded-full bg-[#070202]/90 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[9.5px] sm:text-[10px] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
         title="Zurück zum Seitenanfang scrollen"
         aria-label="Nach oben scrollen"
       >
-        <span className="text-[10px] sm:text-xs transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
+        <span className="text-[8.5px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
         <span className="font-semibold whitespace-nowrap">Nach oben</span>
       </button>
     </div>

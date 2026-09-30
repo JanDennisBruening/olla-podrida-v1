@@ -76,6 +76,27 @@ $audio = Olla_Podrida_Settings::get_section('audio');
                     <span id="vol_val" style="font-weight: bold; margin-left: 10px;"><?php echo esc_html($audio['volume'] ?? 50); ?>%</span>
                 </div>
             </div>
+
+            <!-- Wiedergabe-Modus (Loop vs. Einmalig) -->
+            <div class="olla-field-group" style="margin-top: 20px; background: #faf8f5; border: 1px solid #e5dfd5; padding: 15px 18px; border-radius: 8px;">
+                <label style="font-size: 14px; color: #1d2327;"><strong>Wiedergabe-Verhalten nach Ende des Musikstücks:</strong></label>
+                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-weight: normal; cursor: pointer; display: flex; align-items: flex-start; gap: 8px;">
+                        <input type="radio" name="loop" value="0" style="margin-top: 3px;" <?php checked(empty($audio['loop'])); ?> />
+                        <span>
+                            <strong>Nur einmalig durchlaufen (Empfohlen):</strong><br/>
+                            <span style="color: #666; font-size: 12px;">Das Musikstück wird einmal komplett abgespielt und schaltet sich danach automatisch ab. Der Besucher kann es bei Bedarf durch Klick auf den Button erneut starten.</span>
+                        </span>
+                    </label>
+                    <label style="font-weight: normal; cursor: pointer; display: flex; align-items: flex-start; gap: 8px;">
+                        <input type="radio" name="loop" value="1" style="margin-top: 3px;" <?php checked(!empty($audio['loop'])); ?> />
+                        <span>
+                            <strong>Endlosschleife (Loop):</strong><br/>
+                            <span style="color: #666; font-size: 12px;">Das Musikstück wiederholt sich nach dem Durchlaufen permanent und ununterbrochen im Hintergrund, bis der Besucher den Button drückt.</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="olla-card-footer">

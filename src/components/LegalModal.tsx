@@ -48,7 +48,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
             <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
               {type === 'impressum' && 'Impressum'}
               {type === 'datenschutz' && 'Datenschutzerklärung'}
-              {type === 'cookies' && 'Cookies und Consent'}
+              {type === 'cookies' && 'Cookie & Consent'}
             </h2>
           </div>
 
@@ -87,7 +87,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
               type === 'cookies' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
             }`}
           >
-            Cookies und Consent
+            Cookie &amp; Consent
           </button>
         </div>
 
@@ -294,7 +294,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
               <div>
                 <h3 className="font-macondo text-xl text-[#F5F5DC] mb-1">6. Cookies und lokale Speicherung</h3>
                 <p className="text-xs sm:text-sm text-justify">
-                  Unsere Website verzichtet vollständig auf Tracking-, Marketing- und Werbe-Cookies. Wir setzen ausschließlich technisch erforderliche Speicherfunktionen (z. B. den lokalen Browserspeicher „LocalStorage“) ein, um Ihre persönlichen Komfort-Einstellungen wie die Stummschaltung oder Lautstärke unseres Musikplayers zu speichern. Diese Daten verbleiben auf Ihrem Gerät und werden nicht an uns oder Dritte übertragen. Nähere Details finden Sie im Reiter „Cookies und Consent“.
+                  Unsere Website verzichtet vollständig auf Tracking-, Marketing- und Werbe-Cookies. Wir setzen ausschließlich technisch erforderliche Speicherfunktionen (z. B. den lokalen Browserspeicher „LocalStorage“) ein, um Ihre persönlichen Komfort-Einstellungen wie die Stummschaltung oder Lautstärke unseres Musikplayers zu speichern. Diese Daten verbleiben auf Ihrem Gerät und werden nicht an uns oder Dritte übertragen. Nähere Details finden Sie im Reiter „Cookie & Consent“.
                 </p>
               </div>
 
@@ -317,7 +317,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           )}
 
           {/* COOKIES INFO & ERKLÄRUNG */}
-          {/* COOKIES & CONSENT */}
+          {/* COOKIE & CONSENT */}
           {type === 'cookies' && (
             <div className="space-y-6 py-2">
               <div className="text-center space-y-3">
@@ -325,7 +325,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
                   <Cookie size={44} />
                 </div>
                 <h3 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
-                  Cookies und Consent
+                  Cookie &amp; Consent
                 </h3>
                 <p className="max-w-2xl mx-auto text-[#D1C7AC] text-sm sm:text-base leading-relaxed">
                   Wir schätzen Ihre Privatsphäre genauso sehr wie die Musik aus Mittelalter und Renaissance. Erfahren Sie hier verständlich und transparent, welche Cookies und lokalen Speichertechniken eingesetzt werden, wie Ihre Einwilligung dokumentiert wird und wie Sie diese jederzeit widerrufen können.
@@ -355,7 +355,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
 
               {/* Box 1: Übersicht der verwendeten Cookies & Speicherungen */}
               <div className="p-5 rounded-xl bg-[#1A100B] border border-[#DAA520]/30 space-y-3">
-                <h4 className="font-macondo text-xl text-[#F5F5DC]">1. Übersicht aller genutzten Speicherungen &amp; Cookies</h4>
+                <h4 className="font-macondo text-xl text-[#F5F5DC]">1. Übersicht aller genutzten Speicherungen &amp; Cookies (Cookie &amp; Consent)</h4>
                 <p className="text-xs sm:text-sm text-[#D1C7AC] leading-relaxed">
                   Nachfolgend finden Sie eine vollständige Auflistung sämtlicher lokaler Speicherfunktionen, die von dieser Website gesetzt werden:
                 </p>

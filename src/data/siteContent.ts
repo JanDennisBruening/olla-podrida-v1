@@ -51,6 +51,7 @@ export interface AudioConfig {
   title: string;
   subtitle: string;
   autoplay: boolean;
+  loop?: boolean;
   volume: number;
   buttonText: string;
 }
@@ -215,6 +216,7 @@ export const DEFAULT_AUDIO_CONFIG: AudioConfig = {
   title: 'Riu Riu Chiu',
   subtitle: 'Live in Atter (Spanisches Renaissance-Villancico)',
   autoplay: true,
+  loop: false,
   volume: 0.5,
   buttonText: '• Musik an / aus • Musik an / aus'
 };
@@ -336,9 +338,9 @@ export const DEFAULT_PRESS_CONFIG: PressConfig = {
   pressNote: 'Die hier bereitgestellten Pressefotos und Grafiken dürfen im Rahmen redaktioneller Berichterstattung über das Ensemble Olla Podrida sowie zur Ankündigung von Veranstaltungen unter Nennung der Quelle honorarfrei verwendet werden.',
   logos: [
     {
-      id: 'logo-main',
-      title: 'Ensemble-Logo Olla Podrida',
-      subtitle: 'Offizielles Logo mit Zierelement (Hell & Dunkel PNG)',
+      id: 'logo-light',
+      title: 'Ensemble Logo Olla Podrida',
+      subtitle: 'Offizielles Emblem für helle Hintergründe',
       category: 'logo',
       imageUrl: '/images/2024_07_15_Logo_Olla-Podrida_V1_1.png',
       downloadUrl: '/images/2024_07_15_Logo_Olla-Podrida_V1_1.png',
@@ -346,9 +348,9 @@ export const DEFAULT_PRESS_CONFIG: PressConfig = {
       fileSize: '128 KB'
     },
     {
-      id: 'logo-seal',
-      title: 'Ensemble-Wappen (Rundsiegel)',
-      subtitle: 'Historisches Ziersiegel & Wappenmarke für Programmhefte & Plakate',
+      id: 'logo-dark',
+      title: 'Ensemble Logo Olla Podrida',
+      subtitle: 'Offizielles Emblem für dunkle Hintergründe',
       category: 'logo',
       imageUrl: '/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png',
       downloadUrl: '/images/3_Zeichenflaeche-1-Kopie-10-1024x1024.png',
@@ -369,13 +371,13 @@ export const DEFAULT_PRESS_CONFIG: PressConfig = {
     },
     {
       id: 'photo-stage-header',
-      title: 'Bühnenkulisse & Instrumentarium',
+      title: 'Bühnenkulisse im Instrumentarium',
       subtitle: 'Historische Atmosphäre',
       category: 'photo',
       imageUrl: '/images/Hintergrund-Header-2-2-scaled.webp',
       downloadUrl: '/images/Hintergrund-Header-2-2-scaled.webp',
       format: 'WEBP (Großformat)',
-      credit: '© Jan Dennis Brüning / Ensemble Olla Podrida'
+      credit: '© Jan Dennis Brüning · Freepik'
     }
   ]
 };
