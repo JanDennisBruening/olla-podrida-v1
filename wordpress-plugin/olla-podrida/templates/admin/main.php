@@ -66,7 +66,12 @@ foreach ($tabs as $key => $info) {
         </div>
     <?php endif; ?>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs (ausgeblendet für Ensemble-Leitung, da alle Menüpunkte bereits in der linken Seitenleiste liegen) -->
+    <?php
+    $current_user = wp_get_current_user();
+    $is_ensemble_leitung = in_array('olla_ensemble_leitung', (array) $current_user->roles, true);
+    if (!$is_ensemble_leitung):
+    ?>
     <nav class="nav-tab-wrapper olla-nav-tab-wrapper">
         <?php foreach ($filtered_tabs as $key => $info): ?>
             <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=' . $key)); ?>" 
@@ -75,6 +80,7 @@ foreach ($tabs as $key => $info) {
             </a>
         <?php endforeach; ?>
     </nav>
+    <?php endif; ?>
 
     <!-- Tab Content Container -->
     <div class="olla-tab-container">

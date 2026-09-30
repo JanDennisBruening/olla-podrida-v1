@@ -159,11 +159,51 @@ $events = Olla_Podrida_Events::get_all_events();
 
                     <div class="olla-field-group olla-media-field">
                         <label><strong>Veranstaltungsfoto / Flyer:</strong></label>
-                        <div class="olla-media-row">
-                            <input type="text" name="image_url" id="event_image_url" class="regular-text olla-media-input" />
-                            <button type="button" class="button olla-media-upload-btn" data-target="#event_image_url" data-preview="#event_image_preview">Aus Mediathek wählen</button>
+                        <div class="olla-media-row" style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                            <button type="button" class="button button-secondary olla-media-upload-btn" data-target="#event_image_url" data-preview="#event_image_preview" style="white-space: nowrap; height: 36px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px;">
+                                <span class="dashicons dashicons-admin-media" style="margin-top: 1px;"></span> Aus Mediathek wählen
+                            </button>
+                            <input type="text" name="image_url" id="event_image_url" class="regular-text olla-media-input" placeholder="https://... (oder Bild aus Mediathek wählen)" style="flex: 1; height: 36px;" />
+                            <button type="button" class="button button-link-delete" id="event_image_clear_btn" style="height: 36px; display: inline-flex; align-items: center; color: #b32d2e; text-decoration: none;">Entfernen</button>
                         </div>
-                        <div class="olla-media-preview" id="event_image_preview"></div>
+                        <div class="olla-media-preview" id="event_image_preview" style="margin-top: 8px;"></div>
+                    </div>
+
+                    <!-- Zusatzpunkte / Highlights im Ausklappbereich -->
+                    <div class="olla-field-group" style="background: #faf7f0; border: 1px solid #d4c29d; border-radius: 6px; padding: 14px 16px; margin: 15px 0;">
+                        <h4 style="margin: 0 0 6px 0; color: #8c6d1f; display: flex; align-items: center; gap: 6px; font-size: 14px;">
+                            <span class="dashicons dashicons-tag"></span> Zusatzpunkte &amp; Hinweise (im Ausklappbereich &bdquo;Ausführliche Konzertinformationen&ldquo;)
+                        </h4>
+                        <p style="font-size: 11.5px; color: #666; margin: 0 0 12px 0;">
+                            Diese drei Punkte erscheinen auf der Website im Ausklapp-Bereich jedes Termins. Du kannst jeden Punkt individuell anpassen oder über das Häkchen aktivieren/deaktivieren:
+                        </p>
+
+                        <!-- Zusatzpunkt 1: Musikstil -->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; min-width: 140px; font-weight: 600; cursor: pointer; font-size: 13px;">
+                                <input type="checkbox" name="badge_music_show" id="event_badge_music_show" value="1" checked />
+                                <span>🎵 Punkt 1 anzeigen:</span>
+                            </label>
+                            <input type="text" name="badge_music" id="event_badge_music" class="large-text" value="🎵 Historische Musik der Renaissance &amp; des Mittelalters" placeholder="z. B. 🎵 Historische Musik der Renaissance & des Mittelalters" style="flex: 1; height: 32px;" />
+                        </div>
+
+                        <!-- Zusatzpunkt 2: Platzwahl -->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; min-width: 140px; font-weight: 600; cursor: pointer; font-size: 13px;">
+                                <input type="checkbox" name="badge_seating_show" id="event_badge_seating_show" value="1" checked />
+                                <span>🏛️ Punkt 2 anzeigen:</span>
+                            </label>
+                            <input type="text" name="badge_seating" id="event_badge_seating" class="large-text" value="🏛️ Freie Platzwahl vor Ort" placeholder="z. B. 🏛️ Freie Platzwahl vor Ort" style="flex: 1; height: 32px;" />
+                        </div>
+
+                        <!-- Zusatzpunkt 3: Eintritt / Spende -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; min-width: 140px; font-weight: 600; cursor: pointer; font-size: 13px;">
+                                <input type="checkbox" name="badge_admission_show" id="event_badge_admission_show" value="1" checked />
+                                <span>📜 Punkt 3 anzeigen:</span>
+                            </label>
+                            <input type="text" name="badge_admission" id="event_badge_admission" class="large-text" value="📜 Eintritt frei / Spende erbeten" placeholder="z. B. 📜 Eintritt frei / Spende erbeten" style="flex: 1; height: 32px;" />
+                        </div>
                     </div>
 
                     <div class="olla-field-group">

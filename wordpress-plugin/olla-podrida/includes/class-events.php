@@ -12,7 +12,30 @@ class Olla_Podrida_Events {
             $events = $defaults['events'];
             update_option('olla_podrida_events', $events);
         }
-        return is_array($events) ? $events : [];
+        if (!is_array($events)) {
+            $events = [];
+        }
+        foreach ($events as &$ev) {
+            if (!isset($ev['badge_music'])) {
+                $ev['badge_music'] = '🎵 Historische Musik der Renaissance & des Mittelalters';
+            }
+            if (!isset($ev['badge_music_show'])) {
+                $ev['badge_music_show'] = true;
+            }
+            if (!isset($ev['badge_seating'])) {
+                $ev['badge_seating'] = '🏛️ Freie Platzwahl vor Ort';
+            }
+            if (!isset($ev['badge_seating_show'])) {
+                $ev['badge_seating_show'] = true;
+            }
+            if (!isset($ev['badge_admission'])) {
+                $ev['badge_admission'] = '📜 Eintritt frei / Spende erbeten';
+            }
+            if (!isset($ev['badge_admission_show'])) {
+                $ev['badge_admission_show'] = true;
+            }
+        }
+        return $events;
     }
 
     public static function save_events(array $events) {
@@ -47,6 +70,12 @@ class Olla_Podrida_Events {
             'is_upcoming' => !empty($event_data['is_upcoming']),
             'ticket_info' => sanitize_text_field($event_data['ticket_info'] ?? ''),
             'contact_registration' => sanitize_text_field($event_data['contact_registration'] ?? ''),
+            'badge_music' => sanitize_text_field($event_data['badge_music'] ?? '🎵 Historische Musik der Renaissance & des Mittelalters'),
+            'badge_music_show' => filter_var($event_data['badge_music_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'badge_seating' => sanitize_text_field($event_data['badge_seating'] ?? '🏛️ Freie Platzwahl vor Ort'),
+            'badge_seating_show' => filter_var($event_data['badge_seating_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'badge_admission' => sanitize_text_field($event_data['badge_admission'] ?? '📜 Eintritt frei / Spende erbeten'),
+            'badge_admission_show' => filter_var($event_data['badge_admission_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
         ];
 
         $found = false;

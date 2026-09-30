@@ -14,6 +14,12 @@ interface PostEvent {
   imageSrc: string;
   linkUrl?: string;
   registrationContact?: string;
+  badgeMusic?: string;
+  badgeMusicShow?: boolean;
+  badgeSeating?: string;
+  badgeSeatingShow?: boolean;
+  badgeAdmission?: string;
+  badgeAdmissionShow?: boolean;
 }
 
 interface EventCardItemProps {
@@ -221,6 +227,17 @@ const printEventDocument = (event: PostEvent, logoUrl: string) => {
         <div class="meta-row">
           <span class="meta-icon">🎟️</span>
           <div><span class="meta-label">Eintritt & Details:</span> ${event.expandedDetailsHtml.replace(/<[^>]*>?/gm, '')}</div>
+        </div>` : ''}
+        ${((event.badgeMusicShow && event.badgeMusic) || (event.badgeSeatingShow && event.badgeSeating) || (event.badgeAdmissionShow && event.badgeAdmission)) ? `
+        <div class="meta-row" style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed #d4c29d;">
+          <span class="meta-icon">✦</span>
+          <div style="font-size: 12px; color: #5c4428;">
+            ${[
+              event.badgeMusicShow && event.badgeMusic ? event.badgeMusic : '',
+              event.badgeSeatingShow && event.badgeSeating ? event.badgeSeating : '',
+              event.badgeAdmissionShow && event.badgeAdmission ? event.badgeAdmission : ''
+            ].filter(Boolean).join(' &nbsp;·&nbsp; ')}
+          </div>
         </div>` : ''}
       </div>
 
@@ -455,11 +472,16 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
               {event.registrationContact}
             </div>
           )}
-          <div className="pt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs sm:text-sm text-[#F5F5DC]/70 font-sans border-t border-[#DAA520]/20">
-            <span>🎵 Historische Musik der Renaissance &amp; des Mittelalters</span>
-            <span>🏛️ Freie Platzwahl vor Ort</span>
-            <span>📜 Eintritt frei / Spende erbeten</span>
-          </div>
+          {/* Dynamisch konfigurierbare Zusatzpunkte & Hinweise */}
+          {((event.badgeMusicShow && event.badgeMusic) ||
+            (event.badgeSeatingShow && event.badgeSeating) ||
+            (event.badgeAdmissionShow && event.badgeAdmission)) && (
+            <div className="pt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs sm:text-sm text-[#F5F5DC]/70 font-sans border-t border-[#DAA520]/20">
+              {event.badgeMusicShow && event.badgeMusic && <span>{event.badgeMusic}</span>}
+              {event.badgeSeatingShow && event.badgeSeating && <span>{event.badgeSeating}</span>}
+              {event.badgeAdmissionShow && event.badgeAdmission && <span>{event.badgeAdmission}</span>}
+            </div>
+          )}
         </div>
       </div>
 
@@ -504,7 +526,13 @@ export const TermineSection: React.FC = () => {
       expandedDetailsHtml: ev.ticketInfo || ev.description,
       imageSrc: resolveAssetUrl(ev.imageUrl || '/images/Biomarkt-vorne-mit-Musik.jpg'),
       linkUrl: ev.link,
-      registrationContact: ev.contactRegistration || ''
+      registrationContact: ev.contactRegistration || '',
+      badgeMusic: ev.badgeMusic ?? '🎵 Historische Musik der Renaissance & des Mittelalters',
+      badgeMusicShow: ev.badgeMusicShow !== false,
+      badgeSeating: ev.badgeSeating ?? '🏛️ Freie Platzwahl vor Ort',
+      badgeSeatingShow: ev.badgeSeatingShow !== false,
+      badgeAdmission: ev.badgeAdmission ?? '📜 Eintritt frei / Spende erbeten',
+      badgeAdmissionShow: ev.badgeAdmissionShow !== false,
     }));
   }, [rawEvents]);
 

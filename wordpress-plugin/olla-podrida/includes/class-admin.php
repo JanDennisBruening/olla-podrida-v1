@@ -18,6 +18,7 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
         add_action('admin_bar_menu', [__CLASS__, 'customize_admin_bar_logo'], 11);
         add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
+        add_filter('admin_body_class', [__CLASS__, 'add_admin_body_classes']);
         add_action('login_enqueue_scripts', [__CLASS__, 'customize_login_page']);
         add_filter('login_headerurl', [__CLASS__, 'customize_login_headerurl']);
         add_filter('login_headertext', [__CLASS__, 'customize_login_headertext']);
@@ -393,8 +394,30 @@ class Olla_Podrida_Admin {
                 margin: 0 !important;
                 display: inline-block !important;
             }
+            /* ======================================================== */
+            /* 5. HIDE REDUNDANT TAB BAR FOR ENSEMBLE-LEITUNG          */
+            /* ======================================================== */
+            body.role-olla_ensemble_leitung .olla-nav-tab-wrapper,
+            body.role-olla_ensemble_leitung .nav-tab-wrapper,
+            .role-olla_ensemble_leitung .olla-nav-tab-wrapper {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
         </style>
         <?php
+    }
+
+    public static function add_admin_body_classes($classes) {
+        $user = wp_get_current_user();
+        if ($user && !empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                $classes .= ' role-' . sanitize_html_class($role);
+            }
+        }
+        return $classes;
     }
 
     public static function enqueue_admin_assets($hook) {

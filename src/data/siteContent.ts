@@ -43,6 +43,12 @@ export interface ConcertEvent {
   isUpcoming: boolean;
   ticketInfo?: string;
   contactRegistration?: string;
+  badgeMusic?: string;
+  badgeMusicShow?: boolean;
+  badgeSeating?: string;
+  badgeSeatingShow?: boolean;
+  badgeAdmission?: string;
+  badgeAdmissionShow?: boolean;
 }
 
 export interface AudioConfig {

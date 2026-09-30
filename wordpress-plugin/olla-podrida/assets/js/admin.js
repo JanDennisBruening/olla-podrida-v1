@@ -82,6 +82,12 @@
             $('#event_link').val('');
             $('#event_image_url').val('');
             $('#event_image_preview').empty();
+            $('#event_badge_music_show').prop('checked', true);
+            $('#event_badge_music').val('🎵 Historische Musik der Renaissance & des Mittelalters');
+            $('#event_badge_seating_show').prop('checked', true);
+            $('#event_badge_seating').val('🏛️ Freie Platzwahl vor Ort');
+            $('#event_badge_admission_show').prop('checked', true);
+            $('#event_badge_admission').val('📜 Eintritt frei / Spende erbeten');
             $('#event_description').val('');
 
             $('#olla-event-modal').fadeIn(200);
@@ -106,6 +112,19 @@
             } else {
                 $('#event_image_preview').empty();
             }
+
+            var showMusic = (eventData.badge_music_show !== false && eventData.badge_music_show !== 0 && eventData.badge_music_show !== '0');
+            $('#event_badge_music_show').prop('checked', showMusic);
+            $('#event_badge_music').val(eventData.badge_music !== undefined ? eventData.badge_music : '🎵 Historische Musik der Renaissance & des Mittelalters');
+
+            var showSeating = (eventData.badge_seating_show !== false && eventData.badge_seating_show !== 0 && eventData.badge_seating_show !== '0');
+            $('#event_badge_seating_show').prop('checked', showSeating);
+            $('#event_badge_seating').val(eventData.badge_seating !== undefined ? eventData.badge_seating : '🏛️ Freie Platzwahl vor Ort');
+
+            var showAdmission = (eventData.badge_admission_show !== false && eventData.badge_admission_show !== 0 && eventData.badge_admission_show !== '0');
+            $('#event_badge_admission_show').prop('checked', showAdmission);
+            $('#event_badge_admission').val(eventData.badge_admission !== undefined ? eventData.badge_admission : '📜 Eintritt frei / Spende erbeten');
+
             $('#event_description').val(eventData.description || '');
 
             $('#olla-event-modal').fadeIn(200);
@@ -180,7 +199,13 @@
                 contact_registration: $('#event_contact_registration').val(),
                 link: $('#event_link').val(),
                 image_url: $('#event_image_url').val(),
-                description: $('#event_description').val()
+                description: $('#event_description').val(),
+                badge_music: $('#event_badge_music').val(),
+                badge_music_show: $('#event_badge_music_show').is(':checked'),
+                badge_seating: $('#event_badge_seating').val(),
+                badge_seating_show: $('#event_badge_seating_show').is(':checked'),
+                badge_admission: $('#event_badge_admission').val(),
+                badge_admission_show: $('#event_badge_admission_show').is(':checked')
             };
 
             $.post(OllaPodridaAdmin.ajax_url, {
@@ -194,6 +219,22 @@
                     alert('Fehler beim Speichern: ' + (res.data || 'Unbekannt'));
                 }
             });
+        });
+
+        // Event Image Live Input & Clear Handlers
+        $(document).on('input change', '#event_image_url', function() {
+            var val = $(this).val().trim();
+            if (val) {
+                $('#event_image_preview').html('<img src="' + val + '" style="max-height: 80px; margin-top: 6px; border-radius: 4px;" />');
+            } else {
+                $('#event_image_preview').empty();
+            }
+        });
+
+        $(document).on('click', '#event_image_clear_btn', function(e) {
+            e.preventDefault();
+            $('#event_image_url').val('').trigger('change');
+            $('#event_image_preview').empty();
         });
     }
 

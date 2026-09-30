@@ -151,6 +151,12 @@ class Olla_Podrida_Frontend {
                 'isUpcoming' => !empty($ev['is_upcoming']) && !$is_expired,
                 'ticketInfo' => $ev['ticket_info'] ?? '',
                 'contactRegistration' => $ev['contact_registration'] ?? '',
+                'badgeMusic' => $ev['badge_music'] ?? '🎵 Historische Musik der Renaissance & des Mittelalters',
+                'badgeMusicShow' => !isset($ev['badge_music_show']) || !empty($ev['badge_music_show']),
+                'badgeSeating' => $ev['badge_seating'] ?? '🏛️ Freie Platzwahl vor Ort',
+                'badgeSeatingShow' => !isset($ev['badge_seating_show']) || !empty($ev['badge_seating_show']),
+                'badgeAdmission' => $ev['badge_admission'] ?? '📜 Eintritt frei / Spende erbeten',
+                'badgeAdmissionShow' => !isset($ev['badge_admission_show']) || !empty($ev['badge_admission_show']),
             ];
         }
 
