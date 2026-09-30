@@ -56,8 +56,24 @@ async function main() {
   const vMatch = phpCode.match(/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/);
   const version = vMatch ? vMatch[1] : '1.1.5';
 
-  console.log(`🚀 Deploying v${version} to https://cms.janbruening.de...`);
   console.log(`📦 JS: ${jsFile}, CSS: ${cssFile}`);
+
+  // Query server status to know which folder to write into
+  let targetFolder = 'olla-podrida';
+  try {
+    const statusRes = await fetch('https://cms.janbruening.de/?olla_upload=1', {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'status' })
+    });
+    const statusJson = await statusRes.json();
+    console.log('📊 Server folder state:', statusJson);
+    if (!statusJson.has_active_dir && statusJson.folders && statusJson.folders.length > 0) {
+      targetFolder = statusJson.folders[0];
+      console.log(`ℹ️ Target folder is temporarily renamed to: ${targetFolder}`);
+    }
+  } catch (e) {
+    console.warn('Could not query server status:', e.message);
+  }
 
   for (const rel of filesToDeploy) {
     const full = path.join(pluginDir, rel);
@@ -70,6 +86,7 @@ async function main() {
     const b64 = gz.toString('base64');
     const form = new URLSearchParams();
     form.append('action', 'write_file');
+    form.append('folder', targetFolder);
     form.append('path', rel);
     form.append('data', b64);
     const res = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: form });
@@ -86,12 +103,24 @@ async function main() {
   if (jsFile && cssFile) {
     const cleanupForm = new URLSearchParams();
     cleanupForm.append('action', 'cleanup_dist');
+    cleanupForm.append('folder', targetFolder);
     cleanupForm.append('keep_js', jsFile);
     cleanupForm.append('keep_css', cssFile);
     const cleanRes = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: cleanupForm });
     const cleanJson = await cleanRes.json();
     console.log('🧹 Cleanup:', cleanJson.deleted);
   }
+
+  // If the folder was renamed (e.g. olla-podrida-deactiviert), restore it to olla-podrida now that all files exist
+  if (targetFolder !== 'olla-podrida') {
+    console.log(`🔄 Restoring plugin folder from ${targetFolder} to olla-podrida...`);
+    const restoreForm = new URLSearchParams();
+    restoreForm.append('action', 'restore_folder');
+    const restoreRes = await fetch('https://cms.janbruening.de/?olla_upload=1', { method: 'POST', body: restoreForm });
+    const restoreJson = await restoreRes.json();
+    console.log('📁 Restore folder result:', restoreJson);
+  }
+
   console.log(`🎉 v${version} live deployment complete!`);
 }
 
