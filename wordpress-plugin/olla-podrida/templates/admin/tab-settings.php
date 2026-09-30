@@ -197,6 +197,34 @@ $settings = Olla_Podrida_Settings::get_section('settings');
         </div>
     </div>
 
+    <!-- 7. Wichtige Dokumente & Cloud-Ablage (Google Drive) -->
+    <div class="olla-card" id="drive_section">
+        <div class="olla-card-header">
+            <h2>📁 Wichtige Dokumente &amp; Cloud-Ablage (Google Drive)</h2>
+            <p>Hinterlegen Sie hier den Link zur gemeinsamen Cloud-Ablage (z. B. Google Drive Ordner für Noten, Verträge und Programmhefte). Dieser wird im Dashboard-Cockpit angezeigt.</p>
+        </div>
+        <div class="olla-card-body">
+            <div class="olla-field-group">
+                <label for="drive_folder_url"><strong>Link zur Google Drive-Ablage (URL):</strong></label>
+                <input type="url" id="drive_folder_url" name="drive_folder_url" value="<?php echo esc_attr($settings['drive_folder_url'] ?? ''); ?>" placeholder="https://drive.google.com/drive/folders/..." class="large-text" />
+                <span class="description">Der vollständige Freigabelink zum Google Drive Ordner des Ensembles (kann vorerst leer gelassen werden).</span>
+            </div>
+
+            <div class="olla-grid-2">
+                <div class="olla-field-group">
+                    <label for="drive_folder_title"><strong>Titel / Bezeichnung:</strong></label>
+                    <input type="text" id="drive_folder_title" name="drive_folder_title" value="<?php echo esc_attr($settings['drive_folder_title'] ?? 'Gemeinsame Google Drive-Ablage'); ?>" class="regular-text" />
+                    <span class="description">Name der Ablage auf dem Dashboard.</span>
+                </div>
+                <div class="olla-field-group">
+                    <label for="drive_folder_notes"><strong>Hinweistext / Notizen:</strong></label>
+                    <input type="text" id="drive_folder_notes" name="drive_folder_notes" value="<?php echo esc_attr($settings['drive_folder_notes'] ?? 'Zentraler Ordner für Noten, Konzertverträge, Programmhefte und Ablaufpläne des Ensembles.'); ?>" class="large-text" />
+                    <span class="description">Kurze Erklärung, welche Dokumente dort zu finden sind.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="olla-form-actions">
         <button type="submit" class="button button-primary button-large">
             Einstellungen speichern
