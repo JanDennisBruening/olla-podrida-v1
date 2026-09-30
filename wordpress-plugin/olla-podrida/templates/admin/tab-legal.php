@@ -44,7 +44,7 @@ $legal = Olla_Podrida_Settings::get_section('legal');
             <?php
             $defaults = Olla_Podrida_Settings::get_defaults();
             $impressum_val = $legal['impressum_html'] ?? '';
-            if (empty($impressum_val) || strlen(strip_tags($impressum_val)) < 300) {
+            if (empty($impressum_val) || strlen(strip_tags($impressum_val)) < 1400) {
                 $impressum_val = $defaults['legal']['impressum_html'];
             }
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getAudioConfig } from '../data/siteContent';
+import { getAudioConfig, getSiteTexts } from '../data/siteContent';
 import { audioManager } from '../utils/audioManager';
 
 export const AudioPlayer: React.FC = () => {
   const config = getAudioConfig();
+  const texts = getSiteTexts();
   const [isPlaying, setIsPlaying] = useState(audioManager.isPlaying());
 
   const buttonText = config.buttonText || '• Musik an / aus • Musik an / aus';
@@ -115,7 +116,7 @@ export const AudioPlayer: React.FC = () => {
         aria-label="Nach oben scrollen"
       >
         <span className="text-[8.5px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
-        <span className="font-semibold whitespace-nowrap">Nach oben</span>
+        <span className="font-semibold whitespace-nowrap">{texts.scrollTop || 'Nach oben'}</span>
       </button>
     </div>
   );

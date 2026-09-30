@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getAssets } from '../data/siteContent';
+import { getAssets, getSiteTexts } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
 interface FooterProps {
@@ -11,6 +11,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive, onOpenPresse }) => {
   const assets = getAssets();
+  const texts = getSiteTexts();
   const currentYear = new Date().getFullYear();
   const [cookieTooltip, setCookieTooltip] = useState(false);
   const { ref: footerRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
@@ -81,7 +82,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
               onClick={() => scrollTo('termine')}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
             >
-              Termine
+              {texts.navTermine || 'Termine'}
             </button>
             <button
               onClick={onOpenTermineArchive}
@@ -93,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
               onClick={() => scrollTo('kontakt')}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
             >
-              Kontakt
+              {texts.navKontakt || 'Kontakt'}
             </button>
           </div>
 
@@ -103,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
               onClick={onOpenPresse}
               className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
             >
-              Presse
+              {texts.navPresse || 'Presse'}
             </button>
 
             {/* Cookies und Consent button with Premium Tooltip */}
@@ -162,15 +163,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             {currentYear} © Ensemble Olla Podrida
           </p>
           <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
-            Design, Konzept und Webentwicklung ·{' '}
-            <a
-              href="https://www.janbruening.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#DAA520] hover:underline"
-            >
-              www.janbruening.de
-            </a>
+            {(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').includes('www.janbruening.de') ? (
+              <>
+                {(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim()}{' · '}
+                <a
+                  href="https://www.janbruening.de"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#DAA520] hover:underline"
+                >
+                  www.janbruening.de
+                </a>
+              </>
+            ) : (
+              texts.footerDev
+            )}
           </p>
         </div>
 

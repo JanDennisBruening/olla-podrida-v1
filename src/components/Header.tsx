@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAssets } from '../data/siteContent';
+import { getAssets, getSiteTexts } from '../data/siteContent';
 
 interface HeaderProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
@@ -15,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   onCloseAll
 }) => {
   const assets = getAssets();
+  const texts = getSiteTexts();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isMenuMounted, setIsMenuMounted] = useState(false);
@@ -111,13 +112,13 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => scrollToSection('Start')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
-              Start
+              {texts.navStart || 'Start'}
             </button>
             <button
               onClick={() => scrollToSection('ensemble')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
-              Ensemble
+              {texts.navEnsemble || 'Ensemble'}
             </button>
           </div>
 
@@ -148,13 +149,13 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => scrollToSection('termine')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
-              Termine
+              {texts.navTermine || 'Termine'}
             </button>
             <button
               onClick={() => scrollToSection('kontakt')}
               className="font-macondo text-[1.1rem] sm:text-[1.2rem] md:text-[1.28rem] lg:text-[1.6rem] xl:text-[1.72rem] font-semibold text-[#0A0707] hover:scale-110 hover:text-[#0A0707] transition-transform duration-100 cursor-pointer drop-shadow-xs whitespace-nowrap"
             >
-              Kontakt
+              {texts.navKontakt || 'Kontakt'}
             </button>
           </div>
         </div>
@@ -291,10 +292,10 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Main Navigation Links with Bi-directional Staggered Appearance */}
             <div className="w-full flex flex-col space-y-2 text-center font-macondo">
               {[
-                { id: 'Start', label: 'Start', openDelay: '180ms', closeDelay: '160ms' },
-                { id: 'ensemble', label: 'Ensemble', openDelay: '230ms', closeDelay: '120ms' },
-                { id: 'termine', label: 'Termine', openDelay: '280ms', closeDelay: '70ms' },
-                { id: 'kontakt', label: 'Kontakt', openDelay: '330ms', closeDelay: '30ms' },
+                { id: 'Start', label: texts.navStart || 'Start', openDelay: '180ms', closeDelay: '160ms' },
+                { id: 'ensemble', label: texts.navEnsemble || 'Ensemble', openDelay: '230ms', closeDelay: '120ms' },
+                { id: 'termine', label: texts.navTermine || 'Termine', openDelay: '280ms', closeDelay: '70ms' },
+                { id: 'kontakt', label: texts.navKontakt || 'Kontakt', openDelay: '330ms', closeDelay: '30ms' },
               ].map((item) => (
                 <button
                   key={item.id}

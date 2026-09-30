@@ -136,6 +136,67 @@ $settings = Olla_Podrida_Settings::get_section('settings');
         </div>
     </div>
 
+    <!-- 6. Website-Texte & Passagen -->
+    <div class="olla-card">
+        <div class="olla-card-header">
+            <h2>✏️ Zentrale Website-Texte &amp; Passagen</h2>
+            <p>Hier können Sie zentrale Texte, Menü-Beschriftungen und Standard-Meldungen flexibel anpassen.</p>
+        </div>
+        <div class="olla-card-body">
+            <h3 style="margin-top:0; color:#DAA520; border-bottom:1px solid rgba(218,165,32,0.2); padding-bottom:6px;">Hauptnavigation (Menü-Labels)</h3>
+            <div class="olla-grid-2">
+                <div class="olla-field-group">
+                    <label for="text_nav_start"><strong>Menü 1: Startseite:</strong></label>
+                    <input type="text" id="text_nav_start" name="text_nav_start" value="<?php echo esc_attr($settings['text_nav_start'] ?? 'Start'); ?>" class="regular-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_nav_ensemble"><strong>Menü 2: Ensemble:</strong></label>
+                    <input type="text" id="text_nav_ensemble" name="text_nav_ensemble" value="<?php echo esc_attr($settings['text_nav_ensemble'] ?? 'Ensemble'); ?>" class="regular-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_nav_termine"><strong>Menü 3: Termine:</strong></label>
+                    <input type="text" id="text_nav_termine" name="text_nav_termine" value="<?php echo esc_attr($settings['text_nav_termine'] ?? 'Termine'); ?>" class="regular-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_nav_kontakt"><strong>Menü 4: Kontakt:</strong></label>
+                    <input type="text" id="text_nav_kontakt" name="text_nav_kontakt" value="<?php echo esc_attr($settings['text_nav_kontakt'] ?? 'Kontakt'); ?>" class="regular-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_nav_presse"><strong>Menü 5: Presse:</strong></label>
+                    <input type="text" id="text_nav_presse" name="text_nav_presse" value="<?php echo esc_attr($settings['text_nav_presse'] ?? 'Presse'); ?>" class="regular-text" />
+                </div>
+            </div>
+
+            <h3 style="margin-top:20px; color:#DAA520; border-bottom:1px solid rgba(218,165,32,0.2); padding-bottom:6px;">Konzerttermine (Überschrift &amp; Leerer Status)</h3>
+            <div class="olla-field-group">
+                <label for="text_termine_title"><strong>Abschnittsüberschrift:</strong></label>
+                <input type="text" id="text_termine_title" name="text_termine_title" value="<?php echo esc_attr($settings['text_termine_title'] ?? 'Aktuelle Termine'); ?>" class="large-text" />
+            </div>
+            <div class="olla-grid-2">
+                <div class="olla-field-group">
+                    <label for="text_termine_empty"><strong>Hinweistext bei keinen aktuellen Terminen:</strong></label>
+                    <input type="text" id="text_termine_empty" name="text_termine_empty" value="<?php echo esc_attr($settings['text_termine_empty'] ?? 'Zurzeit sind keine weiteren Konzerttermine in Planung.'); ?>" class="large-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_termine_empty_sub"><strong>Untertitel / Chronik-Hinweis:</strong></label>
+                    <input type="text" id="text_termine_empty_sub" name="text_termine_empty_sub" value="<?php echo esc_attr($settings['text_termine_empty_sub'] ?? 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!'); ?>" class="large-text" />
+                </div>
+            </div>
+
+            <h3 style="margin-top:20px; color:#DAA520; border-bottom:1px solid rgba(218,165,32,0.2); padding-bottom:6px;">Buttons &amp; Footer-Credit</h3>
+            <div class="olla-grid-2">
+                <div class="olla-field-group">
+                    <label for="text_scroll_top"><strong>Text für „Nach oben“-Button:</strong></label>
+                    <input type="text" id="text_scroll_top" name="text_scroll_top" value="<?php echo esc_attr($settings['text_scroll_top'] ?? 'Nach oben'); ?>" class="regular-text" />
+                </div>
+                <div class="olla-field-group">
+                    <label for="text_footer_dev"><strong>Entwickler- &amp; Design-Credit (Footer):</strong></label>
+                    <input type="text" id="text_footer_dev" name="text_footer_dev" value="<?php echo esc_attr($settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de'); ?>" class="large-text" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="olla-form-actions">
         <button type="submit" class="button button-primary button-large">
             Einstellungen speichern

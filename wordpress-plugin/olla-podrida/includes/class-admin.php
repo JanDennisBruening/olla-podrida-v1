@@ -503,6 +503,17 @@ class Olla_Podrida_Admin {
                     'bot_protection_enabled' => !empty($_POST['bot_protection_enabled']),
                     'min_submit_seconds' => intval($_POST['min_submit_seconds'] ?? 2),
                     'rate_limit_submissions' => intval($_POST['rate_limit_submissions'] ?? 5),
+                    // Website-Texte & Passagen
+                    'text_nav_start' => sanitize_text_field($_POST['text_nav_start'] ?? 'Start'),
+                    'text_nav_ensemble' => sanitize_text_field($_POST['text_nav_ensemble'] ?? 'Ensemble'),
+                    'text_nav_termine' => sanitize_text_field($_POST['text_nav_termine'] ?? 'Termine'),
+                    'text_nav_kontakt' => sanitize_text_field($_POST['text_nav_kontakt'] ?? 'Kontakt'),
+                    'text_nav_presse' => sanitize_text_field($_POST['text_nav_presse'] ?? 'Presse'),
+                    'text_termine_title' => sanitize_text_field($_POST['text_termine_title'] ?? 'Aktuelle Termine'),
+                    'text_termine_empty' => sanitize_text_field($_POST['text_termine_empty'] ?? 'Zurzeit sind keine weiteren Konzerttermine in Planung.'),
+                    'text_termine_empty_sub' => sanitize_text_field($_POST['text_termine_empty_sub'] ?? 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!'),
+                    'text_scroll_top' => sanitize_text_field($_POST['text_scroll_top'] ?? 'Nach oben'),
+                    'text_footer_dev' => sanitize_text_field($_POST['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de'),
                 ];
                 Olla_Podrida_Settings::update_section('settings', $data);
                 break;
@@ -773,6 +784,17 @@ class Olla_Podrida_Admin {
         // Allowed sections for current user
         $allowed = Olla_Podrida_Roles::get_allowed_sections_for_current_user();
 
+        // 0. Welcome & Overview Widget (Placed at absolute #1 position for guidance)
+        wp_add_dashboard_widget(
+            'olla_podrida_dashboard_welcome',
+            '✨ Willkommen beim Ensemble Olla Podrida',
+            [__CLASS__, 'render_dashboard_welcome_widget'],
+            null,
+            null,
+            'normal',
+            'high'
+        );
+
         // 1. Events Widget (Konzerttermine & Status)
         if (in_array('events', $allowed, true)) {
             wp_add_dashboard_widget(
@@ -882,7 +904,7 @@ class Olla_Podrida_Admin {
         if (isset($wp_meta_boxes['dashboard']['normal']['high'])) {
             $normal_high = $wp_meta_boxes['dashboard']['normal']['high'];
             $prioritized = [];
-            foreach (['olla_podrida_dashboard_events', 'olla_podrida_dashboard_contact', 'olla_podrida_dashboard_ensemble'] as $wid) {
+            foreach (['olla_podrida_dashboard_welcome', 'olla_podrida_dashboard_events', 'olla_podrida_dashboard_contact', 'olla_podrida_dashboard_ensemble'] as $wid) {
                 if (isset($normal_high[$wid])) {
                     $prioritized[$wid] = $normal_high[$wid];
                     unset($normal_high[$wid]);
@@ -890,6 +912,104 @@ class Olla_Podrida_Admin {
             }
             $wp_meta_boxes['dashboard']['normal']['high'] = array_merge($prioritized, $normal_high);
         }
+    }
+
+    public static function render_dashboard_welcome_widget() {
+        $user = wp_get_current_user();
+        $first_name = !empty($user->first_name) ? $user->first_name : (!empty($user->display_name) ? $user->display_name : 'liebe Leitung');
+        $pot_logo = OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png';
+        $live_url = home_url('/?olla_canvas=1');
+        ?>
+        <div class="olla-dashboard-welcome" style="padding: 4px 0;">
+            <!-- Top Hero Banner -->
+            <div style="display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #1f140e 0%, #120b08 100%); border: 1px solid rgba(218, 165, 32, 0.35); border-radius: 10px; padding: 14px 18px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);">
+                <div style="flex-shrink: 0; width: 54px; height: 54px; background: #2a1a12; border: 2px solid #DAA520; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                    <img src="<?php echo esc_url($pot_logo); ?>" alt="Olla Podrida Topf" style="width: 38px; height: 38px; object-fit: contain;" />
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: #DAA520; line-height: 1.2;">
+                        Hallo <?php echo esc_html($first_name); ?>, schön, dass Du da bist! 👋
+                    </h3>
+                    <p style="margin: 0; font-size: 13px; color: #f5f5dc; line-height: 1.45;">
+                        Willkommen in Deiner Schaltzentrale für die Website des <strong>Ensemble Olla Podrida</strong>. Hier pflegst Du alle Inhalte ganz unkompliziert – Änderungen sind sofort live sichtbar.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4 Quick Guide Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px;">
+                <!-- Card 1: Termine -->
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 13px; color: #1d2327; margin-bottom: 4px;">
+                            📅 Konzerte &amp; Termine
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555; line-height: 1.4;">
+                            Neue Konzerte eintragen, Zeiten &amp; Orte anpassen oder Details zum Programm hinterlegen.
+                        </p>
+                    </div>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=events')); ?>" class="button button-small" style="align-self: flex-start; border-color: #DAA520; color: #8a6508; font-weight: 600;">
+                        Termine öffnen &rarr;
+                    </a>
+                </div>
+
+                <!-- Card 2: Posteingang -->
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 13px; color: #1d2327; margin-bottom: 4px;">
+                            📬 Posteingang &amp; Anfragen
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555; line-height: 1.4;">
+                            Konzertanfragen und Nachrichten von Besuchern direkt hier im System lesen und beantworten.
+                        </p>
+                    </div>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=contact')); ?>" class="button button-small" style="align-self: flex-start; border-color: #DAA520; color: #8a6508; font-weight: 600;">
+                        Posteingang ansehen &rarr;
+                    </a>
+                </div>
+
+                <!-- Card 3: Musik -->
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 13px; color: #1d2327; margin-bottom: 4px;">
+                            🎵 Musik &amp; Player
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555; line-height: 1.4;">
+                            Musikstück austauschen, Lautstärke regeln oder Endlos-Schleife (Loop) aktivieren.
+                        </p>
+                    </div>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=audio')); ?>" class="button button-small" style="align-self: flex-start; border-color: #DAA520; color: #8a6508; font-weight: 600;">
+                        Musik einstellen &rarr;
+                    </a>
+                </div>
+
+                <!-- Card 4: Ensemble & Presse -->
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 13px; color: #1d2327; margin-bottom: 4px;">
+                            👥 Ensemble &amp; Presse
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555; line-height: 1.4;">
+                            Instrumente und Musiker aktuell halten sowie Pressefotos für Veranstalter bereitstellen.
+                        </p>
+                    </div>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=ensemble')); ?>" class="button button-small" style="align-self: flex-start; border-color: #DAA520; color: #8a6508; font-weight: 600;">
+                        Ensemble bearbeiten &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer Action Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding-top: 10px; border-top: 1px solid #eee;">
+                <span style="font-size: 12px; color: #646970;">
+                    💡 <em>Tipp: Alle Änderungen werden direkt gespeichert und sind sofort für Besucher sichtbar.</em>
+                </span>
+                <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 700;">
+                    🌐 Website live ansehen ↗
+                </a>
+            </div>
+        </div>
+        <?php
     }
 
     public static function render_dashboard_contact_widget() {

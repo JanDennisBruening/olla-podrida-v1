@@ -128,6 +128,32 @@ export interface PressConfig {
   photos: PressItem[];
 }
 
+export interface SiteTextsConfig {
+  navStart?: string;
+  navEnsemble?: string;
+  navTermine?: string;
+  navKontakt?: string;
+  navPresse?: string;
+  termineTitle?: string;
+  termineEmpty?: string;
+  termineEmptySub?: string;
+  scrollTop?: string;
+  footerDev?: string;
+}
+
+export const DEFAULT_SITE_TEXTS: SiteTextsConfig = {
+  navStart: 'Start',
+  navEnsemble: 'Ensemble',
+  navTermine: 'Termine',
+  navKontakt: 'Kontakt',
+  navPresse: 'Presse',
+  termineTitle: 'Aktuelle Termine',
+  termineEmpty: 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
+  termineEmptySub: 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
+  scrollTop: 'Nach oben',
+  footerDev: 'Design, Konzept und Webentwicklung · www.janbruening.de',
+};
+
 // Global WordPress bridge data
 declare global {
   interface Window {
@@ -143,6 +169,7 @@ declare global {
       audio?: Partial<AudioConfig>;
       legal?: Partial<LegalConfig>;
       press?: Partial<PressConfig>;
+      texts?: Partial<SiteTextsConfig>;
       restUrl?: string;
       nonce?: string;
     };
@@ -769,6 +796,14 @@ export const getConcertEvents = (): ConcertEvent[] => {
     ...ev,
     imageUrl: resolveAssetUrl(ev.imageUrl)
   }));
+};
+
+export const getSiteTexts = (): SiteTextsConfig => {
+  const wp = getWPData();
+  return {
+    ...DEFAULT_SITE_TEXTS,
+    ...(wp?.texts || {})
+  };
 };
 
 /**

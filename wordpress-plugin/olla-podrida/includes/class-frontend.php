@@ -74,6 +74,7 @@ class Olla_Podrida_Frontend {
         $audio = Olla_Podrida_Settings::get_section('audio');
         $legal = Olla_Podrida_Settings::get_section('legal');
         $press = Olla_Podrida_Settings::get_section('press');
+        $settings = Olla_Podrida_Settings::get_section('settings');
 
         // Transform musicians instruments from comma string to array if needed
         $formatted_musicians = [];
@@ -266,6 +267,18 @@ class Olla_Podrida_Frontend {
                         'credit' => '© Jan Dennis Brüning · Freepik',
                     ],
                 ]
+            ],
+            'texts' => [
+                'navStart' => $settings['text_nav_start'] ?? 'Start',
+                'navEnsemble' => $settings['text_nav_ensemble'] ?? 'Ensemble',
+                'navTermine' => $settings['text_nav_termine'] ?? 'Termine',
+                'navKontakt' => $settings['text_nav_kontakt'] ?? 'Kontakt',
+                'navPresse' => $settings['text_nav_presse'] ?? 'Presse',
+                'termineTitle' => $settings['text_termine_title'] ?? 'Aktuelle Termine',
+                'termineEmpty' => $settings['text_termine_empty'] ?? 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
+                'termineEmptySub' => $settings['text_termine_empty_sub'] ?? 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
+                'scrollTop' => $settings['text_scroll_top'] ?? 'Nach oben',
+                'footerDev' => $settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de',
             ],
             'restUrl' => rest_url('olla-podrida/v1/contact'),
             'nonce' => wp_create_nonce('wp_rest')

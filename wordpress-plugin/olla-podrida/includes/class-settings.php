@@ -19,6 +19,17 @@ class Olla_Podrida_Settings {
                 'bot_protection_enabled' => true,
                 'min_submit_seconds' => 2,
                 'rate_limit_submissions' => 5,
+                // Website-Texte & Passagen
+                'text_nav_start' => 'Start',
+                'text_nav_ensemble' => 'Ensemble',
+                'text_nav_termine' => 'Termine',
+                'text_nav_kontakt' => 'Kontakt',
+                'text_nav_presse' => 'Presse',
+                'text_termine_title' => 'Aktuelle Termine',
+                'text_termine_empty' => 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
+                'text_termine_empty_sub' => 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
+                'text_scroll_top' => 'Nach oben',
+                'text_footer_dev' => 'Design, Konzept und Webentwicklung · www.janbruening.de',
             ],
             'hero' => [
                 'slogan' => 'Ensemble Olla Podrida',
@@ -396,7 +407,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
         }
 
         if ($section === 'legal' && is_array($stored)) {
-            if (empty($stored['impressum_html']) || strlen(strip_tags($stored['impressum_html'])) < 300) {
+            if (empty($stored['impressum_html']) || strlen(strip_tags($stored['impressum_html'])) < 1400) {
                 $stored['impressum_html'] = $defaults['legal']['impressum_html'];
             }
             if (empty($stored['datenschutz_html']) || strlen(strip_tags($stored['datenschutz_html'])) < 1200) {
@@ -434,7 +445,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
         if (is_array($legal)) {
             $updated = false;
             $defaults = self::get_defaults()['legal'];
-            if (empty($legal['impressum_html']) || strlen(strip_tags($legal['impressum_html'])) < 300) {
+            if (empty($legal['impressum_html']) || strlen(strip_tags($legal['impressum_html'])) < 1400) {
                 $legal['impressum_html'] = $defaults['impressum_html'];
                 $updated = true;
             }

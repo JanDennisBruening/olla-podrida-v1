@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { getAssets, getConcertEvents, resolveAssetUrl } from '../data/siteContent';
+import { getAssets, getConcertEvents, getSiteTexts, resolveAssetUrl } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 
 interface PostEvent {
@@ -506,6 +506,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
 
 export const TermineSection: React.FC = () => {
   const assets = getAssets();
+  const texts = getSiteTexts();
   const rawEvents = getConcertEvents();
   const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
   const [scrollY, setScrollY] = useState(0);
@@ -574,7 +575,7 @@ export const TermineSection: React.FC = () => {
           }`}
         >
           <h2 className="font-macondo text-[2.15rem] sm:text-[2.85rem] md:text-[4.0rem] text-[#F5F5DC] font-normal tracking-wide drop-shadow-md">
-            Aktuelle Termine
+            {texts.termineTitle || 'Aktuelle Termine'}
           </h2>
           {/* Subtle antique flourish line */}
           <div
@@ -601,8 +602,8 @@ export const TermineSection: React.FC = () => {
             ))
           ) : (
             <div className="bg-[#1A1A18] rounded-xl p-8 border border-[#DAA520]/40 text-center font-macondo text-xl text-[#F5F5DC]/80">
-              <p>Zurzeit sind keine weiteren Konzerttermine in Planung.</p>
-              <p className="text-sm mt-2 text-[#D1C7AC]">Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!</p>
+              <p>{texts.termineEmpty || 'Zurzeit sind keine weiteren Konzerttermine in Planung.'}</p>
+              <p className="text-sm mt-2 text-[#D1C7AC]">{texts.termineEmptySub || 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!'}</p>
             </div>
           )}
         </div>
