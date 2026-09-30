@@ -577,7 +577,7 @@ class Olla_Podrida_Import {
 
     public static function ajax_detect_sources() {
         check_ajax_referer('olla_podrida_import', '_nonce');
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
             wp_send_json_error('Keine Berechtigung.');
         }
         wp_send_json_success(self::detect_sources());
@@ -585,7 +585,7 @@ class Olla_Podrida_Import {
 
     public static function ajax_get_forms() {
         check_ajax_referer('olla_podrida_import', '_nonce');
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
             wp_send_json_error('Keine Berechtigung.');
         }
         $source = sanitize_key($_POST['source'] ?? '');
@@ -594,7 +594,7 @@ class Olla_Podrida_Import {
 
     public static function ajax_preview() {
         check_ajax_referer('olla_podrida_import', '_nonce');
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
             wp_send_json_error('Keine Berechtigung.');
         }
         $source  = sanitize_key($_POST['source'] ?? '');
@@ -604,7 +604,7 @@ class Olla_Podrida_Import {
 
     public static function ajax_execute() {
         check_ajax_referer('olla_podrida_import', '_nonce');
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
             wp_send_json_error('Keine Berechtigung.');
         }
         $source  = sanitize_key($_POST['source'] ?? '');

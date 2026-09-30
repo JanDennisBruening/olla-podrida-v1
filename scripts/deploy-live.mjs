@@ -40,6 +40,7 @@ async function main() {
     'includes/class-settings.php',
     'includes/class-olla-podrida.php',
     'templates/canvas-page.php',
+    'templates/404-page.php',
     'templates/admin/main.php',
     'templates/admin/tab-settings.php',
     'templates/admin/tab-hero.php',

@@ -140,7 +140,7 @@ class Olla_Podrida_Consent {
     }
 
     public static function handle_export_csv() {
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('consent')) {
             wp_die('Keine ausreichenden Berechtigungen.');
         }
 
@@ -190,7 +190,7 @@ class Olla_Podrida_Consent {
     }
 
     public static function handle_print_report() {
-        if (!current_user_can('manage_options')) {
+        if (!Olla_Podrida_Roles::can_user_manage_section('consent')) {
             wp_die('Keine ausreichenden Berechtigungen.');
         }
 

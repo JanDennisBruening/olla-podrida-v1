@@ -7,6 +7,7 @@ class Olla_Podrida_Admin {
 
     public static function init() {
         add_action('admin_menu', [__CLASS__, 'register_admin_menu']);
+        add_action('admin_menu', [__CLASS__, 'cleanup_unwanted_menus'], 999);
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_admin_assets']);
         add_action('wp_dashboard_setup', [__CLASS__, 'register_dashboard_widgets']);
         add_action('admin_post_olla_podrida_save_settings', [__CLASS__, 'handle_save_settings']);
@@ -16,6 +17,9 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
         add_action('admin_bar_menu', [__CLASS__, 'customize_admin_bar_logo'], 11);
         add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
+        add_action('login_enqueue_scripts', [__CLASS__, 'customize_login_page']);
+        add_filter('login_headerurl', [__CLASS__, 'customize_login_headerurl']);
+        add_filter('login_headertext', [__CLASS__, 'customize_login_headertext']);
     }
 
     public static function register_admin_menu() {
@@ -42,21 +46,8 @@ class Olla_Podrida_Admin {
         // Register submenus for each section the current user is permitted to see
         $sections = Olla_Podrida_Roles::get_all_sections();
         
-        // 1. First submenu item overrides the duplicate top-level menu item name
-        $first_key = $allowed[0];
-        $first_info = $sections[$first_key] ?? ['label' => 'Übersicht'];
-        add_submenu_page(
-            'olla-podrida',
-            $first_info['label'] . ' - Olla Podrida',
-            $first_info['label'],
-            'read',
-            'olla-podrida',
-            [__CLASS__, 'render_admin_page']
-        );
-
-        // 2. Add individual submenu items for all other permitted sections
         foreach ($sections as $key => $info) {
-            if ($key === $first_key || !in_array($key, $allowed, true)) {
+            if (!in_array($key, $allowed, true)) {
                 continue;
             }
 
@@ -72,20 +63,22 @@ class Olla_Podrida_Admin {
                 }
             );
         }
+    }
 
-        // 3. Register hidden page hook for olla-podrida-{$first_key}
-        // Prevents native WordPress "Du bist leider nicht berechtigt" if someone visits page=olla-podrida-settings directly
-        add_submenu_page(
-            null,
-            $first_info['label'] . ' - Olla Podrida',
-            $first_info['label'],
-            'read',
-            'olla-podrida-' . $first_key,
-            function() use ($first_key) {
-                $_GET['tab'] = $first_key;
-                self::render_admin_page();
+    /**
+     * Remove redundant duplicate menu items and unwanted items for specific roles
+     */
+    public static function cleanup_unwanted_menus() {
+        // Remove the duplicate first item ("Olla Podrida") from the Olla Podrida submenu
+        remove_submenu_page('olla-podrida', 'olla-podrida');
+
+        // For non-admin roles (specifically Ensemble-Leitung), remove Kommentare (Comments)
+        if (!current_user_can('manage_options')) {
+            $user = wp_get_current_user();
+            if (in_array('olla_ensemble_leitung', (array) $user->roles, true)) {
+                remove_menu_page('edit-comments.php');
             }
-        );
+        }
     }
 
     /**
@@ -180,48 +173,11 @@ class Olla_Podrida_Admin {
             /* ======================================================== */
             /* 2. PERMANENTLY EXPANDED SUBMENU FOR OLLA PODRIDA         */
             /* ======================================================== */
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu {
-                display: block !important;
-                position: static !important;
-                top: auto !important;
-                left: auto !important;
-                right: auto !important;
-                box-shadow: none !important;
-                border-left: 3px solid #DAA520 !important;
-                background: #160e0a !important;
-                margin: 0 !important;
-                padding: 4px 0 !important;
-                float: none !important;
-                width: auto !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li {
-                display: block !important;
-                margin: 0 !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
-                display: block !important;
-                padding: 6px 12px 6px 22px !important;
-                font-size: 13px !important;
-                line-height: 1.4 !important;
-                color: #cfc4ac !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
-                color: #FFD700 !important;
-                background: #251912 !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
-                font-weight: 700 !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
-                display: none !important;
-            }
-
-            /* Olla Podrida Top-Level Highlight */
+            /* Single clean gold border on the parent container ONLY */
             #adminmenu #toplevel_page_olla-podrida {
                 border-left: 4px solid #DAA520 !important;
                 background: #1c140f !important;
+                box-sizing: border-box !important;
             }
             #adminmenu #toplevel_page_olla-podrida > a {
                 color: #FFD700 !important;
@@ -229,6 +185,66 @@ class Olla_Podrida_Admin {
             }
             #adminmenu #toplevel_page_olla-podrida .wp-menu-image:before {
                 color: #DAA520 !important;
+            }
+
+            /* Submenu inside Olla Podrida: NO extra left border, flush with sidebar */
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
+                display: block !important;
+                position: static !important;
+                top: auto !important;
+                left: 0 !important;
+                right: auto !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-left: none !important; /* NO DOUBLE BORDER */
+                background: #160e0a !important;
+                margin: 0 !important;
+                padding: 4px 0 6px 0 !important;
+                float: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li {
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                display: block !important;
+                padding: 6px 10px 6px 16px !important;
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+                color: #cfc4ac !important;
+                border: none !important;
+                border-left: none !important; /* NO HOVER BAR */
+                box-shadow: none !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
+                color: #FFD700 !important;
+                background: #251912 !important;
+                border: none !important;
+                border-left: none !important; /* NO HOVER BAR */
+                box-shadow: none !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
+                color: #DAA520 !important;
+                font-weight: 700 !important;
+                background: #221610 !important;
+                border: none !important;
+                border-left: none !important;
+            }
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
+                display: none !important;
             }
 
             /* ======================================================== */
@@ -646,14 +662,44 @@ class Olla_Podrida_Admin {
             return;
         }
 
-        $can_events = Olla_Podrida_Roles::can_user_manage_section('events');
-        $can_contact = Olla_Podrida_Roles::can_user_manage_section('contact');
+        $user = wp_get_current_user();
+        $is_admin = current_user_can('manage_options');
 
-        // Priority 1: Events Widget (if user has events rights, this goes at the very top)
-        if ($can_events) {
+        // For non-admin roles (specifically Ensemble-Leitung), remove ALL standard WP core and third-party widgets
+        if (!$is_admin) {
+            remove_action('welcome_panel', 'wp_welcome_panel');
+            remove_meta_box('dashboard_primary', 'dashboard', 'side');
+            remove_meta_box('dashboard_quick_press', 'dashboard', 'side');
+            remove_meta_box('dashboard_right_now', 'dashboard', 'normal');
+            remove_meta_box('dashboard_activity', 'dashboard', 'normal');
+            remove_meta_box('dashboard_site_health', 'dashboard', 'normal');
+
+            global $wp_meta_boxes;
+            if (isset($wp_meta_boxes['dashboard'])) {
+                foreach (['normal', 'side', 'column3', 'column4'] as $context) {
+                    if (isset($wp_meta_boxes['dashboard'][$context])) {
+                        foreach (['high', 'core', 'default', 'low'] as $priority) {
+                            if (isset($wp_meta_boxes['dashboard'][$context][$priority])) {
+                                foreach ($wp_meta_boxes['dashboard'][$context][$priority] as $widget_id => $widget) {
+                                    if (strpos($widget_id, 'olla_podrida_dashboard_') !== 0) {
+                                        unset($wp_meta_boxes['dashboard'][$context][$priority][$widget_id]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Allowed sections for current user
+        $allowed = Olla_Podrida_Roles::get_allowed_sections_for_current_user();
+
+        // 1. Events Widget (Konzerttermine & Status)
+        if (in_array('events', $allowed, true)) {
             wp_add_dashboard_widget(
                 'olla_podrida_dashboard_events',
-                '📅 Olla Podrida: Konzerttermine & Status',
+                '📅 Konzerttermine & Status',
                 [__CLASS__, 'render_dashboard_events_widget'],
                 null,
                 null,
@@ -662,11 +708,11 @@ class Olla_Podrida_Admin {
             );
         }
 
-        // Priority 2: Contact Widget
-        if ($can_contact) {
+        // 2. Contact Widget (Kontaktanfragen & Posteingang)
+        if (in_array('contact', $allowed, true)) {
             wp_add_dashboard_widget(
                 'olla_podrida_dashboard_contact',
-                'Kontaktanfragen und Posteingang',
+                '📬 Kontaktanfragen & Posteingang',
                 [__CLASS__, 'render_dashboard_contact_widget'],
                 null,
                 null,
@@ -675,18 +721,94 @@ class Olla_Podrida_Admin {
             );
         }
 
+        // 3. Cookie & Consent Widget
+        if (in_array('consent', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_consent',
+                '🛡️ Cookie & Consent (DSGVO)',
+                [__CLASS__, 'render_dashboard_consent_widget'],
+                null,
+                null,
+                'side',
+                'high'
+            );
+        }
+
+        // 4. Presse & Medienmaterial Widget
+        if (in_array('press', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_press',
+                '📰 Presse & Medienmaterial',
+                [__CLASS__, 'render_dashboard_press_widget'],
+                null,
+                null,
+                'side',
+                'high'
+            );
+        }
+
+        // 5. Hintergrundmusik & Player Widget
+        if (in_array('audio', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_audio',
+                '🎵 Hintergrundmusik & Player',
+                [__CLASS__, 'render_dashboard_audio_widget'],
+                null,
+                null,
+                'side',
+                'default'
+            );
+        }
+
+        // 6. Ensemble & Musiker Widget
+        if (in_array('ensemble', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_ensemble',
+                '👥 Ensemble & Besetzung',
+                [__CLASS__, 'render_dashboard_ensemble_widget'],
+                null,
+                null,
+                'normal',
+                'default'
+            );
+        }
+
+        // 7. SEO & Metadaten Widget
+        if (in_array('seo', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_seo',
+                '🔍 SEO & Suchmaschinen',
+                [__CLASS__, 'render_dashboard_seo_widget'],
+                null,
+                null,
+                'side',
+                'low'
+            );
+        }
+
+        // 8. Rechtliches & Footer Widget
+        if (in_array('legal', $allowed, true)) {
+            wp_add_dashboard_widget(
+                'olla_podrida_dashboard_legal',
+                '⚖️ Rechtliches & Footer',
+                [__CLASS__, 'render_dashboard_legal_widget'],
+                null,
+                null,
+                'side',
+                'low'
+            );
+        }
+
         // Reorder dashboard widgets so that Olla Podrida widgets appear at the absolute top of the screen
         global $wp_meta_boxes;
         if (isset($wp_meta_boxes['dashboard']['normal']['high'])) {
             $normal_high = $wp_meta_boxes['dashboard']['normal']['high'];
             $prioritized = [];
-            if ($can_events && isset($normal_high['olla_podrida_dashboard_events'])) {
-                $prioritized['olla_podrida_dashboard_events'] = $normal_high['olla_podrida_dashboard_events'];
-                unset($normal_high['olla_podrida_dashboard_events']);
-            }
-            if ($can_contact && isset($normal_high['olla_podrida_dashboard_contact'])) {
-                $prioritized['olla_podrida_dashboard_contact'] = $normal_high['olla_podrida_dashboard_contact'];
-                unset($normal_high['olla_podrida_dashboard_contact']);
+            foreach (['olla_podrida_dashboard_events', 'olla_podrida_dashboard_contact', 'olla_podrida_dashboard_ensemble'] as $wid) {
+                if (isset($normal_high[$wid])) {
+                    $prioritized[$wid] = $normal_high[$wid];
+                    unset($normal_high[$wid]);
+                }
             }
             $wp_meta_boxes['dashboard']['normal']['high'] = array_merge($prioritized, $normal_high);
         }
@@ -811,5 +933,257 @@ class Olla_Podrida_Admin {
             <?php endif; ?>
         </div>
         <?php
+    }
+
+    public static function render_dashboard_consent_widget() {
+        $stats = Olla_Podrida_Consent::get_stats();
+        $consent_url = admin_url('admin.php?page=olla-podrida&tab=consent');
+        $csv_url = wp_nonce_url(admin_url('admin-post.php?action=olla_podrida_export_consent_csv'), 'olla_podrida_export_consent');
+        $print_url = wp_nonce_url(admin_url('admin-post.php?action=olla_podrida_print_consent_report'), 'olla_podrida_print_consent');
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">DSGVO-Nachweise:</span>
+                <span style="background: #2e7d32; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    <?php echo intval($stats['total']); ?> protokolliert
+                </span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 8px; text-align: center;">
+                    <div style="font-size: 16px; font-weight: 700; color: #065f46;"><?php echo intval($stats['last_30_days']); ?></div>
+                    <div style="font-size: 11px; color: #666;">Letzte 30 Tage</div>
+                </div>
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 8px; text-align: center;">
+                    <div style="font-size: 16px; font-weight: 700; color: #1e3a8a;"><?php echo intval($stats['active']); ?></div>
+                    <div style="font-size: 11px; color: #666;">Aktiv / Gültig</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <div style="display: flex; gap: 4px;">
+                    <a href="<?php echo esc_url($csv_url); ?>" class="button button-small" title="CSV herunterladen">📥 CSV</a>
+                    <a href="<?php echo esc_url($print_url); ?>" target="_blank" class="button button-small" title="Druckbericht / PDF öffnen">🖨️ PDF</a>
+                </div>
+                <a href="<?php echo esc_url($consent_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1; align-self: center;">
+                    Verwalten &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_dashboard_press_widget() {
+        $press = Olla_Podrida_Settings::get_section('press');
+        $press_url = admin_url('admin.php?page=olla-podrida&tab=press');
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Pressematerialien:</span>
+                <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    Bereit
+                </span>
+            </div>
+            <p style="font-size: 12px; color: #555; margin: 0 0 10px 0; line-height: 1.4;">
+                Pressefotos, helle &amp; dunkle Ensemble-Logos sowie der Pressetext stehen zum Download bereit.
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <span style="font-size: 11px; color: #777;">Kontakt: <?php echo esc_html($press['contact_name'] ?? 'Susanne Hoffmann'); ?></span>
+                <a href="<?php echo esc_url($press_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    Pressemappe &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_dashboard_audio_widget() {
+        $audio = Olla_Podrida_Settings::get_section('audio');
+        $audio_url = admin_url('admin.php?page=olla-podrida&tab=audio');
+        $is_loop = !empty($audio['loop']);
+        $enabled = !empty($audio['enabled']);
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Musikstück:</span>
+                <span style="background: <?php echo $enabled ? '#2e7d32' : '#888'; ?>; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    <?php echo $enabled ? 'Aktiv' : 'Deaktiviert'; ?>
+                </span>
+            </div>
+            <div style="font-size: 12px; color: #333; margin-bottom: 8px;">
+                🎵 <strong><?php echo esc_html($audio['track_title'] ?? 'Riu, riu, chiu'); ?></strong><br/>
+                <span style="font-size: 11px; color: #666;">Modus: <strong><?php echo $is_loop ? 'Endlosschleife (Loop)' : 'Einmalig abspielen'; ?></strong></span>
+            </div>
+            <div style="text-align: right; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <a href="<?php echo esc_url($audio_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    Player konfigurieren &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_dashboard_ensemble_widget() {
+        $ensemble_url = admin_url('admin.php?page=olla-podrida&tab=ensemble');
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Ensemble-Präsentation:</span>
+                <span style="background: #2e7d32; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    7 Musiker
+                </span>
+            </div>
+            <p style="font-size: 12px; color: #555; margin: 0 0 10px 0; line-height: 1.4;">
+                Silke, Simone, Susanne, Sandra, Ruth, Lutz und Klemens – Texte &amp; Musiker-Porträts auf der Pergamentrolle.
+            </p>
+            <div style="text-align: right; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <a href="<?php echo esc_url($ensemble_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    Musiker bearbeiten &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_dashboard_seo_widget() {
+        $seo = Olla_Podrida_Settings::get_section('seo');
+        $seo_url = admin_url('admin.php?page=olla-podrida&tab=seo');
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Suchmaschinen (SEO):</span>
+                <span style="background: #2e7d32; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    <?php echo esc_html($seo['robots_index'] ?? 'index, follow'); ?>
+                </span>
+            </div>
+            <div style="font-size: 12px; color: #444; margin-bottom: 8px;">
+                Titel: <em><?php echo esc_html(mb_strimwidth($seo['meta_title'] ?? 'Ensemble Olla Podrida', 0, 36, '...')); ?></em><br/>
+                <span style="font-size: 11px; color: #666;">Schema: MusicGroup (Mittelalter &amp; Renaissance)</span>
+            </div>
+            <div style="text-align: right; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <a href="<?php echo esc_url($seo_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    SEO anpassen &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_dashboard_legal_widget() {
+        $legal_url = admin_url('admin.php?page=olla-podrida&tab=legal');
+        ?>
+        <div class="olla-dashboard-widget" style="padding: 2px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Rechtliches &amp; Footer:</span>
+                <span style="background: #2e7d32; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                    Gepflegt
+                </span>
+            </div>
+            <p style="font-size: 12px; color: #555; margin: 0 0 10px 0; line-height: 1.4;">
+                Impressum, Datenschutzerklärung, Footer-Texte und Urheberrechtshinweise (Freepik / Jan Dennis Brüning).
+            </p>
+            <div style="text-align: right; padding-top: 8px; border-top: 1px solid #f0f0f1;">
+                <a href="<?php echo esc_url($legal_url); ?>" style="text-decoration: none; font-weight: 600; font-size: 12px; color: #2271b1;">
+                    Rechtstexte ansehen &rarr;
+                </a>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Medieval styling for the WordPress login page (wp-login.php)
+     */
+    public static function customize_login_page() {
+        $pot_logo = esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png');
+        ?>
+        <style id="olla-podrida-login-css">
+            body.login {
+                background: #0d0806 radial-gradient(circle at center, #1b120c 0%, #0a0604 100%) !important;
+                color: #e5dec9 !important;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            }
+            body.login div#login h1 a {
+                background-image: url('<?php echo $pot_logo; ?>') !important;
+                background-size: contain !important;
+                background-repeat: no-repeat !important;
+                background-position: center !important;
+                width: 90px !important;
+                height: 90px !important;
+                margin-bottom: 15px !important;
+                filter: drop-shadow(0 4px 12px rgba(218, 165, 32, 0.45)) !important;
+            }
+            body.login div#login form#loginform {
+                background: #18110c !important;
+                border: 1px solid #DAA520 !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(218, 165, 32, 0.2) !important;
+                border-radius: 10px !important;
+                padding: 26px 24px 24px !important;
+            }
+            body.login div#login form#loginform label {
+                color: #d1c7ac !important;
+                font-weight: 600 !important;
+                font-size: 13px !important;
+            }
+            body.login div#login form#loginform input[type="text"],
+            body.login div#login form#loginform input[type="password"] {
+                background: #231811 !important;
+                border: 1px solid #4a382c !important;
+                color: #f5f5dc !important;
+                border-radius: 6px !important;
+                padding: 6px 12px !important;
+                box-shadow: inset 0 1px 3px rgba(0,0,0,0.5) !important;
+            }
+            body.login div#login form#loginform input[type="text"]:focus,
+            body.login div#login form#loginform input[type="password"]:focus {
+                border-color: #DAA520 !important;
+                box-shadow: 0 0 8px rgba(218, 165, 32, 0.5) !important;
+                outline: none !important;
+            }
+            body.login div#login form#loginform .forgetmenot label {
+                color: #b0a48e !important;
+                font-weight: normal !important;
+            }
+            body.login div#login form#loginform input[type="submit"]#wp-submit {
+                background: linear-gradient(135deg, #DAA520 0%, #b8860b 100%) !important;
+                border: 1px solid #FFD700 !important;
+                color: #120b08 !important;
+                font-weight: 700 !important;
+                text-shadow: none !important;
+                border-radius: 6px !important;
+                padding: 4px 18px !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+                transition: all 0.2s ease !important;
+            }
+            body.login div#login form#loginform input[type="submit"]#wp-submit:hover {
+                background: linear-gradient(135deg, #FFD700 0%, #DAA520 100%) !important;
+                box-shadow: 0 0 15px rgba(218, 165, 32, 0.6) !important;
+                transform: scale(1.02) !important;
+            }
+            body.login #nav a,
+            body.login #backtoblog a {
+                color: #cfc4ac !important;
+                transition: color 0.15s ease !important;
+            }
+            body.login #nav a:hover,
+            body.login #backtoblog a:hover {
+                color: #FFD700 !important;
+            }
+            body.login .notice,
+            body.login .message,
+            body.login #login_error {
+                background: #251a13 !important;
+                border-left-color: #DAA520 !important;
+                color: #f5f5dc !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+            }
+        </style>
+        <?php
+    }
+
+    public static function customize_login_headerurl() {
+        return home_url('/');
+    }
+
+    public static function customize_login_headertext() {
+        return 'Ensemble Olla Podrida – Klangvielfalt aus Mittelalter und Renaissance';
     }
 }

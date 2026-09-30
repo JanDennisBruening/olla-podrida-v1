@@ -302,5 +302,14 @@ class Olla_Podrida_Frontend {
                 exit;
             }
         }
+
+        if (is_404()) {
+            status_header(404);
+            $template_404 = OLLA_PODRIDA_PATH . 'templates/404-page.php';
+            if (file_exists($template_404)) {
+                include $template_404;
+                exit;
+            }
+        }
     }
 }
