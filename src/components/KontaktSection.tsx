@@ -132,12 +132,9 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
               </p>
               <p className="w-full">
                 {contactConfig.introParagraph2 || 'Kontaktieren Sie uns über unser Formular oder per E-Mail:'}{' '}
-                <a
-                  href={`mailto:${contactConfig.recipientEmail || 'info@olla-podrida.de'}`}
-                  className="font-macondo text-[1.05rem] sm:text-[1.18rem] md:text-[1.22rem] lg:text-[1.32rem] text-[#DAA520] hover:underline break-words"
-                >
-                  {contactConfig.emailDisplay || 'info(at)olla-podrida.de'}
-                </a>
+                <span className="font-macondo text-[1.05rem] sm:text-[1.18rem] md:text-[1.22rem] lg:text-[1.32rem] text-[#DAA520] break-words">
+                  {contactConfig.emailDisplay || 'info@olla-podrida.de'}
+                </span>
               </p>
             </div>
 

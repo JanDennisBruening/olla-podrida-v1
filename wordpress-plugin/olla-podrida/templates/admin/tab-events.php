@@ -169,13 +169,18 @@ $events = Olla_Podrida_Events::get_all_events();
                         <div class="olla-media-preview" id="event_image_preview" style="margin-top: 8px;"></div>
                     </div>
 
+                    <div class="olla-field-group">
+                        <label for="event_description"><strong>Ausführliche Beschreibung:</strong></label>
+                        <textarea id="event_description" name="description" rows="4" class="large-text" placeholder="Detailinformationen zum Programm, Stücken oder Mitwirkenden..."></textarea>
+                    </div>
+
                     <!-- Zusatzpunkte / Highlights im Ausklappbereich -->
                     <div class="olla-field-group" style="background: #faf7f0; border: 1px solid #d4c29d; border-radius: 6px; padding: 14px 16px; margin: 15px 0;">
                         <h4 style="margin: 0 0 6px 0; color: #8c6d1f; display: flex; align-items: center; gap: 6px; font-size: 14px;">
                             <span class="dashicons dashicons-tag"></span> Zusatzpunkte &amp; Hinweise (im Ausklappbereich &bdquo;Ausführliche Konzertinformationen&ldquo;)
                         </h4>
                         <p style="font-size: 11.5px; color: #666; margin: 0 0 12px 0;">
-                            Diese drei Punkte erscheinen auf der Website im Ausklapp-Bereich jedes Termins. Du kannst jeden Punkt individuell anpassen oder über das Häkchen aktivieren/deaktivieren:
+                            Diese drei Punkte erscheinen auf der Website im Ausklapp-Bereich jedes Termins unter der Beschreibung. Du kannst jeden Punkt individuell anpassen oder über das Häkchen aktivieren/deaktivieren:
                         </p>
 
                         <!-- Zusatzpunkt 1: Musikstil -->
@@ -204,11 +209,6 @@ $events = Olla_Podrida_Events::get_all_events();
                             </label>
                             <input type="text" name="badge_admission" id="event_badge_admission" class="large-text" value="📜 Eintritt frei / Spende erbeten" placeholder="z. B. 📜 Eintritt frei / Spende erbeten" style="flex: 1; height: 32px;" />
                         </div>
-                    </div>
-
-                    <div class="olla-field-group">
-                        <label for="event_description"><strong>Ausführliche Beschreibung:</strong></label>
-                        <textarea id="event_description" name="description" rows="4" class="large-text"></textarea>
                     </div>
                 </div>
 

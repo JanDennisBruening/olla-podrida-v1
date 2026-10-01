@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getAssets, getSiteTexts } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
+import { Lock } from 'lucide-react';
 
 interface FooterProps {
   onOpenLegal: (type: 'impressum' | 'datenschutz') => void;
@@ -162,10 +163,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
           <p className="font-macondo text-lg sm:text-xl md:text-2xl text-[#F5F5DC] tracking-wide">
             {currentYear} © Ensemble Olla Podrida
           </p>
-          <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light">
+          <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light flex items-center justify-center gap-1.5 flex-wrap">
             {(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').includes('www.janbruening.de') ? (
               <>
-                {(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim()}{' · '}
+                <span>{(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim()}</span>
+                <span>·</span>
                 <a
                   href="https://www.janbruening.de"
                   target="_blank"
@@ -176,8 +178,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
                 </a>
               </>
             ) : (
-              texts.footerDev
+              <span>{texts.footerDev}</span>
             )}
+            <span className="text-[#DAA520]/50 mx-0.5">|</span>
+            <a
+              href="/login"
+              title="Admin- &amp; Redaktions-Login"
+              aria-label="Admin- und Redaktions-Login"
+              className="text-[#DAA520]/75 hover:text-[#DAA520] transition-colors p-0.5 inline-flex items-center hover:scale-110"
+            >
+              <Lock size={12} className="inline opacity-85 hover:opacity-100" />
+            </a>
           </p>
         </div>
 

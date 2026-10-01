@@ -7,13 +7,25 @@ class Olla_Podrida_Frontend {
 
     public static function init() {
         add_shortcode('olla_podrida', [__CLASS__, 'render_shortcode']);
+        add_action('init', [__CLASS__, 'handle_login_redirect'], 1);
         add_action('init', [__CLASS__, 'register_rewrite_rules']);
         add_filter('query_vars', [__CLASS__, 'register_query_vars']);
         add_action('template_redirect', [__CLASS__, 'maybe_render_canvas']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
+    public static function handle_login_redirect() {
+        $raw_uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+        $trimmed_uri = trim($raw_uri, '/');
+        if ($trimmed_uri === 'login') {
+            $redirect_to = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : admin_url();
+            wp_safe_redirect(wp_login_url($redirect_to));
+            exit;
+        }
+    }
+
     public static function register_rewrite_rules() {
+        add_rewrite_rule('^login/?$', 'wp-login.php', 'top');
         add_rewrite_rule('^olla-podrida/?$', 'index.php?olla_podrida_route=1', 'top');
     }
 

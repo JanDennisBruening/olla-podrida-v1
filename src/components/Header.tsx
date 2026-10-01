@@ -40,6 +40,9 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Smooth mobile menu open/close lifecycle with bi-directional stagger transitions
   useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('mobile-menu-open', mobileMenuOpen);
+    }
     if (mobileMenuOpen) {
       setIsMenuMounted(true);
       setIsMenuVisible(false);
@@ -230,7 +233,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </nav>
 
-      {/* Medieval Mobile Menu Overlay with smooth open/close and staggered item reveal */}
+      {/* Medieval Mobile Menu Overlay with smooth open/close, atmospheric fog and staggered item reveal */}
       {isMenuMounted && (
         <div
           onClick={() => setMobileMenuOpen(false)}
@@ -239,10 +242,20 @@ export const Header: React.FC<HeaderProps> = ({
           }`}
           style={{ transitionDelay: isMenuVisible ? '0ms' : '120ms' }}
         >
+          {/* Atmospheric Smoke & Fog Layer in Mobile Menu Background */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img
+              src={assets.smokeAlt}
+              alt=""
+              className="w-full h-full object-cover object-center opacity-35 mix-blend-screen scale-110 pointer-events-none"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#070202]/60 via-transparent to-[#070202]/85 pointer-events-none" />
+          </div>
+
           {/* Menu Card Container with antique golden border & unfold animation */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210] border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_12px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.2)] transition-all duration-300 ease-out transform ${
+            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210]/95 border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_12px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.2)] overflow-hidden transition-all duration-300 ease-out transform z-10 ${
               isMenuVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4'
             }`}
             style={{
@@ -250,6 +263,10 @@ export const Header: React.FC<HeaderProps> = ({
               transitionTimingFunction: isMenuVisible ? 'cubic-bezier(0.16, 1, 0.3, 1)' : 'cubic-bezier(0.4, 0, 1, 1)'
             }}
           >
+            {/* Subtle inner card smoke accent */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl opacity-15 mix-blend-screen z-0">
+              <img src={assets.smokeAlt} alt="" className="w-full h-full object-cover object-center pointer-events-none" />
+            </div>
             {/* Elegant Close Button inside Modal Card */}
             <button
               onClick={() => setMobileMenuOpen(false)}

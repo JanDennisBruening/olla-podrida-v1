@@ -32,6 +32,9 @@ class Olla_Podrida {
         // Security HTTP Headers (anti-sniffing, framing, referrer)
         add_action('send_headers', [$this, 'send_security_headers']);
 
+        if (class_exists('Olla_Podrida_Updater')) {
+            Olla_Podrida_Updater::init();
+        }
         if (class_exists('Olla_Podrida_Admin')) {
             Olla_Podrida_Admin::init();
         }

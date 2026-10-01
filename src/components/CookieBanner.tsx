@@ -122,21 +122,21 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </button>.
         </p>
 
-        {/* Action Buttons: "Alles klar, verstanden!" plays music immediately */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        {/* Action Buttons: Equal visual weight (non-manipulative), identical height & background, single line */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
           <button
             type="button"
             onClick={handleAccept}
-            className="w-full sm:flex-1 py-2.5 sm:py-3 px-5 rounded-xl bg-gradient-to-r from-[#DAA520] via-[#f7d984] to-[#DAA520] text-[#070202] font-macondo text-lg sm:text-xl font-bold tracking-wide shadow-[0_4px_16px_rgba(218,165,32,0.4)] hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer text-center"
+            className="w-full sm:flex-1 h-12 sm:h-13 flex items-center justify-center px-4 sm:px-5 rounded-xl bg-[#22150e] hover:bg-[#2f1d13] active:scale-[0.98] border-2 border-[#DAA520] hover:border-[#FFD700] text-[#F5F5DC] hover:text-[#FFD700] font-macondo text-base sm:text-lg font-bold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.6)] transition-all cursor-pointer text-center whitespace-nowrap"
           >
             Alles klar, verstanden!
           </button>
           <button
             type="button"
             onClick={handleEssential}
-            className="w-full sm:w-auto py-2 sm:py-2.5 px-4 rounded-xl border border-[#DAA520]/40 text-[#D1C7AC] hover:text-[#F5F5DC] hover:border-[#DAA520] font-macondo text-sm transition-all cursor-pointer text-center"
+            className="w-full sm:flex-1 h-12 sm:h-13 flex items-center justify-center px-4 sm:px-5 rounded-xl bg-[#22150e] hover:bg-[#2f1d13] active:scale-[0.98] border-2 border-[#DAA520] hover:border-[#FFD700] text-[#F5F5DC] hover:text-[#FFD700] font-macondo text-base sm:text-lg font-bold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.6)] transition-all cursor-pointer text-center whitespace-nowrap"
           >
-            Nur essenzielle Cookie &amp; Consent
+            Nur essenzielle Cookies
           </button>
         </div>
       </div>

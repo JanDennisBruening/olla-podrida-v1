@@ -225,6 +225,36 @@ $settings = Olla_Podrida_Settings::get_section('settings');
         </div>
     </div>
 
+    <!-- 8. Plugin-Updates & GitHub Synchronisation -->
+    <div class="olla-card" id="updates_section">
+        <div class="olla-card-header">
+            <h2>🔄 Plugin-Updates &amp; GitHub-Synchronisation</h2>
+            <p>Das Plugin verfügt über einen integrierten Updater, der direkt mit dem offiziellen GitHub-Repository verknüpft ist. Sobald eine neue Version veröffentlicht wird, erscheint diese automatisch im WordPress-Bereich &bdquo;Plugins&ldquo; zur 1-Klick-Aktualisierung.</p>
+        </div>
+        <div class="olla-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; background: #faf8f5; border: 1px solid #e0d8cc; border-radius: 8px; padding: 14px 18px;">
+                <div>
+                    <div style="font-size: 13.5px; font-weight: 700; color: #1d2327;">
+                        Installierte Version: <span style="color: #DAA520;">v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
+                    </div>
+                    <div style="font-size: 12px; color: #666; margin-top: 3px;">
+                        Quellcode-Repository: <a href="https://github.com/JanDennisBruening/olla-podrida-v1" target="_blank" rel="noopener noreferrer" style="color: #1a73e8; font-weight: 600;">github.com/JanDennisBruening/olla-podrida-v1 ↗</a>
+                    </div>
+                </div>
+                <div>
+                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=olla_check_updates'), 'olla_check_updates_nonce')); ?>" class="button button-secondary" style="height: 34px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-update" style="margin-top: 1px;"></span> Jetzt nach GitHub-Updates suchen
+                    </a>
+                </div>
+            </div>
+            <?php if (isset($_GET['update_checked'])): ?>
+                <div style="margin-top: 12px; padding: 10px 14px; background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 6px; font-size: 12.5px; color: #2e7d32;">
+                    ✓ Update-Prüfung erfolgreich ausgeführt. Falls eine neuere Version auf GitHub vorhanden ist, wird sie unter <em>Plugins &rarr; Installierte Plugins</em> angezeigt.
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <div class="olla-form-actions">
         <button type="submit" class="button button-primary button-large">
             Einstellungen speichern

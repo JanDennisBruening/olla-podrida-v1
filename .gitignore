@@ -9,5 +9,6 @@ coverage/
 scripts/*.png
 wordpress-plugin/Versionen/
 wordpress-plugin/*.zip
+!wordpress-plugin/olla-podrida.zip
 wordpress-plugin/olla-podrida/*.zip
 

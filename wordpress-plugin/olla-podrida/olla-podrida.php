@@ -3,7 +3,7 @@
  * Plugin Name: Ensemble Olla Podrida
  * Plugin URI: https://olla-podrida.de
  * Description: Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida (Klangvielfalt aus Mittelalter und Renaissance). Bietet eine theatralische Hero-Bühne, Pergament-Ensemble-Präsentation, Termine- und Konzertarchiv-Verwaltung, Kontaktformular mit Posteingang, konfigurierbaren Hintergrundmusik-Player und Rollen-Berechtigungssteuerung.
- * Version: 1.3.1
+ * Version: 1.3.2
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: Jan Dennis Brüning
@@ -11,6 +11,9 @@
  * License: GPL v2 or later
  * Text Domain: olla-podrida
  * Domain Path: /languages
+ * Update URI: https://github.com/JanDennisBruening/olla-podrida-v1
+ * GitHub Plugin URI: https://github.com/JanDennisBruening/olla-podrida-v1
+ * Primary Branch: main
  */
 
 if (!defined('ABSPATH')) {
@@ -18,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OLLA_PODRIDA_VERSION', '1.3.1');
+define('OLLA_PODRIDA_VERSION', '1.3.2');
 define('OLLA_PODRIDA_FILE', __FILE__);
 define('OLLA_PODRIDA_PATH', plugin_dir_path(__FILE__));
 define('OLLA_PODRIDA_URL', plugin_dir_url(__FILE__));
@@ -31,6 +34,7 @@ $olla_required_files = [
     'includes/class-contact.php',
     'includes/class-import.php',
     'includes/class-consent.php',
+    'includes/class-updater.php',
     'includes/class-admin.php',
     'includes/class-frontend.php',
     'includes/class-olla-podrida.php',

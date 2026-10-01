@@ -38,7 +38,7 @@ export const EnsembleSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[13vw] lg:-mt-[10rem] xl:-mt-[11.5rem] pt-0 pb-10 sm:pb-14 md:pb-16 lg:pb-20 select-none z-20"
+      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[13vw] lg:-mt-[5.5rem] xl:-mt-[6.5rem] pt-0 pb-10 sm:pb-14 md:pb-16 lg:pb-20 select-none z-20"
     >
       {/* Centered Parchment Container - Reduced side borders by half, perfectly centered */}
       <div className="w-full flex flex-col items-center justify-center px-0 relative z-10">
@@ -84,7 +84,7 @@ export const EnsembleSection: React.FC = () => {
                 </p>
               </div>
 
-              {/* Suppentopf Illustration (right column: ~40%) - enlarged by 20% */}
+              {/* Suppentopf Illustration (right column: ~40%) */}
               <div className="w-[40%] xl:w-[40%] flex justify-center items-center overflow-visible p-2">
                 <img
                   src={ensembleConfig.logo || assets.logo}
@@ -106,7 +106,7 @@ export const EnsembleSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Suppentopf Illustration on Mobile & Tablet: Centered between text parts & enlarged by 20% */}
+            {/* Suppentopf Illustration on Mobile & Tablet: Centered & enlarged by 30% on mobile */}
             <div className={`lg:hidden w-full flex justify-center my-5 sm:my-7 md:my-8 overflow-visible transition-all duration-700 delay-250 ease-out ${
               isInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}>
@@ -114,7 +114,7 @@ export const EnsembleSection: React.FC = () => {
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-[17.4rem] sm:w-[21.6rem] md:w-[25.2rem] max-w-full h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-[22.6rem] sm:w-[28rem] md:w-[32rem] max-w-[86vw] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
@@ -192,11 +192,11 @@ export const EnsembleSection: React.FC = () => {
               </div>
 
             {/* ======================================================== */}
-            {/* 2. TABLET VIEWPORT (768px to 1023px): 4 + 3 COMPACT ROWS */}
+            {/* 2. TABLET VIEWPORT (768px to 1023px): 4 + 3 PROPORTIONATELY SCALED ROWS */}
             {/* ======================================================== */}
-            <div className="hidden md:flex lg:hidden w-full my-6 overflow-visible flex-col items-center gap-4 md:gap-5">
+            <div className="hidden md:flex lg:hidden w-full my-6 overflow-visible flex-col items-center gap-5 md:gap-7">
               {/* Row 1: 4 Musicians Centered (Simone, Klemens, Silke, Sandra) */}
-              <div className="w-full flex justify-center items-end gap-2.5 md:gap-3.5 overflow-visible">
+              <div className="w-full flex justify-center items-end gap-3.5 sm:gap-5 md:gap-7 overflow-visible">
                 {tabletRow1.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
@@ -220,8 +220,11 @@ export const EnsembleSection: React.FC = () => {
                       </div>
 
                       <div
-                        className="h-32 md:h-36 flex items-end justify-center overflow-visible"
+                        className="flex items-end justify-center overflow-visible"
                         style={{
+                          height: 'min(25vw, 14.5rem)',
+                          minHeight: '10.5rem',
+                          maxHeight: '15rem',
                           transformOrigin: 'bottom center',
                           transform: musiciansInView
                             ? `translateY(0) scale(${targetScale})`
@@ -236,7 +239,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className={`h-full w-auto max-w-none object-contain object-bottom transition-all duration-300 ${
+                          className={`h-full w-auto max-w-[20vw] object-contain object-bottom transition-all duration-300 ${
                             isHovered
                               ? 'filter saturate-100 brightness-105 drop-shadow-md'
                               : 'filter saturate-[0.8] brightness-98 drop-shadow-xs'
@@ -250,7 +253,7 @@ export const EnsembleSection: React.FC = () => {
               </div>
 
               {/* Row 2: 3 Musicians Centered Underneath (Lutz, Susanne, Ruth) */}
-              <div className="w-full flex justify-center items-end gap-2.5 md:gap-3.5 overflow-visible">
+              <div className="w-full flex justify-center items-end gap-5 sm:gap-7 md:gap-9 overflow-visible">
                 {tabletRow2.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
@@ -274,8 +277,11 @@ export const EnsembleSection: React.FC = () => {
                       </div>
 
                       <div
-                        className="h-32 md:h-36 flex items-end justify-center overflow-visible"
+                        className="flex items-end justify-center overflow-visible"
                         style={{
+                          height: 'min(25vw, 14.5rem)',
+                          minHeight: '10.5rem',
+                          maxHeight: '15rem',
                           transformOrigin: 'bottom center',
                           transform: musiciansInView
                             ? `translateY(0) scale(${targetScale})`
@@ -290,7 +296,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className={`h-full w-auto max-w-none object-contain object-bottom transition-all duration-300 ${
+                          className={`h-full w-auto max-w-[20vw] object-contain object-bottom transition-all duration-300 ${
                             isHovered
                               ? 'filter saturate-100 brightness-105 drop-shadow-md'
                               : 'filter saturate-[0.8] brightness-98 drop-shadow-xs'
@@ -334,9 +340,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(32vw, 9.5rem)',
-                          minHeight: '7rem',
-                          maxHeight: '9.5rem',
+                          height: 'min(38vw, 12.5rem)',
+                          minHeight: '8.5rem',
+                          maxHeight: '12.5rem',
                           transformOrigin: 'bottom center',
                           transform: musiciansInView
                             ? `translateY(0) scale(${targetScale})`
@@ -351,7 +357,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[30vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>
@@ -361,7 +367,7 @@ export const EnsembleSection: React.FC = () => {
               </div>
 
               {/* Row 2: 3 Musicians (Sandra, Lutz, Susanne) */}
-              <div className="w-full flex justify-center items-end gap-2.5 sm:gap-3.5 overflow-visible">
+              <div className="w-full flex justify-center items-end gap-3 sm:gap-4.5 overflow-visible">
                 {mobileRow2.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
@@ -386,9 +392,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(32vw, 9.5rem)',
-                          minHeight: '7rem',
-                          maxHeight: '9.5rem',
+                          height: 'min(38vw, 12.5rem)',
+                          minHeight: '8.5rem',
+                          maxHeight: '12.5rem',
                           transformOrigin: 'bottom center',
                           transform: musiciansInView
                             ? `translateY(0) scale(${targetScale})`
@@ -403,7 +409,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[30vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>
@@ -438,9 +444,9 @@ export const EnsembleSection: React.FC = () => {
                       <div
                         className="flex items-end justify-center overflow-visible"
                         style={{
-                          height: 'min(32vw, 9.5rem)',
-                          minHeight: '7rem',
-                          maxHeight: '9.5rem',
+                          height: 'min(38vw, 12.5rem)',
+                          minHeight: '8.5rem',
+                          maxHeight: '12.5rem',
                           transformOrigin: 'bottom center',
                           transform: musiciansInView
                             ? `translateY(0) scale(${targetScale})`
@@ -455,7 +461,7 @@ export const EnsembleSection: React.FC = () => {
                         <img
                           src={musician.image}
                           alt={musician.alt}
-                          className="h-full w-auto max-w-[28vw] object-contain object-bottom drop-shadow-xs"
+                          className="h-full w-auto max-w-[30vw] object-contain object-bottom drop-shadow-xs"
                           loading="lazy"
                         />
                       </div>

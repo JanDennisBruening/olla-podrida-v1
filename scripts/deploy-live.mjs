@@ -35,6 +35,7 @@ async function main() {
     'includes/class-contact.php',
     'includes/class-import.php',
     'includes/class-consent.php',
+    'includes/class-updater.php',
     'includes/class-admin.php',
     'includes/class-frontend.php',
     'includes/class-settings.php',

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { getAudioConfig, getSiteTexts } from '../data/siteContent';
 import { audioManager } from '../utils/audioManager';
 
-export const AudioPlayer: React.FC = () => {
+export const AudioPlayer: React.FC<{ isMobileMenuOpen?: boolean }> = ({ isMobileMenuOpen = false }) => {
   const config = getAudioConfig();
   const texts = getSiteTexts();
   const [isPlaying, setIsPlaying] = useState(audioManager.isPlaying());
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [bodyMenuOpen, setBodyMenuOpen] = useState(false);
 
   const buttonText = config.buttonText || '• Musik an / aus • Musik an / aus';
 
@@ -17,21 +19,52 @@ export const AudioPlayer: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // Show scroll-to-top button only after scrolling down
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 280);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Track if mobile menu is open via class on body
+  useEffect(() => {
+    const checkMenu = () => {
+      if (typeof document !== 'undefined') {
+        setBodyMenuOpen(document.body.classList.contains('mobile-menu-open'));
+      }
+    };
+    checkMenu();
+    const observer = new MutationObserver(checkMenu);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const togglePlay = () => {
     audioManager.toggle();
   };
 
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   if (!config.enabled) {
     return null;
   }
 
+  const isMenuOpen = isMobileMenuOpen || bodyMenuOpen;
+  const isScrollTopVisible = showScrollTop && !isMenuOpen;
+
   return (
     <div
-      className="audio-player fixed bottom-5 right-4 sm:bottom-7 sm:right-6 md:bottom-9 md:right-8 z-[10030] select-none flex flex-col items-center gap-1.5"
+      className="audio-player fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[10030] select-none flex flex-col items-center transition-all duration-500 ease-out"
     >
       <button
         type="button"
@@ -107,17 +140,25 @@ export const AudioPlayer: React.FC = () => {
         </div>
       </button>
 
-      {/* Nach oben (Scroll-to-top) Button directly below the music button (-20% size) */}
-      <button
-        type="button"
-        onClick={handleScrollToTop}
-        className="group flex items-center justify-center gap-1 px-2 py-0.5 rounded-full bg-[#070202]/90 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[9.5px] sm:text-[10px] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-        title="Zurück zum Seitenanfang scrollen"
-        aria-label="Nach oben scrollen"
+      {/* Nach oben (Scroll-to-top) Button directly below the music button - animates in and lifts the music button */}
+      <div
+        className={`w-full flex justify-center overflow-hidden transition-all duration-500 ease-out ${
+          isScrollTopVisible
+            ? 'max-h-14 opacity-100 translate-y-0 mt-1.5'
+            : 'max-h-0 opacity-0 translate-y-3 pointer-events-none mt-0'
+        }`}
       >
-        <span className="text-[8.5px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
-        <span className="font-semibold whitespace-nowrap">{texts.scrollTop || 'Nach oben'}</span>
-      </button>
+        <button
+          type="button"
+          onClick={handleScrollToTop}
+          className="group flex items-center justify-center gap-1 px-2.5 py-0.5 rounded-full bg-[#070202]/92 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[9.5px] sm:text-[10px] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap"
+          title="Zurück zum Seitenanfang scrollen"
+          aria-label="Nach oben scrollen"
+        >
+          <span className="text-[8.5px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
+          <span className="font-semibold whitespace-nowrap">{texts.scrollTop || 'Nach oben'}</span>
+        </button>
+      </div>
     </div>
   );
 };
