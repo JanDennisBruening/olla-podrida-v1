@@ -36,8 +36,12 @@ class Olla_Podrida_Roles {
         add_role('olla_ensemble_leitung', 'Ensemble-Leitung', [
             'read' => true,
             'upload_files' => true,
-            'edit_posts' => true,
+            'edit_posts' => false,
         ]);
+        $existing_role = get_role('olla_ensemble_leitung');
+        if ($existing_role && $existing_role->has_cap('edit_posts')) {
+            $existing_role->remove_cap('edit_posts');
+        }
 
         add_role('olla_grossmeister', '👑 Großmeister des mächtigen Topfes (Admin)', [
             'read' => true,

@@ -30,6 +30,7 @@ async function main() {
     'assets/dist/images/Favicon-transparent.png',
     'assets/dist/images/Favicon2-2.png',
     'assets/dist/images/favicon.ico',
+    'assets/dist/images/Magisches-Musikkessel-Emblem-auf-Pergament.png',
     'includes/class-roles.php',
     'includes/class-events.php',
     'includes/class-contact.php',

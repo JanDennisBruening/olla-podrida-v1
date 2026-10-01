@@ -18,11 +18,11 @@ const htmlContent = `<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Kunden-Handover · Ensemble Olla Podrida</title>
+  <title>Handbuch &amp; Dokumentation · Ensemble Olla Podrida</title>
   <style>
     @page {
       size: A4 portrait;
-      margin: 10mm 13mm 10mm 13mm;
+      margin: 12mm 14mm 12mm 14mm;
     }
     * {
       box-sizing: border-box;
@@ -30,21 +30,36 @@ const htmlContent = `<!DOCTYPE html>
       print-color-adjust: exact !important;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #241A12;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #261911;
       background: #FFFFFF;
       margin: 0;
       padding: 0;
-      font-size: 8.5pt;
-      line-height: 1.35;
+      font-size: 9.3pt;
+      line-height: 1.45;
     }
+    
+    .page-container {
+      height: 270mm;
+      max-height: 270mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+      position: relative;
+    }
+    .page-container:last-child {
+      page-break-after: avoid;
+    }
+
+    /* HEADER BANNER */
     .header-banner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 2px solid #8B6508;
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
     }
     .header-title-box {
       flex: 1;
@@ -53,378 +68,359 @@ const htmlContent = `<!DOCTYPE html>
       display: inline-block;
       background: #8B6508;
       color: #FFFFFF;
-      font-size: 7pt;
+      font-size: 7.5pt;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 2px 7px;
-      border-radius: 3px;
-      margin-bottom: 4px;
+      letter-spacing: 1.2px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-bottom: 5px;
     }
     .doc-title {
-      font-size: 17pt;
+      font-size: 19pt;
       font-weight: 800;
       color: #1A1009;
-      margin: 0 0 2px 0;
+      margin: 0 0 3px 0;
       letter-spacing: -0.3px;
     }
     .doc-sub {
-      font-size: 9pt;
+      font-size: 9.8pt;
       color: #6B4E36;
       margin: 0;
-      font-weight: 500;
+      font-weight: 600;
     }
     .header-logo {
-      max-height: 58px;
-      max-width: 120px;
-      object-contain: contain;
-      margin-left: 15px;
+      max-height: 64px;
+      max-width: 140px;
+      object-fit: contain;
+      margin-left: 20px;
     }
+
+    /* META BAR */
     .meta-bar {
       display: flex;
       justify-content: space-between;
       background: #F8F4EC;
-      border: 1px solid #E5D9C3;
-      border-radius: 5px;
-      padding: 6px 12px;
-      margin-bottom: 10px;
-      font-size: 8pt;
+      border: 1px solid #E2D5BE;
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-bottom: 14px;
+      font-size: 8.6pt;
     }
     .meta-item strong {
       color: #4A3320;
     }
+
+    /* TYPOGRAPHY */
     h2 {
-      font-size: 10.5pt;
+      font-size: 11.5pt;
       color: #382414;
-      border-left: 3px solid #8B6508;
-      padding-left: 7px;
-      margin: 10px 0 6px 0;
+      border-left: 3.5px solid #8B6508;
+      padding-left: 9px;
+      margin: 12px 0 8px 0;
       letter-spacing: 0.1px;
-      page-break-after: avoid;
     }
     p {
-      margin: 0 0 5px 0;
-      color: #33271D;
+      margin: 0 0 7px 0;
+      color: #2F2116;
     }
+    .lead-text {
+      font-size: 9.7pt;
+      line-height: 1.5;
+      color: #261911;
+      margin-bottom: 12px;
+    }
+
+    /* CARDS & GRIDS */
     .grid-2 {
       display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
     .grid-3 {
       display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
     .card {
       flex: 1;
-      background: #FAFAF7;
-      border: 1px solid #E3D9C8;
-      border-radius: 5px;
-      padding: 7px 10px;
-      page-break-inside: avoid;
+      background: #FAF8F4;
+      border: 1px solid #E2D5BE;
+      border-radius: 6px;
+      padding: 10px 13px;
     }
     .card-title {
-      font-size: 8.5pt;
+      font-size: 9.6pt;
       font-weight: 700;
       color: #8B6508;
-      margin: 0 0 3px 0;
+      margin: 0 0 5px 0;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .card p, .card ul {
       margin: 0;
-      font-size: 8pt;
-      color: #3D2D20;
-      line-height: 1.3;
+      font-size: 8.8pt;
+      color: #3B2B1E;
+      line-height: 1.4;
     }
     ul {
-      margin: 3px 0 4px 14px;
+      margin: 4px 0 4px 16px;
       padding: 0;
     }
     li {
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
-    .feature-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 4px;
+
+    /* STEP CARDS */
+    .step-box {
+      display: flex;
+      gap: 12px;
+      background: #FAF8F4;
+      border: 1px solid #E2D5BE;
+      border-radius: 6px;
+      padding: 9px 12px;
       margin-bottom: 8px;
-      font-size: 7.8pt;
-      page-break-inside: avoid;
+      align-items: flex-start;
     }
-    .feature-table th {
+    .step-badge {
       background: #8B6508;
       color: #FFFFFF;
-      text-align: left;
-      padding: 4px 6px;
-      font-weight: 600;
-      font-size: 7.5pt;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      font-weight: 800;
+      font-size: 9pt;
+      padding: 4px 9px;
+      border-radius: 5px;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
-    .feature-table td {
-      border-bottom: 1px solid #E8DFCF;
-      padding: 3.5px 6px;
-      vertical-align: top;
-      color: #2D2016;
-      line-height: 1.25;
+    .step-content {
+      flex: 1;
     }
-    .feature-table tr:nth-child(even) td {
-      background: #FBF9F5;
+    .step-content strong {
+      color: #1A1009;
+      font-size: 9.3pt;
+      display: block;
+      margin-bottom: 2px;
     }
-    .badge {
-      display: inline-block;
-      background: #EDE4D3;
-      color: #5C4124;
-      font-size: 7pt;
-      font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 3px;
-      border: 1px solid #DACAB0;
+    .step-content p {
+      margin: 0;
+      font-size: 8.7pt;
+      color: #3B2B1E;
+      line-height: 1.4;
     }
+
+    /* HIGHLIGHT BOX */
     .highlight-box {
       background: #FDF9F0;
-      border-left: 3px solid #DAA520;
-      padding: 6px 10px;
-      margin: 6px 0;
-      border-radius: 0 4px 4px 0;
-      font-size: 7.8pt;
-      line-height: 1.35;
-      color: #4A3522;
-      page-break-inside: avoid;
+      border-left: 4px solid #DAA520;
+      border-top: 1px solid #EBE0C9;
+      border-right: 1px solid #EBE0C9;
+      border-bottom: 1px solid #EBE0C9;
+      padding: 9px 13px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 8.8pt;
+      line-height: 1.45;
+      color: #432F1D;
     }
-    .page-break {
-      page-break-before: always;
-      padding-top: 4px;
-    }
+
+    /* FOOTER BAR */
     .footer-bar {
-      border-top: 1px solid #D9CBBA;
+      border-top: 1.5px solid #D8C9B2;
+      padding-top: 6px;
       margin-top: 10px;
-      padding-top: 5px;
       display: flex;
       justify-content: space-between;
-      font-size: 7.2pt;
-      color: #7D6B5A;
+      font-size: 7.8pt;
+      color: #7A6755;
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <div class="header-banner">
-    <div class="header-title-box">
-      <div class="doc-badge">Kunden-Dokumentation &amp; Handover</div>
-      <h1 class="doc-title">Ensemble Olla Podrida</h1>
-      <p class="doc-sub">Klangvielfalt aus Mittelalter &amp; Renaissance · Neue Website &amp; Redaktionssystem (v1.4.2)</p>
-    </div>
-    ${logoBase64 ? `<img src="${logoBase64}" class="header-logo" alt="Olla Podrida" />` : ''}
-  </div>
+  <!-- ======================================================== -->
+  <!-- SEITE 1: ÜBERSICHT, AUFBAU & DIE ZENTRALEN FUNKTIONEN    -->
+  <!-- ======================================================== -->
+  <div class="page-container">
+    <div>
+      <!-- HEADER -->
+      <div class="header-banner">
+        <div class="header-title-box">
+          <div class="doc-badge">Handbuch &amp; Dokumentation</div>
+          <h1 class="doc-title">Ensemble Olla Podrida</h1>
+          <p class="doc-sub">Klangvielfalt aus Mittelalter &amp; Renaissance · Leitfaden für die Ensemble-Leitung</p>
+        </div>
+        ${logoBase64 ? `<img src="${logoBase64}" class="header-logo" alt="Olla Podrida" />` : ''}
+      </div>
 
-  <!-- META BAR -->
-  <div class="meta-bar">
-    <div class="meta-item"><strong>Auftraggeber:</strong> Ensemble Olla Podrida · Susanne Hoffmann</div>
-    <div class="meta-item"><strong>Konzept &amp; Entwicklung:</strong> Jan Dennis Brüning</div>
-    <div class="meta-item"><strong>Version:</strong> v1.4.2 (Oktober 2026)</div>
-    <div class="meta-item"><strong>Web:</strong> www.olla-podrida.de</div>
-  </div>
+      <!-- META BAR -->
+      <div class="meta-bar">
+        <div class="meta-item"><strong>Auftraggeberin:</strong> Susanne Hoffmann (Ensemble-Leitung)</div>
+        <div class="meta-item"><strong>Konzept &amp; Entwicklung:</strong> Jan Dennis Brüning</div>
+        <div class="meta-item"><strong>Version:</strong> v1.4.2 (Oktober 2026)</div>
+        <div class="meta-item"><strong>Web:</strong> www.olla-podrida.de</div>
+      </div>
 
-  <!-- 1. PROJEKTÜBERBLICK -->
-  <h2>1. Projektübersicht &amp; Architektur</h2>
-  <p>
-    Für das <strong>Ensemble Olla Podrida</strong> wurde ein maßgeschneiderter, theatralischer Webauftritt realisiert, der das historische Flair von Mittelalter und Renaissance mit moderner Webtechnologie vereint. Die Lösung ist als eigenständiges, autarkes WordPress-Plugin (<strong>„Ensemble Olla Podrida“</strong>) aufgebaut – ohne Abhängigkeit von schweren, fehleranfälligen Drittanbieter-Pagebuildern.
-  </p>
-  <div class="grid-3">
-    <div class="card">
-      <div class="card-title">🎭 Theatralisches Design</div>
-      <p>Historische Steinbogen-Halle, Fackelschein, Pergament-Schleifen und animierte Bühnensilhouetten mit lebendigem Charakter.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">📱 100% Responsive</div>
-      <p>Perfekt optimiert für Smartphone, Tablet und Desktop mit touch-optimierter Bedienung und flüssigen Animationen.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">⚡ High Performance &amp; DSGVO</div>
-      <p>Lokal gehostete Schriften, WebP-Kompression, ohne Third-Party-Tracker und mit transparentem Cookie-Manager.</p>
-    </div>
-  </div>
-
-  <!-- 2. FRONTEND UMFANG -->
-  <h2>2. Übersicht der Funktionen im Frontend (Besucheransicht)</h2>
-  <table class="feature-table">
-    <thead>
-      <tr>
-        <th style="width: 28%;">Bereich / Funktion</th>
-        <th style="width: 54%;">Beschreibung &amp; Mehrwert</th>
-        <th style="width: 18%;">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Theatralische Hero-Bühne</strong></td>
-        <td>Atmosphärische Begrüßung mit 7 Ensemble-Figuren, die in harmonischem Schwung aufsteigen. Dynamische Fackel-Glows und Bodennebel.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Pergament-Präsentation</strong></td>
-        <td>Schleifenbanner <em>Klangvielfalt</em> mit 7 Porträts (Simone, Klemens, Silke, Sandra, Lutz, Susanne, Ruth) inkl. Namens-Tooltips auf Klick/Touch.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Aktuelle Termine (Kalender)</strong></td>
-        <td>Konzertkarten mit Datums-, Uhrzeit- und Ortsangaben, Kategorie-Badges, Detail-Akkordeon und direkter Kontakt/Anmelde-Integration.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>PDF-Export &amp; Druckfunktion</strong></td>
-        <td>Jeder Termin kann per Knopfdruck als druckfertige DIN-A4-Veranstaltungsseite mit Ensemble-Emblem ausgedruckt oder als PDF gespeichert werden.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Konzertchronik (Archiv)</strong></td>
-        <td>Vollständige Historie vergangener Konzerte in einem edlen Pergament-Modal mit Such- und Jahressortierung.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Pressebereich (EPK)</strong></td>
-        <td>Download-Center für Medien &amp; Veranstalter: Pressemitteilung, Pressetext, Web- &amp; Print-Logos sowie hochauflösende Pressefotos.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>DSGVO-Kontaktformular</strong></td>
-        <td>Rechtssicheres Anfrageformular mit Pflichtangaben-Prüfung, Datenschutzeinwilligung, Erfolgsbenachrichtigung und E-Mail-Weiterleitung.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Musik-Player (*Riu, Riu, Chiu*)</strong></td>
-        <td>Authentisches spanisches Renaissance-Villancico als dezente musikalische Untermalung mit bequemer Stummschalt-Funktion.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-      <tr>
-        <td><strong>Rechtliches (Impressum &amp; DSGVO)</strong></td>
-        <td>Vollständiges Impressum (§ 5 DDG), Datenschutzerklärung (DSGVO) und Cookie-Banner ohne manipulatives Dark Pattern.</td>
-        <td><span class="badge">Vollständig</span></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- PAGE BREAK -->
-  <div class="page-break"></div>
-
-  <!-- 3. BACKEND & VERWALTUNG FÜR DIE ENSEMBLE-LEITUNG -->
-  <h2>3. Was steht der Ensemble-Leitung zur Verfügung? (WordPress-Backend)</h2>
-  <p>
-    Im WordPress-Administrationsbereich steht der Ensembleleitung unter dem Menüpunkt <strong>„Olla Podrida“</strong> ein klares, intuitives Dashboard zur Verfügung. Alle Inhalte können eigenständig ohne HTML- oder Programmierkenntnisse gepflegt werden:
-  </p>
-
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">📅 Konzert- &amp; Terminverwaltung</div>
-      <ul>
-        <li><strong>Termin anlegen:</strong> Titel, Datum, Uhrzeit, Spielort, Kategorie und Beschreibung eintragen.</li>
-        <li><strong>Zusatzangaben:</strong> Eintritt, Vorverkauf, Bestuhlung und optionale Anmeldekontaktdaten festlegen.</li>
-        <li><strong>Automatisches Archiv:</strong> Vergangene Termine wandern auf Wunsch automatisch in die Konzertchronik.</li>
-        <li><strong>Sofort-Rückmeldung:</strong> Bestätigungs-Infobox bei jedem Speichern.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-title">👥 Musiker-Profile</div>
-      <ul>
-        <li><strong>7 Musiker verwalten:</strong> Susanne, Simone, Klemens, Silke, Sandra, Lutz und Ruth.</li>
-        <li><strong>Instrumente &amp; Rollen:</strong> Gespielte Instrumente und Gesangsstimmen flexibel anpassen.</li>
-        <li><strong>Porträts &amp; Fotos:</strong> Fotos für die Pergamentansicht und die Hero-Bühne austauschen.</li>
-        <li><strong>Bühnensichtbarkeit:</strong> Musiker nach Bedarf auf der Startbühne ein- oder ausblenden.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">📬 Posteingang (Kontaktanfragen)</div>
-      <ul>
-        <li><strong>Zentraler Nachrichtenspeicher:</strong> Sämtliche Website-Anfragen werden sicher in der WordPress-Datenbank archiviert.</li>
-        <li><strong>Kein Datenverlust:</strong> Selbst falls eine Benachrichtigungs-Mail im Spamfilter landen sollte, ist jede Nachricht im Dashboard abrufbar.</li>
-        <li><strong>Veranstalter-Anfragen:</strong> Schnelle Einsicht in Datum, Absender, Telefon und Nachrichteninhalt.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-title">⚙️ Texte, Presse &amp; Musik</div>
-      <ul>
-        <li><strong>Slogans &amp; Texte:</strong> Begrüßungstexte und Ensemble-Vorstellung jederzeit editierbar.</li>
-        <li><strong>Pressematerialien:</strong> Neue Pressefotos und Infodateien für Journalisten per Upload hinterlegen.</li>
-        <li><strong>Musiksteuerung:</strong> Hintergrundmusik aktivieren/deaktivieren, Audiodatei austauschen oder Lautstärke justieren.</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- 4. SICHERHEIT & DATENSCHUTZ -->
-  <h2>4. Technische Sicherheit &amp; Datenschutz-Compliance</h2>
-  <div class="highlight-box">
-    <strong>Rechtssicherheit nach deutschem &amp; europäischem Standard:</strong><br>
-    • <strong>Google Fonts 100% lokal gehostet:</strong> Keine Datenübertragung an Google-Server in den USA.<br>
-    • <strong>Keine Cookies von Werbenetzwerken:</strong> Ausschließlich technisch essenzielle Speicherungen (Audio-Status, Cookie-Einwilligung).<br>
-    • <strong>Transparenter Cookie-Banner:</strong> Gleiche Farbgebung für „Alles klar, verstanden“ und „Nur essentielle Cookies“ (keine Dark Patterns).<br>
-    • <strong>DDG &amp; DSGVO konform:</strong> Erfüllt alle Vorgaben des neuen Digitale-Dienste-Gesetzes (DDG) und der Datenschutz-Grundverordnung.
-  </div>
-
-  <!-- 5. SCHRITT-FÜR-SCHRITT ANLEITUNG ZUR TERMINPFLEGE -->
-  <h2>5. Schnellanleitung: Neuen Termin in 3 Schritten eintragen</h2>
-  <table class="feature-table">
-    <thead>
-      <tr>
-        <th style="width: 15%;">Schritt</th>
-        <th style="width: 35%;">Aktion im WordPress-Menü</th>
-        <th style="width: 50%;">Ergebnis</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Schritt 1</strong></td>
-        <td>Im WordPress-Menü links auf <strong>Olla Podrida &rarr; Termine</strong> klicken.</td>
-        <td>Die Terminübersicht mit allen aktuellen und vergangenen Konzerten öffnet sich.</td>
-      </tr>
-      <tr>
-        <td><strong>Schritt 2</strong></td>
-        <td>Auf <strong>„Neuen Termin anlegen“</strong> klicken und Datum, Ort, Uhrzeit sowie Text ausfüllen.</td>
-        <td>Optional: Ein schönes Konzert- oder Kirchenfoto als Beitragsbild zuweisen.</td>
-      </tr>
-      <tr>
-        <td><strong>Schritt 3</strong></td>
-        <td>Auf <strong>„Veranstaltung speichern“</strong> klicken.</td>
-        <td>Erfolgsmeldung erscheint. Der Termin ist sofort auf der Website sichtbar und druckbar!</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- 6. ANSPRECHPARTNER -->
-  <h2>6. Ansprechpartner &amp; Support</h2>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">🎵 Ensemble-Leitung</div>
-      <p>
-        <strong>Susanne Hoffmann</strong><br>
-        Ensemble Olla Podrida<br>
-        Im Ort 4, 49356 Diepholz<br>
-        Tel.: +49 174 186 3418<br>
-        E-Mail: info@olla-podrida.de
+      <!-- 1. WILLKOMMEN & PROJEKTZIEL -->
+      <h2>1. Herzlich Willkommen zum neuen Webauftritt</h2>
+      <p class="lead-text">
+        Für das <strong>Ensemble Olla Podrida</strong> wurde eine maßgeschneiderte, theatralische Internetpräsenz geschaffen, die historische Musik mit zeitgemäßer Benutzerfreundlichkeit verbindet. Das gesamte Projekt läuft als eigenständiges, leichtgewichtiges WordPress-Plugin (<strong>„Ensemble Olla Podrida“</strong>) – komplett unabhängig von fehleranfälligen Drittanbieter-Pagebuildern.
       </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">🎭 Theatralisches Flair</div>
+          <p>Historische Steinbogen-Halle, sanfter Fackelschein, Pergament-Schleifen und harmonisch aufsteigende Bühnenfiguren schaffen sofort eine authentische Atmosphäre.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">📱 100% Mobil &amp; Tablet</div>
+          <p>Auf jedem Smartphone, iPad und PC-Bildschirm passgenau dargestellt. Navigation, Schriftgrößen und Grafiken skalieren stets harmonisch und übersichtlich.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🛡️ Rechtssicher &amp; DSGVO</div>
+          <p>Alle Schriften und Mediendateien liegen auf dem eigenen Webserver (keine US-Google-Server). Ohne Werbetracker und mit transparentem Datenschutz-Banner.</p>
+        </div>
+      </div>
+
+      <!-- 2. DIE HAUPTBEREICHE DER WEBSITE -->
+      <h2>2. Die Kernbereiche der Website im Überblick</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📅 Konzertkalender &amp; Detailansichten</div>
+          <p>
+            Übersichtliche Konzertkarten mit Ort, Datum, Uhrzeit und Ticket-Hinweisen. Besucher können jeden Termin mit einem Klick ausklappen und druckfertig als <strong>DIN-A4-Veranstaltungsblatt mit Emblem</strong> ausdrucken oder als PDF herunterladen.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">📜 Historische Konzertchronik</div>
+          <p>
+            Vergangene Auftritte geraten nicht in Vergessenheit, sondern wandern in das stilvolle Archiv. Besucher und Veranstalter können nach Jahren filtern und die Historie des Ensembles nacherleben.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">👥 Musikerinnen &amp; Musiker</div>
+          <p>
+            Interaktive Pergament-Schleife mit den 7 Musiker-Porträts (Susanne, Simone, Klemens, Silke, Sandra, Lutz, Ruth). Beim Anklicken öffnen sich Namensplaketten und gespielte Instrumente.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">📰 Pressebereich (EPK) &amp; Musik</div>
+          <p>
+            Downloadbereich für Journalisten und Veranstalter mit Pressetexten, hochauflösenden Pressefotos und Web-Logos. Dazu der dezente Musikplayer mit dem Villancico <em>„Riu, Riu, Chiu“</em>.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. ZUGANG FÜR DIE ENSEMBLELEITUNG -->
+      <h2>3. Sicherer Zugang für die Ensemble-Leitung</h2>
+      <div class="highlight-box">
+        <strong>Ihr exklusives Dashboard in WordPress:</strong><br>
+        Für Sie wurde eine eigene, geschützte Rolle <strong>„Ensemble-Leitung“</strong> eingerichtet. In der linken Menüleiste finden Sie direkt den golden hervorgehobenen Bereich <strong>„Olla Podrida“</strong>. Alle unnötigen WordPress-Menüs (wie Standard-Blogbeiträge oder Kommentare) wurden ausgeblendet, damit Sie sich voll auf Ihre Konzerte, Musikerprofile und Anfragen konzentrieren können.
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">💻 Konzept, Design &amp; Webentwicklung</div>
-      <p>
-        <strong>Jan Dennis Brüning</strong><br>
-        Web- &amp; Systementwicklung<br>
-        E-Mail: office.janbruening@gmail.com<br>
-        Web: www.janbruening.de<br>
-        Repository: github.com/JanDennisBruening/olla-podrida-v1
-      </p>
+
+    <!-- FOOTER SEITE 1 -->
+    <div class="footer-bar">
+      <div>Ensemble Olla Podrida · Handbuch v1.4.2</div>
+      <div>Seite 1 von 2 · Allgemeine Übersicht &amp; Architektur</div>
     </div>
   </div>
 
-  <div class="footer-bar">
-    <div>Ensemble Olla Podrida · Handover-Dokumentation v1.4.2</div>
-    <div>Erstellt im Oktober 2026 · Jan Dennis Brüning</div>
+
+  <!-- ======================================================== -->
+  <!-- SEITE 2: PRAXISANLEITUNG, DATENSCHUTZ & SUPPORT          -->
+  <!-- ======================================================== -->
+  <div class="page-container">
+    <div>
+      <!-- 4. PRAXISANLEITUNG: TERMINE PFLEGEN -->
+      <h2>4. Praxisanleitung: Neuen Termin in 3 einfachen Schritten anlegen</h2>
+      <p style="margin-bottom: 9px; font-size: 9pt;">
+        Sie benötigen keinerlei Programmierkenntnisse. Das Anlegen eines neuen Konzerts dauert nur eine Minute:
+      </p>
+
+      <div class="step-box">
+        <div class="step-badge">Schritt 1</div>
+        <div class="step-content">
+          <strong>Im WordPress-Menü auf „Olla Podrida &rarr; Termine“ klicken</strong>
+          <p>Hier sehen Sie Ihre aktuelle Terminliste mit Statusanzeige (anstehend oder archiviert) sowie den Button <em>„Neuen Termin anlegen“</em>.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-badge">Schritt 2</div>
+        <div class="step-content">
+          <strong>Veranstaltungsdaten ausfüllen &amp; optionales Foto wählen</strong>
+          <p>Titel, Datum, Uhrzeit, Spielort und eine kurze Beschreibung eingeben. Bei Bedarf Angaben zu Eintritt, Vorverkauf oder Bestuhlung hinzufügen. Sie können auch ein Foto der Spielstätte oder Kirche hochladen.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-badge">Schritt 3</div>
+        <div class="step-content">
+          <strong>Auf „Veranstaltung speichern“ klicken</strong>
+          <p>Eine grüne Erfolgsbestätigung erscheint. Der Termin ist im selben Moment auf der Website sichtbar, interaktiv ausklappbar und als PDF druckbar!</p>
+        </div>
+      </div>
+
+      <!-- 5. WEITERE PFLEGE-FUNKTIONEN -->
+      <h2>5. Weitere nützliche Funktionen im Überblick</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">👥 Musikerprofile anpassen</div>
+          <p>
+            Möchten Sie einen neuen Text, geänderte Instrumente oder ein neues Porträtbild hinterlegen? Unter <strong>Olla Podrida &rarr; Ensemble</strong> lassen sich alle Musiker unkompliziert aktualisieren.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">📬 Kontaktanfragen einsehen</div>
+          <p>
+            Anfragen aus dem Kontaktformular werden nicht nur per E-Mail zugestellt, sondern sicher im Dashboard unter <strong>Kontakt &amp; Postfach</strong> archiviert. So geht garantiert keine Buchung verloren.
+          </p>
+        </div>
+      </div>
+
+      <!-- 6. DATENSCHUTZ & SICHERHEIT -->
+      <h2>6. Rechtssicherheit, Datenschutz &amp; Wartung</h2>
+      <div class="highlight-box">
+        • <strong>DSGVO &amp; DDG:</strong> Erfüllt alle Anforderungen des Digitale-Dienste-Gesetzes und der Datenschutz-Grundverordnung.<br>
+        • <strong>Keine externen Schriften:</strong> Alle Fonts (Macondo, Dosis, Roboto) sind DSGVO-konform direkt im Plugin integriert.<br>
+        • <strong>Wartungsarm:</strong> Keine Drittanbieter-Lizenzen, die jährlich kostenpflichtig verlängert werden müssen.
+      </div>
+
+      <!-- 7. ANSPRECHPARTNER & SUPPORT -->
+      <h2>7. Ihre Ansprechpartner für Fragen &amp; Betreuung</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🎵 Ensemble-Leitung</div>
+          <p>
+            <strong>Susanne Hoffmann</strong><br>
+            Ensemble Olla Podrida<br>
+            Im Ort 4 · 49356 Diepholz<br>
+            Telefon: +49 174 186 3418<br>
+            E-Mail: info@olla-podrida.de
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">💻 Konzeption, Design &amp; Webentwicklung</div>
+          <p>
+            <strong>Jan Dennis Brüning</strong><br>
+            Web- &amp; Systementwicklung<br>
+            E-Mail: office.janbruening@gmail.com<br>
+            Web: www.janbruening.de<br>
+            Projekt-Code: github.com/JanDennisBruening/olla-podrida-v1
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER SEITE 2 -->
+    <div class="footer-bar">
+      <div>Ensemble Olla Podrida · Handbuch v1.4.2</div>
+      <div>Seite 2 von 2 · Praxisleitfaden &amp; Support</div>
+    </div>
   </div>
 
 </body>

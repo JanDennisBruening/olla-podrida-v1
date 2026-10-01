@@ -84,11 +84,12 @@ class Olla_Podrida_Admin {
             }
         }
 
-        // For non-admin roles (specifically Ensemble-Leitung), remove Kommentare (Comments)
+        // For non-admin roles (specifically Ensemble-Leitung), remove Kommentare (Comments) and Beiträge (Posts)
         if (!current_user_can('manage_options')) {
             $user = wp_get_current_user();
             if (in_array('olla_ensemble_leitung', (array) $user->roles, true)) {
                 remove_menu_page('edit-comments.php');
+                remove_menu_page('edit.php');
             }
         }
     }
@@ -212,13 +213,17 @@ class Olla_Podrida_Admin {
             }
 
             /* ======================================================== */
-            /* 2. PERMANENTLY EXPANDED SUBMENU FOR OLLA PODRIDA         */
+            /* 2. UNIFORM SIDEBAR MENU STYLING & ACCENT LINES           */
             /* ======================================================== */
-            /* Single clean gold border on the parent container ONLY */
+            /* Ensure all top-level items share the exact same baseline geometry */
+            #adminmenu li.menu-top,
             #adminmenu #toplevel_page_olla-podrida {
-                border-left: 4px solid #DAA520 !important;
-                background: #1c140f !important;
+                border-left: none !important;
                 box-sizing: border-box !important;
+                margin-left: 0 !important;
+            }
+            #adminmenu #toplevel_page_olla-podrida {
+                background: #1c140f !important;
             }
             #adminmenu #toplevel_page_olla-podrida > a {
                 color: #FFD700 !important;
@@ -239,7 +244,7 @@ class Olla_Podrida_Admin {
                 right: auto !important;
                 box-shadow: none !important;
                 border: none !important;
-                border-left: none !important; /* NO DOUBLE BORDER */
+                border-left: none !important;
                 background: #160e0a !important;
                 margin: 0 !important;
                 padding: 4px 0 6px 0 !important;
@@ -277,7 +282,7 @@ class Olla_Podrida_Admin {
                 line-height: 1.4 !important;
                 color: #cfc4ac !important;
                 border: none !important;
-                border-left: none !important; /* NO HOVER BAR */
+                border-left: none !important;
                 box-shadow: none !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
@@ -285,21 +290,45 @@ class Olla_Podrida_Admin {
                 box-sizing: border-box !important;
                 width: 100% !important;
             }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
+
+            /* UNIFORM ACCENT LINE ON ACTIVE ITEMS & SUB-ITEMS (Always same position, no layout shift) */
+            #adminmenu li.current > a.menu-top,
+            #adminmenu li.wp-has-current-submenu > a.wp-has-current-submenu,
+            #adminmenu #toplevel_page_olla-podrida.current > a,
+            #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu > a {
+                background: #241711 !important;
                 color: #FFD700 !important;
-                background: #251912 !important;
-                border: none !important;
-                border-left: none !important; /* NO HOVER BAR */
-                box-shadow: none !important;
+                font-weight: 600 !important;
+                box-shadow: inset 4px 0 0 #DAA520 !important;
+                border-left: none !important;
             }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current a {
+
+            #adminmenu .wp-submenu li.current > a,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current > a {
                 color: #DAA520 !important;
                 font-weight: 700 !important;
                 background: #221610 !important;
+                box-shadow: inset 4px 0 0 #DAA520 !important;
                 border: none !important;
                 border-left: none !important;
             }
+
+            /* HOVER STATE: Absolutely NO line on hover across all menu items and submenus */
+            #adminmenu a.menu-top:hover,
+            #adminmenu li.menu-top:hover > a,
+            #adminmenu li.opensub > a.menu-top,
+            #adminmenu li > a.menu-top:focus,
+            #adminmenu .wp-submenu a:hover,
+            #adminmenu .wp-submenu a:focus,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
+                background: #1f140f !important;
+                color: #FFD700 !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-left: none !important;
+            }
+
             body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
                 display: none !important;
             }
@@ -317,33 +346,11 @@ class Olla_Podrida_Admin {
             #adminmenu .wp-submenu-head {
                 color: #d1c7ac !important;
             }
-            #adminmenu a.menu-top:hover,
-            #adminmenu li.menu-top:hover,
-            #adminmenu li.opensub > a.menu-top,
-            #adminmenu li > a.menu-top:focus {
-                background: #1f140f !important;
-                color: #FFD700 !important;
-            }
-            #adminmenu li.current a.menu-top,
-            #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu {
-                background: #241711 !important;
-                color: #DAA520 !important;
-                font-weight: 600 !important;
-            }
             #adminmenu .wp-submenu {
                 background: #1a110c !important;
             }
             #adminmenu .wp-submenu a {
                 color: #c4b99e !important;
-            }
-            #adminmenu .wp-submenu a:hover,
-            #adminmenu .wp-submenu a:focus {
-                color: #FFD700 !important;
-                background: #241711 !important;
-            }
-            #adminmenu .wp-submenu li.current a {
-                color: #DAA520 !important;
-                font-weight: 600 !important;
             }
             #collapse-menu {
                 color: #a89f8d !important;
