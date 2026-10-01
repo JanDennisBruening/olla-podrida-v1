@@ -65,8 +65,8 @@ export const Preloader: React.FC<PreloaderProps> = ({
     return () => cancelAnimationFrame(animId);
   }, [canStart, keepVisibleOnFinish, onComplete]);
 
-  // If cannot start yet (e.g. waiting for welcome/cookie consent), do not render into DOM
-  if (!canStart || isRemoved) return null;
+  // If preloader has finished its dissolve and exited, remove from DOM
+  if (isRemoved) return null;
 
   return (
     <div

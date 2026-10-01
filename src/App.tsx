@@ -209,9 +209,24 @@ export default function App() {
     };
   }, []);
 
+  // Lock body & html scroll completely and pause Lenis while cookie consent banner is visible
+  useEffect(() => {
+    if (!hasConsent) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.stop();
+      return () => {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        if (lenis) lenis.start();
+      };
+    }
+  }, [hasConsent]);
+
   // Pause Lenis smooth scrolling when any modal is open to ensure 100% native, unblocked inner scrolling
   useEffect(() => {
-    const isAnyModalOpen = !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
+    const isAnyModalOpen = !hasConsent || !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
     const lenis = (window as any).__lenis;
     if (lenis) {
       if (isAnyModalOpen) {
@@ -220,7 +235,7 @@ export default function App() {
         lenis.start();
       }
     }
-  }, [legalModalType, archiveModalOpen, presseModalOpen, loginModalOpen]);
+  }, [hasConsent, legalModalType, archiveModalOpen, presseModalOpen, loginModalOpen]);
 
   const handleOpenLegal = (type: 'impressum' | 'datenschutz' | 'cookies') => {
     setLegalModalType(type);

@@ -24,24 +24,24 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
     // 1. Immediately start audio playback synchronously inside the user's direct click gesture!
     audioManager.play();
 
-    // 2. Play reverse stagger animation before triggering the Preloader & parent transition
+    // 2. Play card exit transition before handing over to Preloader
     setIsExiting(true);
     setTimeout(() => {
       onAccept();
-    }, 520);
+    }, 380);
   };
 
   const handleEssential = () => {
     setIsExiting(true);
     setTimeout(() => {
       onAccept();
-    }, 520);
+    }, 380);
   };
 
   // Helper styles for stagger entrance & reverse stagger exit
   const getHeaderStyle = () => {
     if (isExiting) {
-      return 'opacity-0 -translate-y-4 transition-all duration-300 ease-in delay-[300ms]';
+      return 'opacity-0 -translate-y-4 transition-all duration-300 ease-in delay-[200ms]';
     }
     return isMounted
       ? 'opacity-100 translate-y-0 transition-all duration-500 ease-out delay-[100ms]'
@@ -50,7 +50,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   const getItem1Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[240ms]';
+      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[160ms]';
     }
     return isMounted
       ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[220ms]'
@@ -59,7 +59,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   const getItem2Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[180ms]';
+      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[120ms]';
     }
     return isMounted
       ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[320ms]'
@@ -68,7 +68,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   const getItem3Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[120ms]';
+      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[80ms]';
     }
     return isMounted
       ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[420ms]'
@@ -77,7 +77,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   const getLegalNoteStyle = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[60ms]';
+      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[40ms]';
     }
     return isMounted
       ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[520ms]'
@@ -95,32 +95,40 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   return (
     <div
-      className={`fixed inset-0 z-[100001] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-500 ease-out overflow-hidden ${
-        isExiting ? 'opacity-0 pointer-events-none' : isMounted ? 'opacity-100' : 'opacity-0'
-      }`}
+      className="fixed inset-0 z-[100001] flex items-center justify-center p-3 sm:p-6 select-none overflow-hidden"
       style={{
-        backgroundColor: 'rgba(7, 2, 2, 0.90)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)'
+        backgroundColor: '#070202',
+        backgroundImage: 'radial-gradient(circle at center, rgba(142, 40, 0, 0.28) 0%, rgba(218, 165, 32, 0.16) 35%, rgba(7, 2, 2, 0.98) 75%, #070202 100%)'
       }}
     >
-      {/* Permanent Billowing Medieval Fog Cloud Layers in Modal Backdrop */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-35 z-0">
+      {/* Warm Mystical Glowing Ambient Orbs illuminating the background */}
+      <div
+        className="absolute top-[18%] left-[10%] w-72 h-72 rounded-full bg-amber-600/22 blur-3xl animate-pulse pointer-events-none"
+        style={{ animationDuration: '4.2s' }}
+      />
+      <div
+        className="absolute bottom-[20%] right-[10%] w-80 h-80 rounded-full bg-[#DAA520]/18 blur-3xl animate-pulse pointer-events-none"
+        style={{ animationDuration: '5.6s', animationDelay: '1.8s' }}
+      />
+      <div className="absolute top-[55%] left-[50%] -translate-x-1/2 w-96 h-96 rounded-full bg-[#8E2800]/14 blur-3xl pointer-events-none" />
+
+      {/* Billowing Atmospheric Medieval Fog Cloud Layers across the Prologue Backdrop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-45 z-0">
         <img
           src={assets.smokeAlt}
           alt=""
-          className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] object-cover animate-fog-drift animate-mystic-glow"
+          className="absolute -top-1/4 -left-1/4 w-[160%] h-[160%] object-cover animate-fog-drift animate-mystic-glow"
         />
         <img
           src={assets.smokeAlt}
           alt=""
-          className="absolute -bottom-1/4 -right-1/4 w-[150%] h-[150%] object-cover animate-fog-drift-reverse"
+          className="absolute -bottom-1/4 -right-1/4 w-[160%] h-[160%] object-cover animate-fog-drift-reverse"
         />
       </div>
 
       <div
-        className={`relative z-10 w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-500 ease-out ${
-          isExiting ? 'scale-95' : isMounted ? 'scale-100' : 'scale-95'
+        className={`relative z-10 w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-380 ease-out ${
+          isExiting ? 'opacity-0 scale-95 pointer-events-none' : isMounted ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
         onClick={(e) => e.stopPropagation()}
       >

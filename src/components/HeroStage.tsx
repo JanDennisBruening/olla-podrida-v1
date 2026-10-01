@@ -23,7 +23,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Simone',
     defaultImage: '/images/Simone_stage.webp',
     defaultAlt: 'Simone',
-    entranceDelay: 100,
+    entranceDelay: 300,
     desktopXl: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
     desktopLg: { left: '25%', top: '8%', width: '20rem', zIndex: 4 },
     tablet: { left: '25%', top: '6%', width: '24vw', zIndex: 4 },
@@ -34,7 +34,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Klemens',
     defaultImage: '/images/Klemens_stage.webp',
     defaultAlt: 'Klemens',
-    entranceDelay: 200,
+    entranceDelay: 420,
     desktopXl: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
     desktopLg: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
     tablet: { left: '46%', top: '5%', width: '22vw', zIndex: 5 },
@@ -45,7 +45,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Silke',
     defaultImage: '/images/Silke_stage.webp',
     defaultAlt: 'Silke',
-    entranceDelay: 320,
+    entranceDelay: 540,
     desktopXl: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
     desktopLg: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
     tablet: { left: '13%', top: '13%', width: '26vw', zIndex: 7 },
@@ -56,7 +56,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Sandra',
     defaultImage: '/images/2024_Sandra_Olla-Podrida_web_2.webp',
     defaultAlt: 'Sandra',
-    entranceDelay: 440,
+    entranceDelay: 660,
     desktopXl: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
     tablet: { left: '58%', top: '13%', width: '26vw', zIndex: 9 },
@@ -67,7 +67,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Lutz',
     defaultImage: '/images/Lutz.webp',
     defaultAlt: 'Lutz',
-    entranceDelay: 560,
+    entranceDelay: 780,
     desktopXl: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
     desktopLg: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
     tablet: { left: '37%', top: '13%', width: '27vw', zIndex: 8 },
@@ -78,7 +78,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Susanne',
     defaultImage: '/images/Susanne-1.webp',
     defaultAlt: 'Susanne spielt vergnügt auf der Flöte',
-    entranceDelay: 680,
+    entranceDelay: 900,
     desktopXl: { left: '19%', top: '24%', width: '33rem', zIndex: 10 },
     desktopLg: { left: '18%', top: '24%', width: '33rem', zIndex: 10 },
     tablet: { left: '25%', top: '21%', width: '36vw', zIndex: 10 },
@@ -89,7 +89,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     name: 'Ruth',
     defaultImage: '/images/Ruth_web_5.webp',
     defaultAlt: 'Ruth',
-    entranceDelay: 800,
+    entranceDelay: 1020,
     desktopXl: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
     tablet: { left: '45%', top: '28%', width: '28vw', zIndex: 9 },
@@ -123,13 +123,14 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Trigger entrance sequence once on initial mount (no scroll-based re-triggering)
+  // Trigger entrance sequence once preloader finishes and unveils the stage
   useEffect(() => {
     let triggered = false;
     const triggerEntrance = () => {
       if (!triggered) {
         triggered = true;
-        setTimeout(() => setIsLoaded(true), 40);
+        // Pause 100ms so the Klangvielfalt banner is mounted and rendered first
+        setTimeout(() => setIsLoaded(true), 100);
       }
     };
 
@@ -140,11 +141,14 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
         setIsLoaded(true);
       }
     });
-    const timer = setTimeout(triggerEntrance, 1200);
+
+    // If returning visitor already completed preloader
+    if (typeof window !== 'undefined' && (window as any).__OLLA_PAGE_READY__) {
+      triggerEntrance();
+    }
 
     return () => {
       window.removeEventListener('preloader-finish', triggerEntrance);
-      clearTimeout(timer);
     };
   }, []);
 
@@ -294,11 +298,11 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
                 top: cfg.top,
                 width: cfg.width,
                 zIndex: cfg.zIndex,
-                transition: 'transform 580ms cubic-bezier(0.16, 1, 0.3, 1), opacity 480ms ease-out',
+                transition: 'transform 720ms cubic-bezier(0.16, 1, 0.3, 1), opacity 560ms ease-out',
                 transitionDelay: `${figure.entranceDelay}ms`,
                 transform: isLoaded
                   ? `translate3d(${offX}px, ${offY}px, 0)`
-                  : `translate3d(${offX}px, ${offY + 36}px, 0)`,
+                  : `translate3d(${offX}px, ${offY + 80}px, 0)`,
                 opacity: isLoaded ? 1 : 0
               }}
             >

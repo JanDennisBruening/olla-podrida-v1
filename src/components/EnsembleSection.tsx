@@ -22,9 +22,31 @@ export const EnsembleSection: React.FC = () => {
   });
 
   const [hoveredMember, setHoveredMember] = useState<string | null>(null);
+  const [isBannerVisible, setIsBannerVisible] = useState(false);
   const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.08, rootMargin: '0px 0px -50px 0px', triggerOnce: true });
   const { ref: musiciansRef, isInView: musiciansInView } = useInView<HTMLDivElement>({ threshold: 0.12, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
   const { ref: textBottomRef, isInView: textBottomInView } = useInView<HTMLDivElement>({ threshold: 0.12, rootMargin: '0px 0px -30px 0px', triggerOnce: true });
+
+  // Appear immediately when preloader finishes so the Klangvielfalt banner is ready in front of the rising musicians
+  React.useEffect(() => {
+    const handlePreloaderFinish = () => {
+      setIsBannerVisible(true);
+    };
+
+    window.addEventListener('preloader-finish', handlePreloaderFinish);
+    window.addEventListener('preloader-removed', handlePreloaderFinish);
+
+    if (typeof window !== 'undefined' && ((window as any).__OLLA_PAGE_READY__ || window.scrollY > 40)) {
+      setIsBannerVisible(true);
+    }
+
+    return () => {
+      window.removeEventListener('preloader-finish', handlePreloaderFinish);
+      window.removeEventListener('preloader-removed', handlePreloaderFinish);
+    };
+  }, []);
+
+  const showBanner = isBannerVisible || isInView;
 
   // Tablet split (4 + 3)
   const tabletRow1 = musicians.slice(0, 4); // Simone, Klemens, Silke, Sandra
@@ -49,8 +71,8 @@ export const EnsembleSection: React.FC = () => {
         {/* Single continuous parchment scroll: SchleifePapier.webp (Desktop) / SchleifePapierMobile.webp (Mobile/Tablet) */}
         {/* background-size: 100% auto locks banner proportions so it NEVER squashes, stretches, or deforms */}
         <div
-          className={`relative w-[96vw] sm:w-[96vw] md:w-[96vw] max-w-[62rem] lg:max-w-[70rem] xl:max-w-[76rem] mx-auto filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] flex flex-col items-center transition-all duration-1000 ease-out transform ${
-            isInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[0.98]'
+          className={`relative w-[96vw] sm:w-[96vw] md:w-[96vw] max-w-[62rem] lg:max-w-[70rem] xl:max-w-[76rem] mx-auto filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] flex flex-col items-center transition-all duration-700 ease-out transform ${
+            showBanner ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-[0.99]'
           }`}
           style={{
             backgroundImage: `url('${resolveAssetUrl('/SchleifePapierMobile.webp')}')`,
@@ -65,7 +87,7 @@ export const EnsembleSection: React.FC = () => {
             {/* Title matching .elementor-element-7bd36bc3 - Appears directly after the ribbon banner */}
             <h2
               className={`font-macondo text-[6.5vw] md:text-[2.6rem] lg:text-[3.2rem] xl:text-[3.6rem] font-semibold text-[#0A0707] tracking-normal mb-3 md:mb-5 lg:mb-6 leading-tight text-left w-full transition-all duration-700 delay-100 ease-out ${
-                isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                showBanner ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               {ensembleConfig.title || 'Ensemble Olla Podrida'}
@@ -75,7 +97,7 @@ export const EnsembleSection: React.FC = () => {
             {/* DESKTOP VIEWPORT (>= 1024px / lg:): Paragraph 1 + Logo side-by-side */}
             {/* ======================================================== */}
             <div className={`hidden lg:flex w-full flex-row items-center justify-between gap-5 xl:gap-8 mb-5 overflow-visible transition-all duration-700 delay-200 ease-out ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              showBanner ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
               {/* Paragraph 1 (left column: ~60%) */}
               <div className="w-[60%] xl:w-[60%] font-macondo text-[1.3rem] font-semibold text-[#0A0707] leading-[1.85rem] text-left">
@@ -99,7 +121,7 @@ export const EnsembleSection: React.FC = () => {
             {/* MOBILE & TABLET VIEWPORT (< 1024px): Paragraph 1 + Centered Logo below */}
             {/* ======================================================== */}
             <div className={`lg:hidden w-full font-macondo text-[3.7vw] md:text-[1.3rem] font-semibold text-[#0A0707] leading-[5.2vw] md:leading-[1.85rem] text-justify md:text-left transition-all duration-700 delay-200 ease-out ${
-              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              showBanner ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
               <p>
                 {ensembleConfig.paragraph1 || 'Eigentlich bezeichnet es ein typisches Gericht der kastilischen Küche und war ursprünglich ein Eintopf. Der Name des Gerichts stammt in Wirklichkeit von dem mittelalterlichen spanischen Ausdruck „olla poderida“ („mächtiger Topf“). Die Franzosen haben den Begriff wörtlich übersetzt mit Potpourri, was in dem Sinne einem musikalischen Cocktail nahekommt. Zum einen symbolisiert der Name unsere musikalische Vielfalt, zum anderen genießen wir den schmackhaften Eintopf bei unseren alljährlichen gemeinsamen Festessen.'}
@@ -108,7 +130,7 @@ export const EnsembleSection: React.FC = () => {
 
             {/* Suppentopf Illustration on Mobile & Tablet: Centered & enlarged by 30% on mobile */}
             <div className={`lg:hidden w-full flex justify-center my-5 sm:my-7 md:my-8 overflow-visible transition-all duration-700 delay-250 ease-out ${
-              isInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+              showBanner ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}>
               <div className="relative flex items-center justify-center p-2 overflow-visible">
                 <img
