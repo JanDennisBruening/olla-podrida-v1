@@ -151,11 +151,11 @@ export const AudioPlayer: React.FC<{ isMobileMenuOpen?: boolean }> = ({ isMobile
         <button
           type="button"
           onClick={handleScrollToTop}
-          className="group flex items-center justify-center gap-1.5 px-2.5 py-1 sm:py-0.5 rounded-full bg-[#070202] border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] font-macondo tracking-wider shadow-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer scale-[1.05] sm:scale-100 origin-bottom"
+          className="group flex items-center justify-center gap-1.5 px-2.5 py-1 sm:py-0.5 rounded-full bg-[#070202] border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] font-macondo tracking-wider shadow-md transition-colors duration-300 cursor-pointer scale-[1.05] sm:scale-100"
           title="Zurück zum Seitenanfang scrollen"
           aria-label="Nach oben scrollen"
         >
-          <span className="text-[10px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold shrink-0">▲</span>
+          <span className="text-[10px] sm:text-[9px] font-bold shrink-0">▲</span>
           <div className="flex flex-col sm:flex-row sm:gap-1 text-left sm:text-center leading-[1.05] sm:leading-normal text-[9px] sm:text-[10px] font-semibold whitespace-nowrap">
             <span>Nach</span>
             <span>oben</span>
