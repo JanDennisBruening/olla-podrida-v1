@@ -132,41 +132,37 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
 
         {/* Dynamic Current Year with JavaScript (new Date().getFullYear()) & Headline Font (font-macondo) */}
         <div
-          className={`text-center text-xs sm:text-sm text-[#F5F5DC]/80 font-normal space-y-1.5 mt-2 transition-all duration-700 delay-450 ease-out transform ${
+          className={`w-full max-w-[15rem] min-[400px]:max-w-[18rem] sm:max-w-md md:max-w-xl mx-auto mb-16 sm:mb-8 md:mb-0 text-center text-xs sm:text-sm text-[#F5F5DC]/80 font-normal space-y-2 mt-2 transition-all duration-700 delay-450 ease-out transform ${
             isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
           <p className="font-macondo text-lg sm:text-xl md:text-2xl text-[#F5F5DC] tracking-wide">
             {currentYear} © Ensemble Olla Podrida
           </p>
-          <p className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light flex items-center justify-center gap-1.5 flex-wrap">
-            {(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').includes('www.janbruening.de') ? (
-              <>
-                <span>{(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim()}</span>
-                <span>·</span>
-                <a
-                  href="https://www.janbruening.de"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#DAA520] hover:underline"
-                >
-                  www.janbruening.de
-                </a>
-              </>
-            ) : (
-              <span>{texts.footerDev}</span>
-            )}
-            <span className="text-[#DAA520]/50 mx-0.5">|</span>
-            <button
-              type="button"
-              onClick={onOpenLogin}
-              title="Admin- &amp; Redaktions-Login"
-              aria-label="Admin- und Redaktions-Login"
-              className="text-[#DAA520]/75 hover:text-[#DAA520] transition-colors p-0.5 inline-flex items-center hover:scale-110 cursor-pointer"
-            >
-              <Lock size={12} className="inline opacity-85 hover:opacity-100" />
-            </button>
-          </p>
+          <div className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
+            <span>{(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').includes('www.janbruening.de') ? (texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim() : texts.footerDev}</span>
+            <span className="hidden sm:inline">·</span>
+            <div className="flex items-center justify-center gap-1.5">
+              <a
+                href="https://www.janbruening.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#DAA520] hover:underline"
+              >
+                www.janbruening.de
+              </a>
+              <span className="text-[#DAA520]/50 mx-0.5">|</span>
+              <button
+                type="button"
+                onClick={onOpenLogin}
+                title="Admin- &amp; Redaktions-Login"
+                aria-label="Admin- und Redaktions-Login"
+                className="text-[#DAA520]/75 hover:text-[#DAA520] transition-colors p-0.5 inline-flex items-center hover:scale-110 cursor-pointer"
+              >
+                <Lock size={12} className="inline opacity-85 hover:opacity-100" />
+              </button>
+            </div>
+          </div>
         </div>
 
       </div>

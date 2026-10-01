@@ -144,7 +144,7 @@ export const EnsembleSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Suppentopf Illustration on Mobile & Tablet: 10% smaller */}
+            {/* Suppentopf Illustration on Mobile: 30% smaller, Tablet unchanged */}
             <div className={`lg:hidden w-full flex justify-center my-4 sm:my-6 md:my-7 overflow-visible transition-all duration-700 delay-250 ease-out ${
               showBanner ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}>
@@ -152,7 +152,7 @@ export const EnsembleSection: React.FC = () => {
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-[20.3rem] sm:w-[25.2rem] md:w-[28.8rem] max-w-[77vw] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-[14.2rem] max-w-[54vw] sm:w-[25.2rem] sm:max-w-[77vw] md:w-[28.8rem] md:max-w-none h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
@@ -375,7 +375,7 @@ export const EnsembleSection: React.FC = () => {
             {/* ======================================================== */}
             {/* 3. MOBILE VIEWPORT (< 768px): 3 + 3 + 1 (UNIFORM SIZE ACROSS ALL 7 FIGURES) */}
             {/* ======================================================== */}
-            <div className="md:hidden w-full my-4 overflow-visible flex flex-col items-center gap-3 sm:gap-4 -mx-1">
+            <div className="md:hidden w-full my-4 overflow-visible flex flex-col items-center gap-3 sm:gap-4">
               {/* Row 1: 3 Musicians (Simone, Klemens, Silke) */}
               <div className="w-full flex justify-center items-end gap-2.5 sm:gap-3.5 overflow-visible">
                 {mobileRow1.map((musician, index) => {

@@ -144,19 +144,22 @@ export const AudioPlayer: React.FC<{ isMobileMenuOpen?: boolean }> = ({ isMobile
       <div
         className={`w-full flex justify-center overflow-hidden transition-all duration-500 ease-out ${
           isScrollTopVisible
-            ? 'max-h-14 opacity-100 translate-y-0 mt-1.5'
+            ? 'max-h-16 opacity-100 translate-y-0 mt-1.5'
             : 'max-h-0 opacity-0 translate-y-3 pointer-events-none mt-0'
         }`}
       >
         <button
           type="button"
           onClick={handleScrollToTop}
-          className="group flex items-center justify-center gap-1 px-2.5 py-0.5 rounded-full bg-[#070202]/92 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] text-[9.5px] sm:text-[10px] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap"
+          className="group flex items-center justify-center gap-1.5 px-2.5 py-1 sm:py-0.5 rounded-full bg-[#070202]/92 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer scale-[1.05] sm:scale-100 origin-bottom"
           title="Zurück zum Seitenanfang scrollen"
           aria-label="Nach oben scrollen"
         >
-          <span className="text-[8.5px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold">▲</span>
-          <span className="font-semibold whitespace-nowrap">{texts.scrollTop || 'Nach oben'}</span>
+          <span className="text-[10px] sm:text-[9px] transition-transform duration-300 group-hover:-translate-y-0.5 font-bold shrink-0">▲</span>
+          <div className="flex flex-col sm:flex-row sm:gap-1 text-left sm:text-center leading-[1.05] sm:leading-normal text-[9px] sm:text-[10px] font-semibold whitespace-nowrap">
+            <span>Nach</span>
+            <span>oben</span>
+          </div>
         </button>
       </div>
     </div>

@@ -244,7 +244,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#070202] text-[#F5F5DC] flex flex-col font-sans selection:bg-[#DAA520] selection:text-[#F5F5DC]">
+    <div className="relative min-h-screen bg-[#070202] text-[#F5F5DC] flex flex-col font-sans selection:bg-[#DAA520] selection:text-[#F5F5DC] overflow-x-hidden w-full max-w-[100vw]">
       {/* 1:1 Preloader matching original site - waits for cookie consent on first visit */}
       <Preloader canStart={hasConsent} />
 

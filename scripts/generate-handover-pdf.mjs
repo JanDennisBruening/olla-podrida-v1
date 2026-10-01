@@ -217,7 +217,7 @@ const htmlContent = `<!DOCTYPE html>
     <div class="header-title-box">
       <div class="doc-badge">Kunden-Dokumentation &amp; Handover</div>
       <h1 class="doc-title">Ensemble Olla Podrida</h1>
-      <p class="doc-sub">Klangvielfalt aus Mittelalter &amp; Renaissance · Neue Website &amp; Redaktionssystem (v1.4.1)</p>
+      <p class="doc-sub">Klangvielfalt aus Mittelalter &amp; Renaissance · Neue Website &amp; Redaktionssystem (v1.4.2)</p>
     </div>
     ${logoBase64 ? `<img src="${logoBase64}" class="header-logo" alt="Olla Podrida" />` : ''}
   </div>
@@ -226,7 +226,7 @@ const htmlContent = `<!DOCTYPE html>
   <div class="meta-bar">
     <div class="meta-item"><strong>Auftraggeber:</strong> Ensemble Olla Podrida · Susanne Hoffmann</div>
     <div class="meta-item"><strong>Konzept &amp; Entwicklung:</strong> Jan Dennis Brüning</div>
-    <div class="meta-item"><strong>Version:</strong> v1.4.1 (Oktober 2026)</div>
+    <div class="meta-item"><strong>Version:</strong> v1.4.2 (Oktober 2026)</div>
     <div class="meta-item"><strong>Web:</strong> www.olla-podrida.de</div>
   </div>
 
@@ -423,7 +423,7 @@ const htmlContent = `<!DOCTYPE html>
   </div>
 
   <div class="footer-bar">
-    <div>Ensemble Olla Podrida · Handover-Dokumentation v1.4.1</div>
+    <div>Ensemble Olla Podrida · Handover-Dokumentation v1.4.2</div>
     <div>Erstellt im Oktober 2026 · Jan Dennis Brüning</div>
   </div>
 

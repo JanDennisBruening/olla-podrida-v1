@@ -176,30 +176,32 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       }}
     >
       {/* Stone Hall Backdrop strictly for the Hero Stage – Fades in slowly from dark */}
-      <div
-        className="hidden md:block absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none -z-10"
-        style={{
-          backgroundImage: `url(${heroConfig.bgDesktop || assets.heroBackgroundDesktop})`,
-          backgroundPosition: 'center top',
-          backgroundSize: '100% auto',
-          transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
-          opacity: isLoaded ? 0.98 : 0,
-          transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
-          filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
-        }}
-      />
-      <div
-        className="md:hidden absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none -z-10"
-        style={{
-          backgroundImage: `url(${heroConfig.bgMobile || assets.heroBackgroundMobile})`,
-          backgroundPosition: 'center top',
-          backgroundSize: 'cover',
-          transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
-          opacity: isLoaded ? 0.98 : 0,
-          transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
-          filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
-        }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div
+          className="hidden md:block absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none"
+          style={{
+            backgroundImage: `url(${heroConfig.bgDesktop || assets.heroBackgroundDesktop})`,
+            backgroundPosition: 'center top',
+            backgroundSize: '100% auto',
+            transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+            opacity: isLoaded ? 0.98 : 0,
+            transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+            filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
+          }}
+        />
+        <div
+          className="md:hidden absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none"
+          style={{
+            backgroundImage: `url(${heroConfig.bgMobile || assets.heroBackgroundMobile})`,
+            backgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+            opacity: isLoaded ? 0.98 : 0,
+            transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+            filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
+          }}
+        />
+      </div>
 
       {/* Atmospheric Torch / Candle Glow points illuminating the stone hall arches on left and right */}
       <div

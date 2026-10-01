@@ -173,10 +173,10 @@ export const Header: React.FC<HeaderProps> = ({
             backgroundSize: '100% 100%'
           }}
         >
-          {/* Logo pinned flush against top edge: exactly 24% of total width, enlarged by 2% overall, inner logo by 3% */}
+          {/* Logo pinned flush against top edge: shifted 5% left and enlarged by 5% overall */}
           <button
             onClick={() => scrollToSection('Start')}
-            className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30 scale-[1.02] origin-top-left"
+            className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30 scale-[1.07] -translate-x-[5%] origin-top-left"
           >
             <div
               className="w-[24vw] h-[24vw] min-w-[5.6rem] min-h-[5.6rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
@@ -195,10 +195,10 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </button>
 
-          {/* Medieval Calligraphic Menu / Close Button with crisp morphing animation */}
+          {/* Medieval Calligraphic Menu / Close Button with crisp morphing animation - width fixed to lock horizontal position */}
           <button
             onClick={handleToggleMobileMenu}
-            className="self-center my-auto mr-3 sm:mr-4 flex flex-col items-center justify-center p-1.5 cursor-pointer transition-all duration-300 active:scale-80 scale-[0.95] z-30"
+            className="self-center my-auto mr-1.5 sm:mr-3 flex flex-col items-center justify-center w-[4.8rem] shrink-0 p-1 cursor-pointer transition-all duration-300 active:scale-80 scale-[0.95] z-30"
             aria-label={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
             title={isAnyOpen ? 'Menü schließen' : 'Menü öffnen'}
           >
@@ -226,7 +226,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
               />
             </div>
-            <span className="font-macondo font-bold text-[11px] tracking-wider text-[#1D1D1B] uppercase leading-none mt-1 min-w-[3.2rem] text-center transition-all duration-300">
+            <span className="font-macondo font-bold text-[11px] tracking-wider text-[#1D1D1B] uppercase leading-none mt-1 w-full text-center transition-all duration-300">
               {isAnyOpen ? 'Schließen' : 'Menü'}
             </span>
           </button>
