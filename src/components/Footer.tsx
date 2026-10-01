@@ -66,80 +66,55 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
           />
         </div>
 
-        {/* Footer Navigation Buttons: Single row on Desktop (lg:), two cleanly stacked rows on Mobile/Tablet */}
+        {/* Footer Navigation Buttons: Konzertchronik, Presse, Cookie & Consent, Datenschutz, Impressum */}
         <div
-          className={`w-full flex flex-col lg:flex-row items-center justify-center gap-y-1.5 lg:gap-y-0 gap-x-0 lg:gap-x-7 xl:gap-x-8 mb-4 font-macondo text-[0.92rem] sm:text-[1.02rem] md:text-[1.08rem] lg:text-[1.12rem] font-medium text-[#F5F5DC] text-center transition-all duration-700 delay-150 ease-out transform ${
+          className={`w-full flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-7 lg:gap-x-8 gap-y-2 mb-4 font-macondo text-[0.95rem] sm:text-[1.05rem] md:text-[1.12rem] font-medium text-[#F5F5DC] text-center transition-all duration-700 delay-150 ease-out transform ${
             isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          {/* Main sections group */}
-          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 lg:gap-x-7 xl:gap-x-8">
+          <button
+            onClick={onOpenTermineArchive}
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+          >
+            Konzertchronik
+          </button>
+          <button
+            onClick={onOpenPresse}
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+          >
+            {texts.navPresse || 'Presse'}
+          </button>
+
+          {/* Cookies und Consent button with Premium Tooltip */}
+          <div className="relative inline-block py-0.5">
             <button
-              onClick={() => scrollTo('ensemble')}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+              onClick={onOpenCookies}
+              onMouseEnter={() => setCookieTooltip(true)}
+              onMouseLeave={() => setCookieTooltip(false)}
+              className="hover:text-[#DAA520] transition-colors cursor-pointer"
             >
-              Ensemble
+              Cookie &amp; Consent
             </button>
-            <button
-              onClick={() => scrollTo('termine')}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              {texts.navTermine || 'Termine'}
-            </button>
-            <button
-              onClick={onOpenTermineArchive}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              Konzertchronik
-            </button>
-            <button
-              onClick={() => scrollTo('kontakt')}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              {texts.navKontakt || 'Kontakt'}
-            </button>
+            {cookieTooltip && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-sm whitespace-nowrap shadow-2xl z-50 pointer-events-none">
+                Nur essenzielle Cookie &amp; Consent-Speicherung für Musik aus alten Zeiten!
+                <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
+              </div>
+            )}
           </div>
 
-          {/* Legal, press and cookies group */}
-          <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-7 lg:gap-x-7 xl:gap-x-8">
-            <button
-              onClick={onOpenPresse}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              {texts.navPresse || 'Presse'}
-            </button>
-
-            {/* Cookies und Consent button with Premium Tooltip */}
-            <div className="relative inline-block py-0.5">
-              <button
-                onClick={onOpenCookies}
-                onMouseEnter={() => setCookieTooltip(true)}
-                onMouseLeave={() => setCookieTooltip(false)}
-                className="hover:text-[#DAA520] transition-colors cursor-pointer"
-              >
-                Cookie &amp; Consent
-              </button>
-              {cookieTooltip && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-sm whitespace-nowrap shadow-2xl z-50 pointer-events-none">
-                  Nur essenzielle Cookie &amp; Consent-Speicherung für Musik aus alten Zeiten!
-                  <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#070202] border-r border-b border-[#DAA520] rotate-45" />
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => onOpenLegal('datenschutz')}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              Datenschutz
-            </button>
-            <button
-              onClick={() => onOpenLegal('impressum')}
-              className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
-            >
-              Impressum
-            </button>
-          </div>
+          <button
+            onClick={() => onOpenLegal('datenschutz')}
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+          >
+            Datenschutz
+          </button>
+          <button
+            onClick={() => onOpenLegal('impressum')}
+            className="hover:text-[#DAA520] transition-colors cursor-pointer py-0.5"
+          >
+            Impressum
+          </button>
         </div>
 
         {/* Divider with Center "O" matching .elementor-element-6e50220f */}

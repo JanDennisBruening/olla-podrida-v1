@@ -33,6 +33,8 @@ class Olla_Podrida {
         // Security HTTP Headers (anti-sniffing, framing, referrer)
         add_action('send_headers', [$this, 'send_security_headers']);
 
+        add_action('admin_init', [$this, 'maybe_run_auto_setup']);
+
         if (class_exists('Olla_Podrida_Updater')) {
             Olla_Podrida_Updater::init();
         }
@@ -145,6 +147,102 @@ class Olla_Podrida {
                 }
             }
         }
+
+        // Automated Self-Setup for Canvas Page, Homepage, Permalinks and Rewrites
+        self::run_auto_setup();
+    }
+
+    /**
+     * Executes auto setup if the installed plugin version differs from current version
+     */
+    public function maybe_run_auto_setup() {
+        $installed_ver = get_option('olla_podrida_installed_version', '');
+        if ($installed_ver !== OLLA_PODRIDA_VERSION) {
+            self::run_auto_setup();
+        }
+    }
+
+    /**
+     * Fully automated self-installation routine.
+     * Ensures the Canvas Page exists, has canvas-page.php template assigned,
+     * sets it as the static front page (if not already set), sets permalinks, and flushes rewrite rules.
+     */
+    public static function run_auto_setup() {
+        // 1. Check or create the Canvas Page ("Ensemble Olla Podrida")
+        $page_id = 0;
+        $target_page = get_page_by_path('olla-podrida');
+        if ($target_page && $target_page->post_status !== 'trash') {
+            $page_id = $target_page->ID;
+        }
+
+        if (!$page_id) {
+            $existing_pages = get_posts([
+                'post_type'   => 'page',
+                'post_status' => ['publish', 'draft', 'private'],
+                'title'       => 'Ensemble Olla Podrida',
+                'numberposts' => 1,
+            ]);
+            if (!empty($existing_pages)) {
+                $page_id = $existing_pages[0]->ID;
+            }
+        }
+
+        if (!$page_id) {
+            $page_id = wp_insert_post([
+                'post_title'     => 'Ensemble Olla Podrida',
+                'post_name'      => 'olla-podrida',
+                'post_status'    => 'publish',
+                'post_type'      => 'page',
+                'post_content'   => '[olla_podrida]',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+            ]);
+        }
+
+        if ($page_id && !is_wp_error($page_id)) {
+            // Assign Canvas Page Template
+            update_post_meta($page_id, '_wp_page_template', 'canvas-page.php');
+
+            // Update display settings
+            $display = get_option('olla_podrida_display', []);
+            if (!is_array($display)) {
+                $display = [];
+            }
+            $display['canvas_page_id'] = $page_id;
+            $display['mode'] = 'canvas_page';
+            if (!isset($display['preloader_enabled'])) {
+                $display['preloader_enabled'] = true;
+            }
+            update_option('olla_podrida_display', $display);
+
+            // Automatically set this page as static front page if default post archive is active or no front page is assigned
+            $show_on_front = get_option('show_on_front');
+            $current_front = intval(get_option('page_on_front'));
+            if ($show_on_front !== 'page' || empty($current_front)) {
+                update_option('show_on_front', 'page');
+                update_option('page_on_front', $page_id);
+            }
+        }
+
+        // Enable universal dominance in settings by default
+        $settings = get_option('olla_podrida_settings', []);
+        if (is_array($settings)) {
+            $settings['universal_dominance'] = true;
+            update_option('olla_podrida_settings', $settings);
+        }
+
+        // Set modern permalinks structure if plain/empty (?p=123)
+        if (get_option('permalink_structure') === '') {
+            update_option('permalink_structure', '/%postname%/');
+        }
+
+        // Register and flush rewrite rules so /login and /olla-podrida work immediately
+        if (class_exists('Olla_Podrida_Frontend')) {
+            Olla_Podrida_Frontend::register_rewrite_rules();
+        }
+        flush_rewrite_rules(false);
+
+        update_option('olla_podrida_installed_version', OLLA_PODRIDA_VERSION);
     }
 
     public static function deactivate() {

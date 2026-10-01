@@ -12,6 +12,7 @@ class Olla_Podrida_Admin {
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_admin_assets']);
         add_action('wp_dashboard_setup', [__CLASS__, 'register_dashboard_widgets']);
         add_action('admin_post_olla_podrida_save_settings', [__CLASS__, 'handle_save_settings']);
+        add_action('admin_post_olla_podrida_run_auto_setup', [__CLASS__, 'handle_run_auto_setup']);
         add_action('wp_ajax_olla_podrida_save_event', [__CLASS__, 'handle_ajax_save_event']);
         add_action('wp_ajax_olla_podrida_delete_event', [__CLASS__, 'handle_ajax_delete_event']);
         add_action('wp_ajax_olla_podrida_toggle_event', [__CLASS__, 'handle_ajax_toggle_event']);
@@ -747,6 +748,24 @@ class Olla_Podrida_Admin {
             'page' => 'olla-podrida',
             'tab' => $section,
             'updated' => 'true'
+        ], admin_url('admin.php')));
+        exit;
+    }
+
+    public static function handle_run_auto_setup() {
+        if (!current_user_can('manage_options')) {
+            wp_die('Keine Berechtigung.');
+        }
+        check_admin_referer('olla_podrida_run_auto_setup', 'olla_setup_nonce');
+
+        if (class_exists('Olla_Podrida')) {
+            Olla_Podrida::run_auto_setup();
+        }
+
+        wp_redirect(add_query_arg([
+            'page' => 'olla-podrida',
+            'tab' => 'display',
+            'updated' => 'auto_setup_success'
         ], admin_url('admin.php')));
         exit;
     }

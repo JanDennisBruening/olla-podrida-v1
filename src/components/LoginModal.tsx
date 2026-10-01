@@ -175,7 +175,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
 
   return (
     <div
-      className={`fixed inset-0 z-[100002] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-300 ease-out overflow-hidden ${
+      className={`fixed inset-0 z-[100002] flex items-center justify-center p-3 sm:p-5 md:p-6 select-none transition-all duration-300 ease-out overflow-y-auto ${
         isMounted && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       style={{
@@ -195,13 +195,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       </div>
 
       <div
-        className={`relative z-10 w-full max-w-md bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.28)] flex flex-col text-[#F5F5DC] overflow-hidden p-6 sm:p-9 transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
+        data-lenis-prevent="true"
+        className={`relative z-10 w-full max-w-sm sm:max-w-md max-h-[94vh] sm:max-h-[90vh] bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.28)] flex flex-col text-[#F5F5DC] overflow-y-auto overscroll-contain p-5 sm:p-7 md:p-8 my-auto transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
           isMounted && !isClosing ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-6'
         }`}
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          touchAction: 'pan-y'
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Gold Corner Accents */}
-        <div className="absolute top-2.5 left-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
+        <div className="absolute top-2.5 left-2.5 text-[#DAA520]/60 text-xs sm:text-sm pointer-events-none">✦</div>
         <div className="absolute top-2.5 right-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
         <div className="absolute bottom-2.5 left-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
         <div className="absolute bottom-2.5 right-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
@@ -211,7 +216,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
           <button
             type="button"
             onClick={handleClose}
-            className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-[#1e130c] border border-[#DAA520]/40 hover:border-[#DAA520] text-[#D1C7AC] hover:text-[#FFD700] flex items-center justify-center text-lg transition-colors cursor-pointer"
+            className="absolute top-3 right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1e130c] border border-[#DAA520]/40 hover:border-[#DAA520] text-[#D1C7AC] hover:text-[#FFD700] flex items-center justify-center text-base sm:text-lg transition-colors cursor-pointer"
             aria-label="Schließen"
           >
             &times;
@@ -224,25 +229,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
           /* ======================================================== */
           <div className="py-4 sm:py-6 flex flex-col items-center text-center transition-all duration-500 ease-out">
             {/* Spinning Antique Outer Circle & Medallion */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 mb-4 flex items-center justify-center">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mb-3 sm:mb-4 flex items-center justify-center">
               <div
                 className="absolute inset-0 rounded-full border border-dashed border-[#DAA520]/60 animate-spin"
                 style={{ animationDuration: '14s' }}
               />
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#2a1708] via-[#1a0e05] to-[#3a200a] border-2 border-[#FFD700] shadow-[0_0_28px_rgba(255,215,0,0.55)] flex items-center justify-center">
-                <span className="text-3xl sm:text-4xl filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✨</span>
+              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-tr from-[#2a1708] via-[#1a0e05] to-[#3a200a] border-2 border-[#FFD700] shadow-[0_0_28px_rgba(255,215,0,0.55)] flex items-center justify-center">
+                <span className="text-2xl sm:text-3xl md:text-4xl filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✨</span>
               </div>
             </div>
 
-            <h3 className="font-macondo text-2xl sm:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1.5">
+            <h3 className="font-macondo text-xl sm:text-2xl md:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1 leading-tight">
               Anmeldung erfolgreich!
             </h3>
-            <p className="font-serif text-xs sm:text-sm text-[#F5F5DC]/85 italic mb-6 max-w-xs leading-relaxed">
+            <p className="font-serif text-[0.72rem] sm:text-xs md:text-sm text-[#F5F5DC]/85 italic mb-4 sm:mb-6 max-w-xs leading-relaxed">
               Willkommen zurück! Das Redaktions-Cockpit wird vorbereitet...
             </p>
 
             {/* Filigree Antique Progress Bar */}
-            <div className="w-56 sm:w-64 h-2 bg-[#DAA520]/20 rounded-full relative overflow-hidden mb-3 border border-[#DAA520]/40 shadow-inner">
+            <div className="w-48 sm:w-56 md:w-64 h-2 bg-[#DAA520]/20 rounded-full relative overflow-hidden mb-3 border border-[#DAA520]/40 shadow-inner">
               <div
                 className="h-full bg-gradient-to-r from-[#8E2800] via-[#DAA520] to-[#FFD700] transition-all duration-100 ease-out shadow-[0_0_12px_rgba(255,215,0,0.8)]"
                 style={{ width: `${loginProgress}%` }}
@@ -262,23 +267,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
           /* ======================================================== */
           <>
             {/* Ornate Header with Lock Emblem */}
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="relative w-18 h-18 sm:w-20 sm:h-20 mb-3 flex items-center justify-center">
+            <div className="flex flex-col items-center text-center mb-4 sm:mb-6">
+              <div className="relative w-14 h-14 sm:w-18 sm:h-18 mb-2 sm:mb-3 flex items-center justify-center shrink-0">
                 {/* Spinning antique dashed outer circle */}
                 <div
                   className="absolute inset-0 rounded-full border border-dashed border-[#DAA520]/60 animate-spin"
                   style={{ animationDuration: '28s' }}
                 />
                 {/* Inner medallion with lock */}
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1e130c] border-2 border-[#DAA520] p-2 shadow-[0_0_20px_rgba(218,165,32,0.5)] flex items-center justify-center text-[#DAA520]">
-                  <Lock size={26} className="text-[#DAA520] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-[#1e130c] border-2 border-[#DAA520] p-1.5 shadow-[0_0_16px_rgba(218,165,32,0.5)] flex items-center justify-center text-[#DAA520]">
+                  <Lock size={20} className="text-[#DAA520] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
                 </div>
               </div>
 
-              <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1">
+              <h2 className="font-macondo text-xl sm:text-2xl md:text-3xl text-[#DAA520] font-normal tracking-wide drop-shadow-sm mb-1 leading-tight">
                 Admin- &amp; Redaktion
               </h2>
-              <p className="font-serif text-xs sm:text-sm text-[#F5F5DC]/80 italic">
+              <p className="font-serif text-[0.72rem] sm:text-xs text-[#F5F5DC]/80 italic max-w-xs leading-relaxed">
                 Melde dich mit deinen Zugangsdaten an, um in das Redaktionssystem zu gelangen.
               </p>
             </div>

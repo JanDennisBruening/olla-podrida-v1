@@ -78,7 +78,7 @@ foreach ($tabs as $key => $info) {
 
     <!-- Tab Content Container -->
     <div class="olla-tab-container">
-        <?php if ((isset($_GET['updated']) && $_GET['updated'] === 'true') || isset($_GET['event_saved'])): ?>
+        <?php if ((isset($_GET['updated']) && in_array($_GET['updated'], ['true', 'auto_setup_success'], true)) || isset($_GET['event_saved'])): ?>
             <div class="olla-save-notice" role="alert">
                 <div class="olla-save-notice-icon">
                     <span class="dashicons dashicons-yes-alt"></span>
@@ -90,6 +90,9 @@ foreach ($tabs as $key => $info) {
                     <?php elseif (isset($_GET['event_saved']) && $_GET['event_saved'] === 'updated'): ?>
                         <strong>Veranstaltung erfolgreich aktualisiert!</strong>
                         <span>Alle Änderungen am Konzerttermin wurden erfolgreich gespeichert und sind sofort live auf der Website aktiv.</span>
+                    <?php elseif (isset($_GET['updated']) && $_GET['updated'] === 'auto_setup_success'): ?>
+                        <strong>Vollautomatische Einrichtung erfolgreich ausgeführt!</strong>
+                        <span>Die Zielseite wurde verknüpft, das Canvas-Template zugewiesen, die Startseite eingerichtet und die Permalinks synchronisiert.</span>
                     <?php else: ?>
                         <strong>Einstellungen erfolgreich gespeichert!</strong>
                         <span>Alle Änderungen wurden sicher übernommen und sind sofort auf der Website aktiv.</span>

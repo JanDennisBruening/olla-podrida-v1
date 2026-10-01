@@ -5,7 +5,65 @@ if (!defined('ABSPATH')) {
 
 $display = Olla_Podrida_Settings::get_section('display');
 $all_pages = get_pages(['sort_column' => 'post_title', 'sort_order' => 'ASC']);
+
+$canvas_id = intval($display['canvas_page_id'] ?? 0);
+$canvas_page = $canvas_id ? get_post($canvas_id) : null;
+$front_page_id = intval(get_option('page_on_front'));
+$show_on_front = get_option('show_on_front');
+$is_front_active = ($show_on_front === 'page' && $front_page_id === $canvas_id && $canvas_id > 0);
+$permalink_structure = get_option('permalink_structure');
 ?>
+
+<div class="olla-card" style="margin-bottom: 25px; border-left: 4px solid #DAA520;">
+    <div class="olla-card-header">
+        <h2>✨ Vollautomatische 1-Klick Einrichtung &amp; Systemstatus</h2>
+        <p>Das Plugin konfiguriert bei der Aktivierung auf einer neuen WordPress-Installation alle nötigen Seiten, Vorlagen und Weiterleitungen selbstständig.</p>
+    </div>
+    <div class="olla-card-body">
+        <ul style="margin: 0 0 16px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                <span class="dashicons <?php echo $canvas_page ? 'dashicons-yes-alt' : 'dashicons-warning'; ?>" style="color: <?php echo $canvas_page ? '#46b450' : '#dba617'; ?>; font-size: 20px;"></span>
+                <span><strong>Canvas-Seite:</strong>
+                <?php if ($canvas_page): ?>
+                    Gefunden &amp; Verknüpft: <em><?php echo esc_html($canvas_page->post_title); ?></em> (ID: <?php echo esc_html($canvas_id); ?>)
+                <?php else: ?>
+                    <span style="color: #d63638;">Noch keine Zielseite verknüpft</span>
+                <?php endif; ?>
+                </span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                <span class="dashicons <?php echo $is_front_active ? 'dashicons-yes-alt' : 'dashicons-warning'; ?>" style="color: <?php echo $is_front_active ? '#46b450' : '#dba617'; ?>; font-size: 20px;"></span>
+                <span><strong>Startseiten-Modus:</strong>
+                <?php if ($is_front_active): ?>
+                    Statische Startseite ist aktiv auf <em><?php echo esc_html($canvas_page->post_title); ?></em>
+                <?php else: ?>
+                    WordPress-Standard (Beitragsübersicht oder abweichende Startseite)
+                <?php endif; ?>
+                </span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                <span class="dashicons <?php echo !empty($permalink_structure) ? 'dashicons-yes-alt' : 'dashicons-warning'; ?>" style="color: <?php echo !empty($permalink_structure) ? '#46b450' : '#dba617'; ?>; font-size: 20px;"></span>
+                <span><strong>Permalinks &amp; URLs:</strong>
+                <?php if (!empty($permalink_structure)): ?>
+                    Aktiv (<code><?php echo esc_html($permalink_structure); ?></code>) – Schöne URLs &amp; <code>/login</code>-Weiterleitung aktiv
+                <?php else: ?>
+                    <span style="color: #dba617;">Einfache Permalinks (Wird durch 1-Klick Setup auf Beitragsname umgestellt)</span>
+                <?php endif; ?>
+                </span>
+            </li>
+        </ul>
+
+        <div>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display: inline-block;">
+                <input type="hidden" name="action" value="olla_podrida_run_auto_setup" />
+                <?php wp_nonce_field('olla_podrida_run_auto_setup', 'olla_setup_nonce'); ?>
+                <button type="submit" class="button button-secondary button-large" onclick="return confirm('Möchtest du die automatische Einrichtung jetzt ausführen? Dadurch wird die Canvas-Seite geprüft/erstellt, als Startseite verknüpft und die Permalinks synchronisiert.');">
+                    <span class="dashicons dashicons-update" style="vertical-align: text-top; margin-top: -1px;"></span> Vollautomatische Einrichtung jetzt erneut ausführen
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="olla-form-box">
     <input type="hidden" name="action" value="olla_podrida_save_settings" />
