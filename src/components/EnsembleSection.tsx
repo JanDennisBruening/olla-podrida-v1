@@ -60,7 +60,7 @@ export const EnsembleSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[13vw] lg:-mt-[5.5rem] xl:-mt-[6.5rem] pt-0 pb-10 sm:pb-14 md:pb-16 lg:pb-20 select-none z-20"
+      className="relative w-full flex flex-col items-center justify-center bg-transparent text-[#F5F5DC] overflow-visible -mt-[16vw] sm:-mt-[15vw] md:-mt-[18vw] lg:-mt-[5.5rem] xl:-mt-[6.5rem] pt-0 pb-10 sm:pb-14 md:pb-16 lg:pb-20 select-none z-20"
     >
       {/* Centered Parchment Container - Reduced side borders by half, perfectly centered */}
       <div className="w-full flex flex-col items-center justify-center px-0 relative z-10">

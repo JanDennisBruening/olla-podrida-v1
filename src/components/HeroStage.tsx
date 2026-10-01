@@ -26,7 +26,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 340,
     desktopXl: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
     desktopLg: { left: '25%', top: '8%', width: '20rem', zIndex: 4 },
-    tablet: { left: '25%', top: '6%', width: '24vw', zIndex: 4 },
+    tablet: { left: '25%', top: '1%', width: '24vw', zIndex: 4 },
     mobile: { left: '10%', top: '3%', width: '40vw', zIndex: 4 }
   },
   {
@@ -37,7 +37,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 300,
     desktopXl: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
     desktopLg: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
-    tablet: { left: '46%', top: '5%', width: '22vw', zIndex: 5 },
+    tablet: { left: '46%', top: '0%', width: '22vw', zIndex: 5 },
     mobile: { left: '38%', top: '1%', width: '38vw', zIndex: 5 }
   },
   {
@@ -48,7 +48,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 260,
     desktopXl: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
     desktopLg: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
-    tablet: { left: '13%', top: '13%', width: '26vw', zIndex: 7 },
+    tablet: { left: '13%', top: '8%', width: '26vw', zIndex: 7 },
     mobile: { left: '-1%', top: '14%', width: '42vw', zIndex: 7 }
   },
   {
@@ -59,7 +59,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 220,
     desktopXl: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
-    tablet: { left: '58%', top: '13%', width: '26vw', zIndex: 9 },
+    tablet: { left: '58%', top: '8%', width: '26vw', zIndex: 9 },
     mobile: { left: '52%', top: '12%', width: '44vw', zIndex: 10 }
   },
   {
@@ -70,7 +70,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 180,
     desktopXl: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
     desktopLg: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
-    tablet: { left: '37%', top: '13%', width: '27vw', zIndex: 8 },
+    tablet: { left: '37%', top: '8%', width: '27vw', zIndex: 8 },
     mobile: { left: '26%', top: '10%', width: '46vw', zIndex: 8 }
   },
   {
@@ -81,7 +81,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 100,
     desktopXl: { left: '19%', top: '24%', width: '33rem', zIndex: 10 },
     desktopLg: { left: '18%', top: '24%', width: '33rem', zIndex: 10 },
-    tablet: { left: '25%', top: '21%', width: '36vw', zIndex: 10 },
+    tablet: { left: '25%', top: '16%', width: '36vw', zIndex: 10 },
     mobile: { left: '12%', top: '22%', width: '56vw', zIndex: 14 }
   },
   {
@@ -92,7 +92,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 140,
     desktopXl: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
-    tablet: { left: '45%', top: '28%', width: '28vw', zIndex: 9 },
+    tablet: { left: '45%', top: '23%', width: '28vw', zIndex: 9 },
     mobile: { left: '44%', top: '26%', width: '38vw', zIndex: 12 }
   }
 ];
