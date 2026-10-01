@@ -146,6 +146,8 @@ export default function App() {
   const [hasConsent, setHasConsent] = useState(checkHasConsent);
   const [sessionId, setSessionId] = useState(() => getOrCreateConsentSessionId());
 
+  const [loginRedirectUrl, setLoginRedirectUrl] = useState('/wp-admin/index.php');
+
   const handleAcceptCookies = (audio: boolean = true) => {
     saveConsent(audio);
     setHasConsent(true);
@@ -160,11 +162,12 @@ export default function App() {
 
   const handleLoginSuccess = (redirectUrl: string) => {
     setLoginModalOpen(false);
+    setLoginRedirectUrl(redirectUrl || '/wp-admin/index.php');
     setIsLoggingIn(true);
-    // Authentic preloader plays smoothly, then enters the WordPress admin dashboard!
-    setTimeout(() => {
-      window.location.href = redirectUrl || '/wp-admin/';
-    }, 1300);
+  };
+
+  const handleLoginPreloaderComplete = () => {
+    window.location.href = loginRedirectUrl || '/wp-admin/index.php';
   };
 
   useEffect(() => {
@@ -256,6 +259,16 @@ export default function App() {
         onCloseAll={handleCloseAllModals}
       />
 
+      {/* Subtle Global Ambient Mystic Fog Layer - Low opacity to maintain optimal text readability */}
+      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden opacity-[0.12] mix-blend-screen">
+        <img
+          src={ASSETS.smokeAlt}
+          alt=""
+          className="w-full h-full object-cover animate-fog-drift animate-mystic-glow"
+          style={{ animationDuration: '32s' }}
+        />
+      </div>
+
       {/* Main Content Sections */}
       <main className="flex-1 w-full flex flex-col bg-[#070202]">
         {/* Clean Theatrical Hero Stage (#Start) */}
@@ -313,11 +326,13 @@ export default function App() {
         onLoginSuccess={handleLoginSuccess}
       />
 
-      {/* Login Transition Preloader */}
+      {/* Login Transition Preloader - Stays 100% solid until the dashboard unloads the page */}
       {isLoggingIn && (
         <Preloader
           canStart={true}
           customSubtitle="Anmeldung erfolgreich · Trete ein in das Redaktionssystem..."
+          keepVisibleOnFinish={true}
+          onComplete={handleLoginPreloaderComplete}
         />
       )}
     </div>

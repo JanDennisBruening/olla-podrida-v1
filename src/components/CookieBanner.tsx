@@ -95,7 +95,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
 
   return (
     <div
-      className={`fixed inset-0 z-[100001] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-500 ease-out ${
+      className={`fixed inset-0 z-[100001] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-500 ease-out overflow-hidden ${
         isExiting ? 'opacity-0 pointer-events-none' : isMounted ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
@@ -104,8 +104,22 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
         WebkitBackdropFilter: 'blur(10px)'
       }}
     >
+      {/* Permanent Billowing Medieval Fog Cloud Layers in Modal Backdrop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-35 z-0">
+        <img
+          src={assets.smokeAlt}
+          alt=""
+          className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] object-cover animate-fog-drift animate-mystic-glow"
+        />
+        <img
+          src={assets.smokeAlt}
+          alt=""
+          className="absolute -bottom-1/4 -right-1/4 w-[150%] h-[150%] object-cover animate-fog-drift-reverse"
+        />
+      </div>
+
       <div
-        className={`relative w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-500 ease-out ${
+        className={`relative z-10 w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-500 ease-out ${
           isExiting ? 'scale-95' : isMounted ? 'scale-100' : 'scale-95'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -186,7 +200,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           </button>.
         </p>
 
-        {/* Action Buttons: Rich medieval color tones, identical height, single line text */}
+        {/* Action Buttons: 100% Identical Visual Weight & Rich Gold Gradient (Zero Dark Patterns!) */}
         <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 w-full ${getButtonsStyle()}`}>
           <button
             type="button"
@@ -198,7 +212,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
           <button
             type="button"
             onClick={handleEssential}
-            className="w-full sm:flex-1 h-12 sm:h-14 flex items-center justify-center px-4 sm:px-6 rounded-xl bg-gradient-to-b from-[#251710] to-[#140b07] hover:from-[#352117] hover:to-[#1e110b] text-[#F5F5DC] hover:text-[#FFD700] font-macondo font-bold text-base sm:text-lg border-2 border-[#DAA520]/80 hover:border-[#FFD700] shadow-[0_4px_16px_rgba(0,0,0,0.6)] hover:shadow-[0_4px_20px_rgba(218,165,32,0.35)] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap text-center tracking-wide"
+            className="w-full sm:flex-1 h-12 sm:h-14 flex items-center justify-center px-4 sm:px-6 rounded-xl bg-gradient-to-r from-[#B8860B] via-[#DAA520] to-[#CD853F] hover:from-[#DAA520] hover:via-[#FFD700] hover:to-[#DAA520] text-[#070202] font-macondo font-bold text-base sm:text-lg border-2 border-[#FFD700] shadow-[0_4px_20px_rgba(218,165,32,0.45)] hover:shadow-[0_6px_25px_rgba(255,215,0,0.6)] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap text-center tracking-wide"
           >
             Nur essenzielle Cookies
           </button>

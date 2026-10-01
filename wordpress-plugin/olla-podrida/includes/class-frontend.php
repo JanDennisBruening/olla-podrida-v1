@@ -50,10 +50,8 @@ class Olla_Podrida_Frontend {
 
         wp_set_current_user($user->ID);
 
-        $redirect = admin_url();
-        if (in_array('olla_ensemble_leitung', (array) $user->roles, true)) {
-            $redirect = admin_url('admin.php?page=olla-podrida');
-        }
+        // Always land directly on the central Dashboard (index.php) where the cockpit widget is located
+        $redirect = admin_url('index.php');
 
         wp_send_json_success([
             'redirect' => $redirect

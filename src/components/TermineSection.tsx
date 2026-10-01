@@ -417,24 +417,6 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
               <span className="shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-200">📍</span>
               <span>{event.locationStr}</span>
             </div>
-
-            {/* Flexible Contact & Registration (only displayed when filled) */}
-            {event.registrationContact && (
-              <div
-                className="flex items-start space-x-2 pt-1 transition-all duration-500 ease-out text-[#DAA520]"
-                style={{
-                  transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
-                  opacity: isInView ? 1 : 0,
-                  transitionDelay: '420ms'
-                }}
-              >
-                <span className="shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-200">📞</span>
-                <span>
-                  <strong className="text-[#DAA520]">Kontakt &amp; Anmeldung:</strong>{' '}
-                  <span className="text-[#F5F5DC] font-normal">{event.registrationContact}</span>
-                </span>
-              </div>
-            )}
           </div>
 
           {/* Description matching .uc_post_content */}
@@ -447,6 +429,25 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
             }}
             dangerouslySetInnerHTML={{ __html: event.descriptionHtml }}
           />
+
+          {/* Flexible Contact & Registration Box (only displayed when filled) */}
+          {event.registrationContact && (
+            <div
+              className="mt-3.5 p-3 sm:p-3.5 bg-[#170f0a] border border-[#DAA520]/45 rounded-lg text-xs sm:text-sm text-[#F5F5DC] shadow-sm transition-all duration-600 ease-out"
+              style={{
+                transform: isInView ? 'translateY(0)' : 'translateY(12px)',
+                opacity: isInView ? 1 : 0,
+                transitionDelay: '480ms'
+              }}
+            >
+              <strong className="text-[#DAA520] flex items-center gap-1.5 mb-1 font-macondo text-sm sm:text-base font-bold">
+                <span>📞</span> Kontakt &amp; Anmeldung:
+              </strong>
+              <div className="text-[#F5F5DC]/90 font-serif leading-relaxed">
+                {event.registrationContact}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -466,12 +467,6 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
           <p className="leading-relaxed">
             {event.expandedDetailsHtml}
           </p>
-          {event.registrationContact && (
-            <div className="p-3 bg-[#1e140e] border border-[#DAA520]/40 rounded text-sm text-[#F5F5DC]">
-              <strong className="text-[#DAA520] block mb-0.5">📞 Kontakt &amp; Anmeldung:</strong>
-              {event.registrationContact}
-            </div>
-          )}
           {/* Dynamisch konfigurierbare Zusatzpunkte & Hinweise */}
           {((event.badgeMusicShow && event.badgeMusic) ||
             (event.badgeSeatingShow && event.badgeSeating) ||

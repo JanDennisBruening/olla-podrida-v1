@@ -203,3 +203,58 @@
   color: #DAA520;
   margin-bottom: 1rem;
 }
+
+/* Atmospheric Medieval Drifting Fog & Mystic Glow */
+@keyframes fogDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate3d(-24px, -14px, 0) scale(1.08);
+    opacity: 0.38;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.22;
+  }
+}
+
+@keyframes fogDriftReverse {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate3d(28px, 16px, 0) scale(1);
+    opacity: 0.34;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+    opacity: 0.18;
+  }
+}
+
+@keyframes mysticFogGlow {
+  0%, 100% {
+    filter: brightness(105%) contrast(105%) drop-shadow(0 0 15px rgba(218, 165, 32, 0.25));
+  }
+  50% {
+    filter: brightness(135%) contrast(115%) drop-shadow(0 0 35px rgba(218, 165, 32, 0.55));
+  }
+}
+
+.animate-fog-drift {
+  animation: fogDrift 20s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-fog-drift-reverse {
+  animation: fogDriftReverse 24s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-mystic-glow {
+  animation: mysticFogGlow 9s ease-in-out infinite;
+}
+

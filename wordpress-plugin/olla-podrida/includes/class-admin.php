@@ -893,18 +893,24 @@ class Olla_Podrida_Admin {
         ?>
         <div class="olla-cockpit-wrap" style="color: #2c3338; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;">
             
-            <!-- 1. Hero Welcome Header -->
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: linear-gradient(135deg, #1b120c 0%, #291b12 100%); border: 1px solid rgba(218, 165, 32, 0.45); border-radius: 12px; padding: 18px 22px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
-                <div style="display: flex; align-items: center; gap: 18px;">
-                    <div style="flex-shrink: 0; width: 62px; height: 62px; background: radial-gradient(circle, #2f1d13 0%, #150d08 100%); border: 2.5px solid #DAA520; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.5);">
-                        <img src="<?php echo esc_url($pot_logo); ?>" alt="Olla Podrida" style="width: 44px; height: 44px; object-fit: contain;" />
+            <!-- 1. Hero Welcome Header with Atmospheric Medieval Drift Smoke -->
+            <div style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: radial-gradient(circle at 80% 25%, rgba(218, 165, 32, 0.16) 0%, transparent 60%), linear-gradient(135deg, #140d09 0%, #070302 100%); border: 1.5px solid #DAA520; border-radius: 12px; padding: 22px 26px; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,215,0,0.25);">
+                
+                <!-- Atmospheric Medieval Drifting Smoke Background -->
+                <div style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: 0.28; mix-blend-mode: screen; z-index: 1;">
+                    <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/Rauch-neu.webp'); ?>" alt="" style="position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; object-fit: cover; animation: ollaAdminSmoke 20s ease-in-out infinite;" />
+                </div>
+
+                <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 18px;">
+                    <div style="flex-shrink: 0; width: 64px; height: 64px; background: radial-gradient(circle, #2f1d13 0%, #150d08 100%); border: 2.5px solid #DAA520; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 3px 12px rgba(218,165,32,0.4);">
+                        <img src="<?php echo esc_url($pot_logo); ?>" alt="Olla Podrida" style="width: 46px; height: 46px; object-fit: contain;" />
                     </div>
                     <div>
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
                             <h2 style="margin: 0; font-size: 20px; font-weight: 700; color: #DAA520; line-height: 1.2;">
                                 Hallo <?php echo esc_html($display_name); ?>, herzlich willkommen! 👋
                             </h2>
-                            <span style="background: rgba(218,165,32,0.18); border: 1px solid #DAA520; color: #FFD700; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">
+                            <span style="background: rgba(218,165,32,0.20); border: 1px solid #DAA520; color: #FFD700; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">
                                 <?php echo esc_html($role_badge); ?>
                             </span>
                         </div>
@@ -913,8 +919,8 @@ class Olla_Podrida_Admin {
                         </p>
                     </div>
                 </div>
-                <div>
-                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary button-large" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 700; padding: 6px 18px; font-size: 13.5px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                <div style="position: relative; z-index: 2;">
+                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary button-large" style="background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%); border-color: #b8860b; color: #070202; font-weight: 700; padding: 7px 20px; font-size: 13.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border-radius: 6px;">
                         🌐 Website live ansehen ↗
                     </a>
                 </div>

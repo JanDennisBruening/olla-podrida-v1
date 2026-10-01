@@ -16,12 +16,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
       setErrorMessage(null);
+      const timer = setTimeout(() => setIsMounted(true), 25);
+      return () => clearTimeout(timer);
+    } else {
+      setIsMounted(false);
+      setIsClosing(false);
     }
   }, [isOpen]);
 
@@ -31,7 +37,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     setIsClosing(true);
     setTimeout(() => {
       onClose();
-    }, 300);
+    }, 320);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,11 +76,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       const json = await response.json();
 
       if (json.success) {
-        // Authenticated successfully! Close modal and launch full-screen Preloader transition
+        // Authenticated successfully! Play smooth outro animation first, then launch Preloader
         setIsClosing(true);
         setTimeout(() => {
-          onLoginSuccess(json.data?.redirect || data.adminUrl || '/wp-admin/');
-        }, 250);
+          onLoginSuccess(json.data?.redirect || '/wp-admin/index.php');
+        }, 320);
       } else {
         setIsLoading(false);
         setErrorMessage(json.data?.message || 'Ungültige Zugangsdaten. Bitte überprüfe Benutzername und Passwort.');
@@ -109,7 +115,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       const redInput = document.createElement('input');
       redInput.type = 'hidden';
       redInput.name = 'redirect_to';
-      redInput.value = data.adminUrl || '/wp-admin/';
+      redInput.value = data.adminUrl || '/wp-admin/index.php';
       form.appendChild(redInput);
 
       document.body.appendChild(form);
@@ -119,8 +125,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
 
   return (
     <div
-      className={`fixed inset-0 z-[100002] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-300 ease-out ${
-        isClosing ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'
+      className={`fixed inset-0 z-[100002] flex items-center justify-center p-3 sm:p-6 select-none transition-all duration-300 ease-out overflow-hidden ${
+        isMounted && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       style={{
         backgroundColor: 'rgba(7, 2, 2, 0.88)',
@@ -129,8 +135,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       }}
       onClick={handleClose}
     >
+      {/* Ambient drifting smoke in login backdrop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-25 z-0">
+        <img
+          src={assets.smokeAlt}
+          alt=""
+          className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] object-cover animate-fog-drift"
+        />
+      </div>
+
       <div
-        className="relative w-full max-w-md bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.28)] flex flex-col text-[#F5F5DC] overflow-hidden p-6 sm:p-9"
+        className={`relative z-10 w-full max-w-md bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.28)] flex flex-col text-[#F5F5DC] overflow-hidden p-6 sm:p-9 transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
+          isMounted && !isClosing ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-6'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Gold Corner Accents */}

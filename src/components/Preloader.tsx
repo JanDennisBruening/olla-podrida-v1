@@ -4,9 +4,16 @@ import { getAssets } from '../data/siteContent';
 interface PreloaderProps {
   canStart?: boolean;
   customSubtitle?: string;
+  keepVisibleOnFinish?: boolean;
+  onComplete?: () => void;
 }
 
-export const Preloader: React.FC<PreloaderProps> = ({ canStart = true, customSubtitle }) => {
+export const Preloader: React.FC<PreloaderProps> = ({
+  canStart = true,
+  customSubtitle,
+  keepVisibleOnFinish = false,
+  onComplete
+}) => {
   const assets = getAssets();
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
@@ -32,27 +39,34 @@ export const Preloader: React.FC<PreloaderProps> = ({ canStart = true, customSub
       if (rawProgress < 1) {
         animId = requestAnimationFrame(updateProgress);
       } else {
-        // Trigger elegant theatrical dissolve
-        setIsFinishing(true);
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('preloader-finish'));
-        }
-        setTimeout(() => {
-          setIsRemoved(true);
+        if (keepVisibleOnFinish) {
+          // Keep preloader 100% solid and opaque (e.g. for login transition into dashboard)
+          onComplete?.();
+        } else {
+          // Trigger elegant theatrical dissolve into the website
+          setIsFinishing(true);
           if (typeof window !== 'undefined') {
-            (window as any).__OLLA_PAGE_READY__ = true;
-            window.dispatchEvent(new CustomEvent('preloader-removed'));
+            window.dispatchEvent(new CustomEvent('preloader-finish'));
           }
-        }, 650);
+          onComplete?.();
+          setTimeout(() => {
+            setIsRemoved(true);
+            if (typeof window !== 'undefined') {
+              (window as any).__OLLA_PAGE_READY__ = true;
+              window.dispatchEvent(new CustomEvent('preloader-removed'));
+            }
+          }, 650);
+        }
       }
     };
 
     animId = requestAnimationFrame(updateProgress);
 
     return () => cancelAnimationFrame(animId);
-  }, [canStart]);
+  }, [canStart, keepVisibleOnFinish, onComplete]);
 
-  if (isRemoved) return null;
+  // If cannot start yet (e.g. waiting for welcome/cookie consent), do not render into DOM
+  if (!canStart || isRemoved) return null;
 
   return (
     <div
@@ -65,16 +79,12 @@ export const Preloader: React.FC<PreloaderProps> = ({ canStart = true, customSub
         backgroundImage: 'radial-gradient(circle at center, rgba(142, 40, 0, 0.22) 0%, rgba(218, 165, 32, 0.12) 28%, rgba(7, 2, 2, 0.98) 72%, #070202 100%)'
       }}
     >
-      {/* Ambient drifting smoke layer in background */}
-      <div className="absolute inset-0 pointer-events-none opacity-25 mix-blend-screen overflow-hidden">
+      {/* Ambient drifting & glowing smoke layer in background */}
+      <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-screen overflow-hidden">
         <img
           src={assets.smokeAlt}
           alt=""
-          className="w-full h-full object-cover object-center animate-pulse"
-          style={{
-            animationDuration: '4s',
-            filter: 'brightness(120%) contrast(110%)'
-          }}
+          className="w-full h-full object-cover object-center animate-fog-drift animate-mystic-glow"
         />
       </div>
 
