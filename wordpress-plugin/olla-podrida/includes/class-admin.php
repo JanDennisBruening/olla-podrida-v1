@@ -689,11 +689,18 @@ class Olla_Podrida_Admin {
                 break;
 
             case 'seo':
+                $raw_verification = trim($_POST['google_site_verification'] ?? '');
+                // Auto-extract content attribute if user pasted complete meta tag
+                if (preg_match('/content=["\']([^"\']+)["\']/i', $raw_verification, $matches)) {
+                    $raw_verification = $matches[1];
+                }
+
                 $data = [
                     'meta_title' => sanitize_text_field($_POST['meta_title'] ?? ''),
                     'meta_description' => sanitize_textarea_field($_POST['meta_description'] ?? ''),
                     'meta_keywords' => sanitize_text_field($_POST['meta_keywords'] ?? ''),
                     'canonical_url' => esc_url_raw($_POST['canonical_url'] ?? ''),
+                    'google_site_verification' => sanitize_text_field($raw_verification),
                     'robots_index' => sanitize_text_field($_POST['robots_index'] ?? 'index, follow'),
                     'og_title' => sanitize_text_field($_POST['og_title'] ?? ''),
                     'og_description' => sanitize_textarea_field($_POST['og_description'] ?? ''),

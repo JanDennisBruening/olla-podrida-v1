@@ -24,6 +24,7 @@ class Olla_Podrida {
 
         // Inject favicon site-wide (frontend, admin, login) as long as plugin is active and enabled
         add_action('wp_head', [$this, 'inject_favicon'], 1);
+        add_action('wp_head', [$this, 'inject_seo_meta'], 2);
         add_action('admin_head', [$this, 'inject_favicon'], 1);
         add_action('login_head', [$this, 'inject_favicon'], 1);
         add_filter('get_site_icon_url', [$this, 'filter_site_icon_url'], 99);
@@ -106,6 +107,16 @@ class Olla_Podrida {
             header('X-Frame-Options: SAMEORIGIN');
             header('Referrer-Policy: strict-origin-when-cross-origin');
             header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+        }
+    }
+
+    /**
+     * Output Google Search Console verification meta tag in wp_head if set.
+     */
+    public function inject_seo_meta() {
+        $seo = Olla_Podrida_Settings::get_section('seo');
+        if (!empty($seo['google_site_verification'])) {
+            echo '<meta name="google-site-verification" content="' . esc_attr(trim($seo['google_site_verification'])) . '" />' . "\n";
         }
     }
 

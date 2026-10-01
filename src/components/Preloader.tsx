@@ -3,9 +3,10 @@ import { getAssets } from '../data/siteContent';
 
 interface PreloaderProps {
   canStart?: boolean;
+  customSubtitle?: string;
 }
 
-export const Preloader: React.FC<PreloaderProps> = ({ canStart = true }) => {
+export const Preloader: React.FC<PreloaderProps> = ({ canStart = true, customSubtitle }) => {
   const assets = getAssets();
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
@@ -122,7 +123,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ canStart = true }) => {
 
         {/* Subtitle */}
         <p className="font-serif text-[0.68rem] sm:text-xs text-[#DAA520]/85 uppercase tracking-[0.28em] text-center mb-6 drop-shadow-sm font-medium">
-          Klangvielfalt aus Mittelalter &amp; Renaissance
+          {customSubtitle || 'Klangvielfalt aus Mittelalter & Renaissance'}
         </p>
 
         {/* Slender Medieval Filigree Progress Bar */}

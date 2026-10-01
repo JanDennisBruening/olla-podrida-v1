@@ -8,9 +8,10 @@ interface FooterProps {
   onOpenCookies: () => void;
   onOpenTermineArchive: () => void;
   onOpenPresse?: () => void;
+  onOpenLogin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive, onOpenPresse }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive, onOpenPresse, onOpenLogin }) => {
   const assets = getAssets();
   const texts = getSiteTexts();
   const currentYear = new Date().getFullYear();
@@ -181,14 +182,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
               <span>{texts.footerDev}</span>
             )}
             <span className="text-[#DAA520]/50 mx-0.5">|</span>
-            <a
-              href="/login"
+            <button
+              type="button"
+              onClick={onOpenLogin}
               title="Admin- &amp; Redaktions-Login"
               aria-label="Admin- und Redaktions-Login"
-              className="text-[#DAA520]/75 hover:text-[#DAA520] transition-colors p-0.5 inline-flex items-center hover:scale-110"
+              className="text-[#DAA520]/75 hover:text-[#DAA520] transition-colors p-0.5 inline-flex items-center hover:scale-110 cursor-pointer"
             >
               <Lock size={12} className="inline opacity-85 hover:opacity-100" />
-            </a>
+            </button>
           </p>
         </div>
 

@@ -359,6 +359,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
                 'meta_description' => 'Das Ensemble Olla Podrida erweckt mit Krummhörnern, Harfe, Sackpfeifen, Flöten und Gesang historische Musik aus Mittelalter und Renaissance zu neuem Leben.',
                 'meta_keywords' => 'Ensemble Olla Podrida, Mittelaltermusik, Renaissancemusik, Alte Musik, Konzerte, Krummhorn, Harfe, Sackpfeife, Osnabrück, Susanne Hoffmann',
                 'canonical_url' => '',
+                'google_site_verification' => '',
                 'robots_index' => 'index, follow',
                 'og_title' => 'Ensemble Olla Podrida – Klangvielfalt aus Mittelalter und Renaissance',
                 'og_description' => 'Historische Musikinstrumente, Konzerte und lebendige Musikgeschichte. Tauchen Sie ein in die Klangwelt von Olla Podrida.',

@@ -60,12 +60,6 @@ foreach ($tabs as $key => $info) {
         </div>
     </div>
 
-    <?php if (isset($_GET['updated']) && $_GET['updated'] === 'true'): ?>
-        <div class="notice notice-success is-dismissible" style="margin: 15px 0;">
-            <p><strong>Die Einstellungen wurden erfolgreich gespeichert!</strong></p>
-        </div>
-    <?php endif; ?>
-
     <!-- Navigation Tabs (ausgeblendet für Ensemble-Leitung, da alle Menüpunkte bereits in der linken Seitenleiste liegen) -->
     <?php
     $current_user = wp_get_current_user();
@@ -84,6 +78,19 @@ foreach ($tabs as $key => $info) {
 
     <!-- Tab Content Container -->
     <div class="olla-tab-container">
+        <?php if (isset($_GET['updated']) && $_GET['updated'] === 'true'): ?>
+            <div class="olla-save-notice" role="alert">
+                <div class="olla-save-notice-icon">
+                    <span class="dashicons dashicons-yes-alt"></span>
+                </div>
+                <div class="olla-save-notice-content">
+                    <strong>Einstellungen erfolgreich gespeichert!</strong>
+                    <span>Alle Änderungen wurden sicher übernommen und sind sofort auf der Website aktiv.</span>
+                </div>
+                <button type="button" class="olla-save-notice-close" onclick="this.closest('.olla-save-notice').style.display='none';" aria-label="Hinweis schließen">&times;</button>
+            </div>
+        <?php endif; ?>
+
         <?php
         $tab_file = OLLA_PODRIDA_PATH . 'templates/admin/tab-' . $tab . '.php';
         if (file_exists($tab_file)) {

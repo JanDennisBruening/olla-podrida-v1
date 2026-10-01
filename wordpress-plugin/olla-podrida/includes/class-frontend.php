@@ -12,6 +12,52 @@ class Olla_Podrida_Frontend {
         add_filter('query_vars', [__CLASS__, 'register_query_vars']);
         add_action('template_redirect', [__CLASS__, 'maybe_render_canvas']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
+
+        // Authenticated & Nonce-protected AJAX login modal
+        add_action('wp_ajax_nopriv_olla_podrida_ajax_login', [__CLASS__, 'handle_ajax_login']);
+        add_action('wp_ajax_olla_podrida_ajax_login', [__CLASS__, 'handle_ajax_login']);
+    }
+
+    public static function handle_ajax_login() {
+        check_ajax_referer('olla_podrida_login_nonce', 'nonce', false);
+
+        $username = sanitize_user($_POST['log'] ?? '');
+        if (empty($username)) {
+            $username = sanitize_text_field($_POST['log'] ?? '');
+        }
+        $password = $_POST['pwd'] ?? '';
+        $remember = !empty($_POST['rememberme']);
+
+        if (empty($username) || empty($password)) {
+            wp_send_json_error([
+                'message' => 'Bitte gib sowohl Benutzername als auch Passwort ein.'
+            ]);
+        }
+
+        $creds = [
+            'user_login'    => $username,
+            'user_password' => $password,
+            'remember'      => $remember,
+        ];
+
+        $user = wp_signon($creds, is_ssl());
+
+        if (is_wp_error($user)) {
+            wp_send_json_error([
+                'message' => 'Ungültige Zugangsdaten. Bitte überprüfe Benutzername und Passwort.'
+            ]);
+        }
+
+        wp_set_current_user($user->ID);
+
+        $redirect = admin_url();
+        if (in_array('olla_ensemble_leitung', (array) $user->roles, true)) {
+            $redirect = admin_url('admin.php?page=olla-podrida');
+        }
+
+        wp_send_json_success([
+            'redirect' => $redirect
+        ]);
     }
 
     public static function handle_login_redirect() {
@@ -293,7 +339,11 @@ class Olla_Podrida_Frontend {
                 'footerDev' => $settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de',
             ],
             'restUrl' => rest_url('olla-podrida/v1/contact'),
-            'nonce' => wp_create_nonce('wp_rest')
+            'nonce' => wp_create_nonce('wp_rest'),
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'loginNonce' => wp_create_nonce('olla_podrida_login_nonce'),
+            'adminUrl' => admin_url(),
+            'loginUrl' => wp_login_url(),
         ];
     }
 

@@ -18,6 +18,7 @@ import { PresseModal } from './components/PresseModal';
 
 import { Preloader } from './components/Preloader';
 import { CookieBanner } from './components/CookieBanner';
+import { LoginModal } from './components/LoginModal';
 import { ASSETS } from './data/siteContent';
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
@@ -138,6 +139,8 @@ export default function App() {
   const [legalModalType, setLegalModalType] = useState<'impressum' | 'datenschutz' | 'cookies' | null>(null);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [presseModalOpen, setPresseModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Cookie consent: stored as a 30-day cookie. If already accepted within 30 days, preloader starts immediately.
   const [hasConsent, setHasConsent] = useState(checkHasConsent);
@@ -153,6 +156,15 @@ export default function App() {
     setHasConsent(false);
     setLegalModalType(null);
     setSessionId(getOrCreateConsentSessionId());
+  };
+
+  const handleLoginSuccess = (redirectUrl: string) => {
+    setLoginModalOpen(false);
+    setIsLoggingIn(true);
+    // Authentic preloader plays smoothly, then enters the WordPress admin dashboard!
+    setTimeout(() => {
+      window.location.href = redirectUrl || '/wp-admin/';
+    }, 1300);
   };
 
   useEffect(() => {
@@ -196,7 +208,7 @@ export default function App() {
 
   // Pause Lenis smooth scrolling when any modal is open to ensure 100% native, unblocked inner scrolling
   useEffect(() => {
-    const isAnyModalOpen = !!legalModalType || archiveModalOpen || presseModalOpen;
+    const isAnyModalOpen = !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
     const lenis = (window as any).__lenis;
     if (lenis) {
       if (isAnyModalOpen) {
@@ -205,7 +217,7 @@ export default function App() {
         lenis.start();
       }
     }
-  }, [legalModalType, archiveModalOpen, presseModalOpen]);
+  }, [legalModalType, archiveModalOpen, presseModalOpen, loginModalOpen]);
 
   const handleOpenLegal = (type: 'impressum' | 'datenschutz' | 'cookies') => {
     setLegalModalType(type);
@@ -219,6 +231,7 @@ export default function App() {
     setArchiveModalOpen(false);
     setPresseModalOpen(false);
     setLegalModalType(null);
+    setLoginModalOpen(false);
   };
 
   return (
@@ -266,6 +279,7 @@ export default function App() {
         onOpenCookies={() => handleOpenLegal('cookies')}
         onOpenTermineArchive={() => setArchiveModalOpen(true)}
         onOpenPresse={() => setPresseModalOpen(true)}
+        onOpenLogin={() => setLoginModalOpen(true)}
       />
 
       {/* 1:1 Floating Audio Player (♫ bottom-right) */}
@@ -291,6 +305,21 @@ export default function App() {
         isOpen={presseModalOpen}
         onClose={() => setPresseModalOpen(false)}
       />
+
+      {/* Atmospheric Medieval Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+
+      {/* Login Transition Preloader */}
+      {isLoggingIn && (
+        <Preloader
+          canStart={true}
+          customSubtitle="Anmeldung erfolgreich · Trete ein in das Redaktionssystem..."
+        />
+      )}
     </div>
   );
 }

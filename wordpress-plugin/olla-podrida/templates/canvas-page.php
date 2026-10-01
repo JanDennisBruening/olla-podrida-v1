@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+$assets_url = OLLA_PODRIDA_URL . 'assets/dist/';
+$settings = Olla_Podrida_Settings::get_section('settings');
 $seo = Olla_Podrida_Settings::get_section('seo');
 $hero = Olla_Podrida_Settings::get_section('hero');
 $meta_title = !empty($seo['meta_title']) ? $seo['meta_title'] : (get_bloginfo('name') . ' - ' . ($hero['subtitle'] ?? 'Klangvielfalt aus Mittelalter und Renaissance'));
@@ -10,13 +12,21 @@ $meta_description = !empty($seo['meta_description']) ? $seo['meta_description'] 
 $meta_keywords = !empty($seo['meta_keywords']) ? $seo['meta_keywords'] : '';
 $robots_index = !empty($seo['robots_index']) ? $seo['robots_index'] : 'index, follow';
 $canonical_url = !empty($seo['canonical_url']) ? $seo['canonical_url'] : home_url('/');
+$google_site_verification = !empty($seo['google_site_verification']) ? trim($seo['google_site_verification']) : '';
 
 // OpenGraph & Social Cards
 $og_title = !empty($seo['og_title']) ? $seo['og_title'] : $meta_title;
 $og_description = !empty($seo['og_description']) ? $seo['og_description'] : $meta_description;
-$og_image = !empty($seo['og_image']) ? $seo['og_image'] : ($assets_url . '2024_Vorschaubild_1zu1_sRGB.webp');
+$og_image = !empty($seo['og_image']) ? $seo['og_image'] : ($assets_url . 'images/2024_Vorschaubild_1zu1_sRGB.webp');
 $og_type = !empty($seo['og_type']) ? $seo['og_type'] : 'website';
 $twitter_card = !empty($seo['twitter_card']) ? $seo['twitter_card'] : 'summary_large_image';
+
+// Favicon configuration
+$favicon_enabled = !isset($settings['favicon_enabled']) || !empty($settings['favicon_enabled']);
+$favicon_url = !empty($settings['favicon_url']) 
+    ? $settings['favicon_url'] 
+    : ($assets_url . 'images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION);
+$favicon_ico = $assets_url . 'images/favicon.ico?v=' . OLLA_PODRIDA_VERSION;
 
 // Schema.org JSON-LD
 $schema_json = null;
@@ -36,7 +46,6 @@ if (!empty($seo['schema_enabled'])) {
     ];
     $schema_json = wp_json_encode($schema_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
-$assets_url = OLLA_PODRIDA_URL . 'assets/dist/';
 
 $dist_dir = OLLA_PODRIDA_PATH . 'assets/dist/assets/';
 $dist_url = OLLA_PODRIDA_URL . 'assets/dist/assets/';
@@ -70,6 +79,9 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
     <?php endif; ?>
     <meta name="robots" content="<?php echo esc_attr($robots_index); ?>" />
     <link rel="canonical" href="<?php echo esc_url($canonical_url); ?>" />
+    <?php if (!empty($google_site_verification)): ?>
+    <meta name="google-site-verification" content="<?php echo esc_attr($google_site_verification); ?>" />
+    <?php endif; ?>
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="<?php echo esc_attr($og_type); ?>" />
@@ -95,10 +107,15 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
     <?php endif; ?>
     <meta name="theme-color" content="#070202" />
     
-    <link rel="icon" type="image/x-icon" href="<?php echo esc_url($assets_url . 'images/favicon.ico?v=' . OLLA_PODRIDA_VERSION); ?>" />
-    <link rel="icon" type="image/png" sizes="512x512" href="<?php echo esc_url($assets_url . 'images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION); ?>" />
-    <link rel="shortcut icon" type="image/png" href="<?php echo esc_url($assets_url . 'images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION); ?>" />
-    <link rel="apple-touch-icon" href="<?php echo esc_url($assets_url . 'images/Favicon-transparent.png?v=' . OLLA_PODRIDA_VERSION); ?>" />
+    <?php if ($favicon_enabled): ?>
+    <link rel="icon" type="image/x-icon" href="<?php echo esc_url($favicon_ico); ?>" />
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url($favicon_url); ?>" />
+    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo esc_url($favicon_url); ?>" />
+    <link rel="icon" type="image/png" sizes="512x512" href="<?php echo esc_url($favicon_url); ?>" />
+    <link rel="shortcut icon" type="image/png" href="<?php echo esc_url($favicon_url); ?>" />
+    <link rel="apple-touch-icon" href="<?php echo esc_url($favicon_url); ?>" />
+    <meta name="msapplication-TileImage" content="<?php echo esc_url($favicon_url); ?>" />
+    <?php endif; ?>
     
     <?php if ($css_file): ?>
         <link rel="stylesheet" href="<?php echo esc_url($dist_url . $css_file); ?>" />

@@ -97,7 +97,30 @@ $seo = Olla_Podrida_Settings::get_section('seo');
         </div>
     </div>
 
-    <!-- 3. Social Media Sharing & Open Graph -->
+    <!-- 3. Google Search Console & Webmaster-Verifizierung -->
+    <div class="olla-card" style="margin-bottom: 24px; border-left: 4px solid #DAA520;">
+        <div class="olla-card-header">
+            <h2>Google Search Console &amp; Webmaster-Verifizierung</h2>
+            <p>Bestätigen Sie die Inhaberschaft der Website für die Google Search Console und weitere Suchmaschinen.</p>
+        </div>
+        <div class="olla-card-body">
+            <div class="olla-field-group" style="margin-bottom: 0;">
+                <label for="google_site_verification" style="font-weight: 600;">Google Site Verification Code (HTML-Tag-Methode)</label>
+                <input type="text" id="google_site_verification" name="google_site_verification" value="<?php echo esc_attr($seo['google_site_verification'] ?? ''); ?>" class="large-text code" placeholder="z. B. 4x8ABCdefGHIjklMNOpqrsTUVwxyz123 oder das vollständige &lt;meta name=...&gt;" />
+                <p class="description">
+                    Tragen Sie hier den Verifizierungscode ein, den Sie in der <strong>Google Search Console</strong> unter <em>Einstellungen &rarr; Bestätigung der Inhaberschaft &rarr; HTML-Tag</em> erhalten. Sie können entweder nur den Schlüsselcode oder das gesamte <code>&lt;meta name="google-site-verification" content="..." /&gt;</code> einfügen – das System erkennt und bereinigt den Code automatisch und platziert den Meta-Tag an der optimalen Stelle im HTML-Kopf.
+                </p>
+                <?php if (!empty($seo['google_site_verification'])): ?>
+                    <div style="margin-top: 12px; padding: 10px 14px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; font-size: 13px; color: #166534; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-yes-alt" style="color: #22c55e;"></span>
+                        <span><strong>Aktiv im Quellcode eingebunden:</strong> <code>&lt;meta name="google-site-verification" content="<?php echo esc_attr($seo['google_site_verification']); ?>" /&gt;</code></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Social Media Sharing & Open Graph -->
     <div class="olla-card" style="margin-bottom: 24px;">
         <div class="olla-card-header">
             <h2>Social Media &amp; Open Graph (Facebook, WhatsApp, LinkedIn, etc.)</h2>
@@ -152,7 +175,7 @@ $seo = Olla_Podrida_Settings::get_section('seo');
         </div>
     </div>
 
-    <!-- 4. Strukturierte Daten (Schema.org / JSON-LD) -->
+    <!-- 5. Strukturierte Daten (Schema.org / JSON-LD) -->
     <div class="olla-card" style="margin-bottom: 24px;">
         <div class="olla-card-header">
             <h2>Strukturierte Daten (Schema.org JSON-LD)</h2>
