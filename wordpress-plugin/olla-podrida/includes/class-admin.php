@@ -291,29 +291,54 @@ class Olla_Podrida_Admin {
                 width: 100% !important;
             }
 
-            /* UNIFORM ACCENT LINE ON ACTIVE ITEMS & SUB-ITEMS (Always same position, no layout shift) */
+            /* NO ACCENT LINES ON MENU ITEMS (Selected state indicated solely by background color) */
+            #adminmenu,
+            #adminmenu *,
+            #adminmenu *:before,
+            #adminmenu *:after {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+            }
+            #adminmenu li,
+            #adminmenu li a,
+            #adminmenu .wp-submenu,
+            #adminmenu .wp-submenu li,
+            #adminmenu .wp-submenu li a {
+                border-left: none !important;
+                border-right: none !important;
+            }
+            #adminmenu li:after,
+            #adminmenu li a:after,
+            #adminmenu .wp-menu-arrow,
+            #adminmenu .wp-menu-arrow div {
+                display: none !important;
+                content: none !important;
+            }
+
+            /* ACTIVE / SELECTED MENU ITEM: Pure background highlight, no border, no side line */
             #adminmenu li.current > a.menu-top,
             #adminmenu li.wp-has-current-submenu > a.wp-has-current-submenu,
             #adminmenu #toplevel_page_olla-podrida.current > a,
             #adminmenu #toplevel_page_olla-podrida.wp-has-current-submenu > a {
-                background: #241711 !important;
-                color: #FFD700 !important;
+                background: #2c1c14 !important;
+                color: #f7eed8 !important;
                 font-weight: 600 !important;
-                box-shadow: inset 4px 0 0 #DAA520 !important;
+                box-shadow: none !important;
+                border: none !important;
                 border-left: none !important;
             }
 
             #adminmenu .wp-submenu li.current > a,
             body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current > a {
-                color: #DAA520 !important;
-                font-weight: 700 !important;
-                background: #221610 !important;
-                box-shadow: inset 4px 0 0 #DAA520 !important;
+                color: #f7eed8 !important;
+                font-weight: 600 !important;
+                background: #251810 !important;
+                box-shadow: none !important;
                 border: none !important;
                 border-left: none !important;
             }
 
-            /* HOVER STATE: Absolutely NO line on hover across all menu items and submenus */
+            /* HOVER STATE: Only subtle background color change, text color stays consistent, absolutely NO lines */
             #adminmenu a.menu-top:hover,
             #adminmenu li.menu-top:hover > a,
             #adminmenu li.opensub > a.menu-top,
@@ -322,8 +347,20 @@ class Olla_Podrida_Admin {
             #adminmenu .wp-submenu a:focus,
             body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
             body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
-                background: #1f140f !important;
-                color: #FFD700 !important;
+                background: #20140e !important;
+                color: inherit !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-left: none !important;
+            }
+
+            /* Hover on already selected items */
+            #adminmenu li.current > a.menu-top:hover,
+            #adminmenu li.wp-has-current-submenu > a.wp-has-current-submenu:hover,
+            #adminmenu .wp-submenu li.current > a:hover,
+            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current > a:hover {
+                background: #362217 !important;
+                color: #f7eed8 !important;
                 box-shadow: none !important;
                 border: none !important;
                 border-left: none !important;
@@ -416,11 +453,16 @@ class Olla_Podrida_Admin {
             }
 
             /* ======================================================== */
-            /* 6. IMMERSIVE OLLA PODRIDA DASHBOARD COCKPIT              */
+            /* 6. IMMERSIVE OLLA PODRIDA DASHBOARD COCKPIT & CENTERED WRAP */
             /* ======================================================== */
-            .index-php #dashboard-widgets-wrap {
-                max-width: 1350px;
-                margin: 0 auto;
+            .index-php #dashboard-widgets-wrap,
+            .olla-podrida-admin-wrap,
+            .toplevel_page_olla-podrida #wpbody-content > .wrap,
+            body[class*="olla-podrida"] #wpbody-content > .wrap {
+                max-width: 1350px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                box-sizing: border-box !important;
             }
             .index-php #dashboard-widgets .postbox-container {
                 width: 100% !important;
@@ -946,7 +988,7 @@ class Olla_Podrida_Admin {
                     </div>
                 </div>
                 <div style="position: relative; z-index: 2;">
-                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary button-large" style="background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%); border-color: #b8860b; color: #070202; font-weight: 700; padding: 7px 20px; font-size: 13.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border-radius: 6px;">
+                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary button-large" style="background: linear-gradient(135deg, #f5bc38 0%, #df9e1a 100%); border-color: #cb8b10; color: #070202; font-weight: 700; padding: 7px 20px; font-size: 13.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border-radius: 6px;">
                         🌐 Website live ansehen ↗
                     </a>
                 </div>
@@ -1021,7 +1063,7 @@ class Olla_Podrida_Admin {
                         </p>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=events#new')); ?>" class="button button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 600; font-size: 12px;">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=events#new')); ?>" class="button button-primary" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700; font-size: 12px;">
                             + Neuer Termin
                         </a>
                         <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=events')); ?>" class="button" style="font-size: 12px;">
@@ -1042,7 +1084,7 @@ class Olla_Podrida_Admin {
                         </p>
                     </div>
                     <div>
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=contact')); ?>" class="button button-primary" style="background: <?php echo $unread_count > 0 ? '#2e7d32' : '#DAA520'; ?>; border-color: <?php echo $unread_count > 0 ? '#1b5e20' : '#b8860b'; ?>; color: #ffffff; font-weight: 600; font-size: 12px;">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=olla-podrida&tab=contact')); ?>" class="button button-primary" style="background: <?php echo $unread_count > 0 ? '#2e7d32' : '#e8a825'; ?>; border-color: <?php echo $unread_count > 0 ? '#1b5e20' : '#cb8b10'; ?>; color: <?php echo $unread_count > 0 ? '#ffffff' : '#070202'; ?>; font-weight: 700; font-size: 12px;">
                             Posteingang öffnen (<?php echo $unread_count; ?> neu) &rarr;
                         </a>
                     </div>
@@ -1158,7 +1200,7 @@ class Olla_Podrida_Admin {
                     Design, Konzept &amp; Entwicklung: <strong>Jan Dennis Brüning</strong> · <a href="https://www.janbruening.de" target="_blank" rel="noopener noreferrer" style="color: #DAA520; text-decoration: none; font-weight: 600;">www.janbruening.de</a>
                 </div>
                 <div>
-                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 700; font-size: 13px;">
+                    <a href="<?php echo esc_url($live_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700; font-size: 13px;">
                         🌐 Zur Live-Website ↗
                     </a>
                 </div>
@@ -1176,11 +1218,11 @@ class Olla_Podrida_Admin {
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <div>
                     <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Eingegangene Nachrichten:</span>
-                    <span style="background: <?php echo $counts['unread'] > 0 ? '#2e7d32' : '#DAA520'; ?>; color: #ffffff; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 4px;">
+                    <span style="background: <?php echo $counts['unread'] > 0 ? '#2e7d32' : '#e8a825'; ?>; color: <?php echo $counts['unread'] > 0 ? '#ffffff' : '#070202'; ?>; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 4px;">
                         <?php echo intval($counts['total']); ?>
                     </span>
                 </div>
-                <a href="<?php echo esc_url($contact_url); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 600;">
+                <a href="<?php echo esc_url($contact_url); ?>" class="button button-small button-primary" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700;">
                     📥 Weiter zum Posteingang &rarr;
                 </a>
             </div>
@@ -1241,7 +1283,7 @@ class Olla_Podrida_Admin {
                         </span>
                     <?php endif; ?>
                 </div>
-                <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210; font-weight: 600;">
+                <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700;">
                     + Neuen Termin anlegen
                 </a>
             </div>
@@ -1249,7 +1291,7 @@ class Olla_Podrida_Admin {
             <?php if (empty($upcoming)): ?>
                 <div style="text-align: center; padding: 16px 10px; background: #faf8f5; border-radius: 6px; border: 1px dashed #d5ccbe;">
                     <p style="color: #666; font-style: italic; margin: 0 0 8px 0; font-size: 12px;">Aktuell sind keine bevorstehenden Konzerte eingetragen.</p>
-                    <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #DAA520; border-color: #b8860b; color: #141210;">
+                    <a href="<?php echo esc_url($events_url . '#new'); ?>" class="button button-small button-primary" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700;">
                         + Neuen Termin anlegen
                     </a>
                 </div>
@@ -1332,7 +1374,7 @@ class Olla_Podrida_Admin {
         <div class="olla-dashboard-widget" style="padding: 2px 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <span style="font-size: 13px; font-weight: 600; color: #1d2327;">Pressematerialien:</span>
-                <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                <span style="background: #e8a825; color: #070202; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
                     Bereit
                 </span>
             </div>

@@ -17,7 +17,7 @@ $total_messages = count($messages);
                 <h2>📥 Posteingang: Eingegangene Anfragen</h2>
                 <p>Hier werden alle Kontaktanfragen aus dem Frontend dauerhaft archiviert.</p>
             </div>
-            <span style="background: #DAA520; color: #141210; font-weight: 700; padding: 4px 12px; border-radius: 12px; font-size: 13px;">
+            <span style="background: #e8a825; color: #070202; font-weight: 700; padding: 4px 12px; border-radius: 12px; font-size: 13px;">
                 <?php echo intval($total_messages); ?> <?php echo $total_messages === 1 ? 'Anfrage' : 'Anfragen'; ?>
             </span>
         </div>

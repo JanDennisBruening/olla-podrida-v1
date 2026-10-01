@@ -212,7 +212,7 @@ $seo = Olla_Podrida_Settings::get_section('seo');
         <span style="color: #646970; font-size: 13px;">
             <span class="dashicons dashicons-yes-alt" style="color: #46b450; vertical-align: middle;"></span> Alle Änderungen werden sofort auf der Website wirksam.
         </span>
-        <button type="submit" class="button button-primary button-hero" style="background: #DAA520; border-color: #b8860b; color: #070202; font-weight: 600; text-shadow: none;">
+        <button type="submit" class="button button-primary button-hero" style="background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700; text-shadow: none;">
             <span class="dashicons dashicons-saved" style="margin-top:4px;"></span> SEO-Einstellungen speichern
         </button>
     </div>
