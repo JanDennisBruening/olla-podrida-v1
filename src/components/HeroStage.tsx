@@ -26,7 +26,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 340,
     desktopXl: { left: '26%', top: '8%', width: '20rem', zIndex: 4 },
     desktopLg: { left: '25%', top: '8%', width: '20rem', zIndex: 4 },
-    tablet: { left: '25%', top: '1%', width: '24vw', zIndex: 4 },
+    tablet: { left: '25%', top: '3%', width: '24vw', zIndex: 4 },
     mobile: { left: '10%', top: '3%', width: '40vw', zIndex: 4 }
   },
   {
@@ -37,7 +37,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 300,
     desktopXl: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
     desktopLg: { left: '44%', top: '7%', width: '19rem', zIndex: 5 },
-    tablet: { left: '46%', top: '0%', width: '22vw', zIndex: 5 },
+    tablet: { left: '46%', top: '2%', width: '22vw', zIndex: 5 },
     mobile: { left: '38%', top: '1%', width: '38vw', zIndex: 5 }
   },
   {
@@ -48,7 +48,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 260,
     desktopXl: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
     desktopLg: { left: '9%', top: '16%', width: '22rem', zIndex: 7 },
-    tablet: { left: '13%', top: '8%', width: '26vw', zIndex: 7 },
+    tablet: { left: '13%', top: '9%', width: '26vw', zIndex: 7 },
     mobile: { left: '-1%', top: '14%', width: '42vw', zIndex: 7 }
   },
   {
@@ -59,7 +59,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 220,
     desktopXl: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '57%', top: '15%', width: '23rem', zIndex: 9 },
-    tablet: { left: '58%', top: '8%', width: '26vw', zIndex: 9 },
+    tablet: { left: '58%', top: '9%', width: '26vw', zIndex: 9 },
     mobile: { left: '52%', top: '12%', width: '44vw', zIndex: 10 }
   },
   {
@@ -70,7 +70,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 180,
     desktopXl: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
     desktopLg: { left: '35%', top: '15%', width: '25rem', zIndex: 8 },
-    tablet: { left: '37%', top: '8%', width: '27vw', zIndex: 8 },
+    tablet: { left: '37%', top: '9%', width: '27vw', zIndex: 8 },
     mobile: { left: '26%', top: '10%', width: '46vw', zIndex: 8 }
   },
   {
@@ -81,7 +81,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 100,
     desktopXl: { left: '19%', top: '24%', width: '33rem', zIndex: 10 },
     desktopLg: { left: '18%', top: '24%', width: '33rem', zIndex: 10 },
-    tablet: { left: '25%', top: '16%', width: '36vw', zIndex: 10 },
+    tablet: { left: '25%', top: '17%', width: '36vw', zIndex: 10 },
     mobile: { left: '12%', top: '22%', width: '56vw', zIndex: 14 }
   },
   {
@@ -92,7 +92,7 @@ const CANONICAL_STAGE_FIGURES: StageFigureConfig[] = [
     entranceDelay: 140,
     desktopXl: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
     desktopLg: { left: '44%', top: '34%', width: '23rem', zIndex: 9 },
-    tablet: { left: '45%', top: '23%', width: '28vw', zIndex: 9 },
+    tablet: { left: '45%', top: '24%', width: '28vw', zIndex: 9 },
     mobile: { left: '44%', top: '26%', width: '38vw', zIndex: 12 }
   }
 ];
@@ -102,15 +102,25 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
   const heroConfig = getHeroConfig();
   const ensembleMembers = getEnsembleMembers();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [viewportMode, setViewportMode] = useState<'mobile' | 'tablet' | 'desktopLg' | 'desktopXl'>('desktopXl');
+  const [viewportMode, setViewportMode] = useState<'mobile' | 'tablet' | 'desktopLg' | 'desktopXl'>(() => {
+    if (typeof window !== 'undefined') {
+      const w = window.innerWidth;
+      if (w < 768) return 'mobile';
+      if (w < 1024) return 'tablet';
+      if (w < 1280) return 'desktopLg';
+      return 'desktopXl';
+    }
+    return 'desktopXl';
+  });
 
-  // Dynamically track viewport mode: mobile (<= 600px), tablet (601px to 1024px), desktop LG, and desktop XL
+  // Dynamically track viewport mode matching Tailwind breakpoints:
+  // mobile (< 768px), tablet (768px to 1023px), desktop LG (1024px to 1279px), and desktop XL (>= 1280px)
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
       if (w < 768) {
         setViewportMode('mobile');
-      } else if (w <= 1024) {
+      } else if (w < 1024) {
         setViewportMode('tablet');
       } else if (w < 1280) {
         setViewportMode('desktopLg');
@@ -155,7 +165,7 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
   return (
     <section
       id="Start"
-      className="relative w-full select-none bg-transparent flex flex-col justify-end pt-14 md:pt-16 lg:pt-20 z-10 overflow-visible"
+      className="relative w-full select-none bg-transparent flex flex-col justify-end pt-14 md:pt-20 lg:pt-20 z-10 overflow-visible"
       style={{
         // Harmonized height so the figures fit naturally and the lower robes dip directly behind the parchment ribbon
         minHeight: viewportMode === 'mobile'
@@ -289,11 +299,11 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
           const resolvedImage = resolveAssetUrl(imageSrc);
           const altText = member?.tooltip || member?.name || figure.defaultAlt;
 
-          const entranceDelay = viewportMode === 'mobile'
+          const entranceDelay = (viewportMode === 'mobile' || viewportMode === 'tablet')
             ? Math.round(60 + (figure.entranceDelay - 100) * 0.35)
-            : viewportMode === 'tablet'
-            ? Math.round(80 + (figure.entranceDelay - 100) * 0.5)
             : figure.entranceDelay;
+
+          const slideDistance = (viewportMode === 'mobile' || viewportMode === 'tablet') ? 52 : 68;
 
           return (
             <div
@@ -308,7 +318,7 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
                 transitionDelay: `${entranceDelay}ms`,
                 transform: isLoaded
                   ? `translate3d(${offX}px, ${offY}px, 0)`
-                  : `translate3d(${offX}px, ${offY + 68}px, 0)`,
+                  : `translate3d(${offX}px, ${offY + slideDistance}px, 0)`,
                 opacity: isLoaded ? 1 : 0
               }}
             >

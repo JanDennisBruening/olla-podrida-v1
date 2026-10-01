@@ -246,7 +246,7 @@ export const EnsembleSection: React.FC = () => {
                 {tabletRow1.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
-                  const entranceDelay = 150 + index * 120;
+                  const entranceDelay = 100 + index * 70;
 
                   return (
                     <div
@@ -311,7 +311,7 @@ export const EnsembleSection: React.FC = () => {
                 {tabletRow2.map((musician, index) => {
                   const isHovered = hoveredMember === musician.id;
                   const targetScale = isHovered ? 1.08 : 1.0;
-                  const entranceDelay = 150 + (index + 4) * 120;
+                  const entranceDelay = 100 + (index + 4) * 70;
 
                   return (
                     <div
