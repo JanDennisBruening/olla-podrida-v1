@@ -78,14 +78,22 @@ foreach ($tabs as $key => $info) {
 
     <!-- Tab Content Container -->
     <div class="olla-tab-container">
-        <?php if (isset($_GET['updated']) && $_GET['updated'] === 'true'): ?>
+        <?php if ((isset($_GET['updated']) && $_GET['updated'] === 'true') || isset($_GET['event_saved'])): ?>
             <div class="olla-save-notice" role="alert">
                 <div class="olla-save-notice-icon">
                     <span class="dashicons dashicons-yes-alt"></span>
                 </div>
                 <div class="olla-save-notice-content">
-                    <strong>Einstellungen erfolgreich gespeichert!</strong>
-                    <span>Alle Änderungen wurden sicher übernommen und sind sofort auf der Website aktiv.</span>
+                    <?php if (isset($_GET['event_saved']) && $_GET['event_saved'] === 'created'): ?>
+                        <strong>Neue Veranstaltung erfolgreich erstellt!</strong>
+                        <span>Der Konzerttermin wurde sicher in der Datenbank gespeichert und ist sofort live auf der Website aktiv.</span>
+                    <?php elseif (isset($_GET['event_saved']) && $_GET['event_saved'] === 'updated'): ?>
+                        <strong>Veranstaltung erfolgreich aktualisiert!</strong>
+                        <span>Alle Änderungen am Konzerttermin wurden erfolgreich gespeichert und sind sofort live auf der Website aktiv.</span>
+                    <?php else: ?>
+                        <strong>Einstellungen erfolgreich gespeichert!</strong>
+                        <span>Alle Änderungen wurden sicher übernommen und sind sofort auf der Website aktiv.</span>
+                    <?php endif; ?>
                 </div>
                 <button type="button" class="olla-save-notice-close" onclick="this.closest('.olla-save-notice').style.display='none';" aria-label="Hinweis schließen">&times;</button>
             </div>

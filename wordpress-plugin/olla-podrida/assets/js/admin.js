@@ -186,6 +186,11 @@
         // Save Event Form Submit
         $('#olla-event-form').on('submit', function(e) {
             e.preventDefault();
+            var isEdit = !!$('#event_id').val();
+            var $submitBtn = $(this).find('button[type="submit"]');
+            var originalText = $submitBtn.text();
+            $submitBtn.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin" style="margin-top: 3px;"></span> Wird gespeichert...');
+
             var formData = {
                 id: $('#event_id').val(),
                 title: $('#event_title').val(),
@@ -214,10 +219,16 @@
                 event: formData
             }, function(res) {
                 if (res.success) {
-                    location.reload();
+                    var currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('event_saved', isEdit ? 'updated' : 'created');
+                    window.location.href = currentUrl.toString();
                 } else {
+                    $submitBtn.prop('disabled', false).text(originalText);
                     alert('Fehler beim Speichern: ' + (res.data || 'Unbekannt'));
                 }
+            }).fail(function() {
+                $submitBtn.prop('disabled', false).text(originalText);
+                alert('Netzwerkfehler beim Speichern der Veranstaltung.');
             });
         });
 

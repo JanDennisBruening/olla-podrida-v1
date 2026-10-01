@@ -140,13 +140,10 @@ export default function App() {
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [presseModalOpen, setPresseModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Cookie consent: stored as a 30-day cookie. If already accepted within 30 days, preloader starts immediately.
   const [hasConsent, setHasConsent] = useState(checkHasConsent);
   const [sessionId, setSessionId] = useState(() => getOrCreateConsentSessionId());
-
-  const [loginRedirectUrl, setLoginRedirectUrl] = useState('/wp-admin/index.php');
 
   const handleAcceptCookies = (audio: boolean = true) => {
     saveConsent(audio);
@@ -160,14 +157,8 @@ export default function App() {
     setSessionId(getOrCreateConsentSessionId());
   };
 
-  const handleLoginSuccess = (redirectUrl: string) => {
+  const handleLoginSuccess = (_redirectUrl: string) => {
     setLoginModalOpen(false);
-    setLoginRedirectUrl(redirectUrl || '/wp-admin/index.php');
-    setIsLoggingIn(true);
-  };
-
-  const handleLoginPreloaderComplete = () => {
-    window.location.href = loginRedirectUrl || '/wp-admin/index.php';
   };
 
   useEffect(() => {
@@ -340,16 +331,6 @@ export default function App() {
         onClose={() => setLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
-
-      {/* Login Transition Preloader - Stays 100% solid until the dashboard unloads the page */}
-      {isLoggingIn && (
-        <Preloader
-          canStart={true}
-          customSubtitle="Anmeldung erfolgreich · Trete ein in das Redaktionssystem..."
-          keepVisibleOnFinish={true}
-          onComplete={handleLoginPreloaderComplete}
-        />
-      )}
     </div>
   );
 }
