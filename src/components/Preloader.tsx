@@ -98,7 +98,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
       </div>
 
       {/* Centerpiece Container */}
-      <div className={`relative z-10 flex flex-col items-center px-4 max-w-md w-full transition-all duration-500 ease-out ${
+      <div className={`relative z-10 flex flex-col items-center px-4 max-w-xl w-full transition-all duration-500 ease-out ${
         isEntered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'
       }`}>
         {/* Ornate Concentric Rings & Seal */}
@@ -142,8 +142,8 @@ export const Preloader: React.FC<PreloaderProps> = ({
           Ensemble Olla Podrida
         </h1>
 
-        {/* Subtitle */}
-        <p className="font-serif text-[0.68rem] sm:text-xs text-[#DAA520]/85 uppercase tracking-[0.28em] text-center mb-6 drop-shadow-sm font-medium">
+        {/* Subtitle - strictly kept on a single line across all viewports */}
+        <p className="font-serif text-[0.62rem] min-[380px]:text-[0.68rem] sm:text-[0.78rem] md:text-[0.84rem] text-[#DAA520]/85 uppercase tracking-[0.16em] sm:tracking-[0.24em] text-center mb-6 drop-shadow-sm font-medium whitespace-nowrap">
           {customSubtitle || 'Klangvielfalt aus Mittelalter & Renaissance'}
         </p>
 

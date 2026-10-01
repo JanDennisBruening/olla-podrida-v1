@@ -201,53 +201,57 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
             filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
           }}
         />
+
+        {/* Atmospheric Torch / Candle Glow points – positioned safely inside bounds to avoid cutoff */}
+        <div
+          className={`absolute top-[22%] left-[10%] sm:left-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
+            isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+          }`}
+          style={{ animationDuration: '3.6s' }}
+        />
+        <div
+          className={`absolute top-[22%] right-[10%] sm:right-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
+            isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+          }`}
+          style={{ animationDuration: '4.4s', animationDelay: '1.2s' }}
+        />
+
+        {/* Warm Ambient Center Stage Glow illuminating the figures and stone hall from behind */}
+        <div
+          className={`absolute inset-0 pointer-events-none transition-opacity duration-2000 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{
+            background: 'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(218, 165, 32, 0.14) 0%, rgba(184, 115, 51, 0.06) 50%, transparent 80%)'
+          }}
+        />
       </div>
-
-      {/* Atmospheric Torch / Candle Glow points illuminating the stone hall arches on left and right */}
-      <div
-        className={`absolute top-[22%] left-[6%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 -z-5 ${
-          isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
-        }`}
-        style={{ animationDuration: '3.6s' }}
-      />
-      <div
-        className={`absolute top-[22%] right-[6%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 -z-5 ${
-          isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
-        }`}
-        style={{ animationDuration: '4.4s', animationDelay: '1.2s' }}
-      />
-
-      {/* Warm Ambient Center Stage Glow illuminating the figures and stone hall from behind */}
-      <div
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-2000 -z-6 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(218, 165, 32, 0.14) 0%, rgba(184, 115, 51, 0.06) 50%, transparent 80%)'
-        }}
-      />
 
       {/* Top navbar blend gradient so navbar floats smoothly over the stone hall backdrop */}
       <div className="absolute top-0 inset-x-0 h-24 md:h-32 bg-gradient-to-b from-[#070202]/85 via-[#070202]/40 to-transparent pointer-events-none -z-4" />
 
-      {/* Drifting Stage Mist / Smoke Layer across the floor */}
+      {/* Drifting Stage Mist / Smoke Layer across the floor – fully feathered with gradient mask to prevent any hard cutoff */}
       {heroConfig.smokeEnabled && (
         <div
-          className={`absolute bottom-0 inset-x-0 h-28 md:h-36 pointer-events-none overflow-hidden transition-opacity duration-2000 -z-5 ${
+          className={`absolute bottom-0 inset-x-0 h-44 sm:h-56 md:h-72 lg:h-80 pointer-events-none overflow-hidden transition-opacity duration-2000 -z-5 ${
             isLoaded ? 'opacity-35' : 'opacity-0'
           }`}
+          style={{
+            maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)'
+          }}
         >
           <img
-            src={assets.smokeBottom || assets.smokeAlt}
+            src={assets.smokeAlt}
             alt=""
             className="w-full h-full object-cover object-bottom mix-blend-screen scale-105"
-            style={{ filter: 'brightness(110%) contrast(115%)' }}
+            style={{ filter: 'brightness(105%) contrast(100%)' }}
           />
         </div>
       )}
 
       {/* Bottom fade into pure #070202 */}
-      <div className="absolute bottom-0 inset-x-0 h-12 md:h-16 bg-gradient-to-b from-transparent to-[#070202] pointer-events-none -z-10" />
+      <div className="absolute bottom-0 inset-x-0 h-16 md:h-24 bg-gradient-to-b from-transparent via-[#070202]/50 to-[#070202] pointer-events-none -z-10" />
 
       {/* Harmonized Stage Layer across Mobile, Tablet, and Desktop */}
       <div
@@ -335,13 +339,19 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
         })}
       </div>
 
-      {/* Ground Smoke & Fog Layer placed at bottom z-[2] */}
+      {/* Ground Smoke & Fog Layer placed at bottom z-[2] – softly feathered with gradient mask */}
       {heroConfig.smokeEnabled && (
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-[2]">
+        <div
+          className="absolute bottom-0 left-0 right-0 pointer-events-none z-[2] overflow-hidden"
+          style={{
+            maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0) 100%)'
+          }}
+        >
           <img
             src={assets.smokeAlt}
             alt="Atmosphärischer Rauch"
-            className="w-full h-24 sm:h-30 md:h-36 object-cover object-bottom mix-blend-screen"
+            className="w-full h-32 sm:h-44 md:h-56 lg:h-64 object-cover object-bottom mix-blend-screen"
             style={{
               opacity: typeof heroConfig.smokeOpacity === 'number' ? heroConfig.smokeOpacity : 0.2,
               filter: 'brightness(105%) contrast(98%)'

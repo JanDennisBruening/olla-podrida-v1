@@ -125,14 +125,14 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          {/* Center Logo Container – strictly centered in tablet without inflating ribbon or overlapping stage */}
-          <div className="w-[20%] h-full flex justify-center items-center z-30">
+          {/* Center Logo Container – top-anchored on tablet, centered on desktop */}
+          <div className="w-[20%] h-full flex justify-center md:items-start lg:items-center z-30">
             <button
               onClick={() => scrollToSection('Start')}
-              className="relative aspect-[324/391] h-24 sm:h-26 md:h-28 lg:h-40 xl:h-44 flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer filter drop-shadow-xl md:-translate-y-1.5 lg:translate-y-4 xl:translate-y-5"
+              className="relative aspect-[324/391] md:h-[135%] lg:h-40 xl:h-44 flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer filter drop-shadow-xl md:self-start md:-mt-1 md:translate-y-0 lg:self-auto lg:translate-y-4 xl:translate-y-5 origin-top"
               style={{
                 backgroundImage: `url(${assets.logoBackground})`,
-                backgroundPosition: 'center center',
+                backgroundPosition: 'top center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
               }}
