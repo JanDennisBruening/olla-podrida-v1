@@ -151,7 +151,7 @@ export const AudioPlayer: React.FC<{ isMobileMenuOpen?: boolean }> = ({ isMobile
         <button
           type="button"
           onClick={handleScrollToTop}
-          className="group flex items-center justify-center gap-1.5 px-2.5 py-1 sm:py-0.5 rounded-full bg-[#070202]/92 border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] font-macondo tracking-wider shadow-[0_3px_10px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer scale-[1.05] sm:scale-100 origin-bottom"
+          className="group flex items-center justify-center gap-1.5 px-2.5 py-1 sm:py-0.5 rounded-full bg-[#070202] border border-[#DAA520]/50 hover:border-[#DAA520] text-[#DAA520] hover:text-[#FFD700] font-macondo tracking-wider shadow-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer scale-[1.05] sm:scale-100 origin-bottom"
           title="Zurück zum Seitenanfang scrollen"
           aria-label="Nach oben scrollen"
         >
