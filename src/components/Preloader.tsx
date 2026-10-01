@@ -18,9 +18,15 @@ export const Preloader: React.FC<PreloaderProps> = ({
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
 
   useEffect(() => {
     if (!canStart) return;
+
+    // Trigger centerpiece entrance
+    const rafEntrance = requestAnimationFrame(() => {
+      setIsEntered(true);
+    });
 
     // Smooth progress simulation from 0 to 100%
     const startTime = performance.now();
@@ -62,11 +68,14 @@ export const Preloader: React.FC<PreloaderProps> = ({
 
     animId = requestAnimationFrame(updateProgress);
 
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      cancelAnimationFrame(rafEntrance);
+      cancelAnimationFrame(animId);
+    };
   }, [canStart, keepVisibleOnFinish, onComplete]);
 
-  // If preloader has finished its dissolve and exited, remove from DOM
-  if (isRemoved) return null;
+  // If preloader is not allowed to start yet or has finished, don't render
+  if (!canStart || isRemoved) return null;
 
   return (
     <div
@@ -76,7 +85,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
       }`}
       style={{
         backgroundColor: '#070202',
-        backgroundImage: 'radial-gradient(circle at center, rgba(142, 40, 0, 0.22) 0%, rgba(218, 165, 32, 0.12) 28%, rgba(7, 2, 2, 0.98) 72%, #070202 100%)'
+        backgroundImage: 'radial-gradient(ellipse at center, rgba(142, 40, 0, 0.22) 0%, rgba(218, 165, 32, 0.12) 28%, rgba(7, 2, 2, 0.98) 72%, #070202 100%)'
       }}
     >
       {/* Ambient drifting & glowing smoke layer in background */}
@@ -89,7 +98,9 @@ export const Preloader: React.FC<PreloaderProps> = ({
       </div>
 
       {/* Centerpiece Container */}
-      <div className="relative z-10 flex flex-col items-center px-4 max-w-md w-full">
+      <div className={`relative z-10 flex flex-col items-center px-4 max-w-md w-full transition-all duration-500 ease-out ${
+        isEntered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'
+      }`}>
         {/* Ornate Concentric Rings & Seal */}
         <div className="relative w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center mb-6">
           {/* Outer slow-spinning celestial dashed ring */}

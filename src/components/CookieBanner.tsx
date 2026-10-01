@@ -4,7 +4,7 @@ import { audioManager } from '../utils/audioManager';
 import { ShieldCheck, Music2, Lock } from 'lucide-react';
 
 interface CookieBannerProps {
-  onAccept: () => void;
+  onAccept: (audio?: boolean) => void;
   onOpenPrivacy: () => void;
   onOpenImpressum: () => void;
 }
@@ -15,9 +15,13 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    // Trigger sequential entrance animations on mount
-    const timer = setTimeout(() => setIsMounted(true), 30);
-    return () => clearTimeout(timer);
+    // Double RAF guarantees initial unmounted styles are painted before transition kicks in
+    const raf1 = requestAnimationFrame(() => {
+      const raf2 = requestAnimationFrame(() => {
+        setIsMounted(true);
+      });
+    });
+    return () => cancelAnimationFrame(raf1);
   }, []);
 
   const handleAccept = () => {
@@ -27,70 +31,70 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
     // 2. Play card exit transition before handing over to Preloader
     setIsExiting(true);
     setTimeout(() => {
-      onAccept();
-    }, 380);
+      onAccept(true);
+    }, 400);
   };
 
   const handleEssential = () => {
     setIsExiting(true);
     setTimeout(() => {
-      onAccept();
-    }, 380);
+      onAccept(false);
+    }, 400);
   };
 
   // Helper styles for stagger entrance & reverse stagger exit
   const getHeaderStyle = () => {
     if (isExiting) {
-      return 'opacity-0 -translate-y-4 transition-all duration-300 ease-in delay-[200ms]';
+      return 'opacity-0 -translate-y-3 transition-all duration-300 ease-in delay-[150ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 transition-all duration-500 ease-out delay-[100ms]'
-      : 'opacity-0 -translate-y-4';
+      ? 'opacity-100 translate-y-0 transition-all duration-500 ease-out delay-[80ms]'
+      : 'opacity-0 -translate-y-3';
   };
 
   const getItem1Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[160ms]';
+      return 'opacity-0 translate-y-2 transition-all duration-300 ease-in delay-[120ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[220ms]'
-      : 'opacity-0 translate-y-3';
+      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[160ms]'
+      : 'opacity-0 translate-y-2';
   };
 
   const getItem2Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[120ms]';
+      return 'opacity-0 translate-y-2 transition-all duration-300 ease-in delay-[90ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[320ms]'
-      : 'opacity-0 translate-y-3';
+      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[240ms]'
+      : 'opacity-0 translate-y-2';
   };
 
   const getItem3Style = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[80ms]';
+      return 'opacity-0 translate-y-2 transition-all duration-300 ease-in delay-[60ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[420ms]'
-      : 'opacity-0 translate-y-3';
+      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[320ms]'
+      : 'opacity-0 translate-y-2';
   };
 
   const getLegalNoteStyle = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-3 transition-all duration-300 ease-in delay-[40ms]';
+      return 'opacity-0 translate-y-2 transition-all duration-300 ease-in delay-[30ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[520ms]'
-      : 'opacity-0 translate-y-3';
+      ? 'opacity-100 translate-y-0 transition-all duration-400 ease-out delay-[400ms]'
+      : 'opacity-0 translate-y-2';
   };
 
   const getButtonsStyle = () => {
     if (isExiting) {
-      return 'opacity-0 translate-y-4 scale-95 transition-all duration-300 ease-in delay-[0ms]';
+      return 'opacity-0 translate-y-3 scale-95 transition-all duration-300 ease-in delay-[0ms]';
     }
     return isMounted
-      ? 'opacity-100 translate-y-0 scale-100 transition-all duration-400 ease-out delay-[620ms]'
-      : 'opacity-0 translate-y-4 scale-95';
+      ? 'opacity-100 translate-y-0 scale-100 transition-all duration-400 ease-out delay-[480ms]'
+      : 'opacity-0 translate-y-3 scale-95';
   };
 
   return (
@@ -98,37 +102,39 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
       className="fixed inset-0 z-[100001] flex items-center justify-center p-3 sm:p-6 select-none overflow-hidden"
       style={{
         backgroundColor: '#070202',
-        backgroundImage: 'radial-gradient(circle at center, rgba(142, 40, 0, 0.28) 0%, rgba(218, 165, 32, 0.16) 35%, rgba(7, 2, 2, 0.98) 75%, #070202 100%)'
+        backgroundImage: 'radial-gradient(ellipse at center, rgba(142, 40, 0, 0.20) 0%, rgba(218, 165, 32, 0.10) 35%, rgba(7, 2, 2, 0.98) 75%, #070202 100%)'
       }}
     >
-      {/* Warm Mystical Glowing Ambient Orbs illuminating the background */}
-      <div
-        className="absolute top-[18%] left-[10%] w-72 h-72 rounded-full bg-amber-600/22 blur-3xl animate-pulse pointer-events-none"
-        style={{ animationDuration: '4.2s' }}
-      />
-      <div
-        className="absolute bottom-[20%] right-[10%] w-80 h-80 rounded-full bg-[#DAA520]/18 blur-3xl animate-pulse pointer-events-none"
-        style={{ animationDuration: '5.6s', animationDelay: '1.8s' }}
-      />
-      <div className="absolute top-[55%] left-[50%] -translate-x-1/2 w-96 h-96 rounded-full bg-[#8E2800]/14 blur-3xl pointer-events-none" />
-
-      {/* Billowing Atmospheric Medieval Fog Cloud Layers across the Prologue Backdrop */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-45 z-0">
-        <img
-          src={assets.smokeAlt}
-          alt=""
-          className="absolute -top-1/4 -left-1/4 w-[160%] h-[160%] object-cover animate-fog-drift animate-mystic-glow"
+      {/* Centered Warm Medieval Glow (Seamless, no side bars or column seams) */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className="w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] rounded-full bg-gradient-to-tr from-[#8E2800]/18 via-[#DAA520]/14 to-transparent blur-3xl animate-pulse pointer-events-none"
+          style={{ animationDuration: '5s' }}
         />
+      </div>
+
+      {/* Seamless Ambient Medieval Fog Layer - Feathered to 0 at edges */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-28 mix-blend-screen overflow-hidden"
+        style={{
+          maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 90%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 90%)'
+        }}
+      >
         <img
           src={assets.smokeAlt}
           alt=""
-          className="absolute -bottom-1/4 -right-1/4 w-[160%] h-[160%] object-cover animate-fog-drift-reverse"
+          className="w-full h-full object-cover object-center animate-fog-drift animate-mystic-glow"
         />
       </div>
 
       <div
-        className={`relative z-10 w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-380 ease-out ${
-          isExiting ? 'opacity-0 scale-95 pointer-events-none' : isMounted ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        className={`relative z-10 w-full max-w-xl bg-[#140D09] border-2 border-[#DAA520] rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden p-7 sm:p-10 md:p-12 transition-all duration-400 ease-out ${
+          isExiting
+            ? 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+            : isMounted
+            ? 'opacity-100 scale-100 translate-y-0'
+            : 'opacity-0 scale-[0.93] translate-y-4'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
