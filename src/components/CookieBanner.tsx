@@ -149,16 +149,16 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onOpenPriv
         <div className="absolute bottom-2.5 left-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
         <div className="absolute bottom-2.5 right-2.5 text-[#DAA520]/60 text-sm pointer-events-none">✦</div>
 
-        {/* Ornate Header with Responsive Logo Emblem */}
+        {/* Ornate Header with Responsive Logo Emblem (enlarged 20%) */}
         <div className={`flex flex-col items-center text-center mb-4 sm:mb-6 ${getHeaderStyle()}`}>
-          <div className="relative w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 mb-2 sm:mb-3 flex items-center justify-center shrink-0">
+          <div className="relative w-[4.2rem] h-[4.2rem] sm:w-[5.4rem] sm:h-[5.4rem] md:w-[6.6rem] md:h-[6.6rem] mb-2.5 sm:mb-3.5 flex items-center justify-center shrink-0">
             {/* Spinning antique dashed outer circle */}
             <div
               className="absolute inset-0 rounded-full border border-dashed border-[#DAA520]/60 animate-spin"
               style={{ animationDuration: '30s' }}
             />
             {/* Inner illuminated medallion container */}
-            <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 rounded-full bg-[#1e130c] border-2 border-[#DAA520] p-1 shadow-[0_0_16px_rgba(218,165,32,0.5)] flex items-center justify-center">
+            <div className="w-[3.3rem] h-[3.3rem] sm:w-[4.2rem] sm:h-[4.2rem] md:w-[5.4rem] md:h-[5.4rem] rounded-full bg-[#1e130c] border-2 border-[#DAA520] p-1.5 shadow-[0_0_20px_rgba(218,165,32,0.55)] flex items-center justify-center">
               <img
                 src={assets.footerSeal}
                 alt="Ensemble Olla Podrida"
