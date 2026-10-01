@@ -287,10 +287,11 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
   smokeAlt
 }) => {
   const { ref: cardRef, isInView } = useInView<HTMLDivElement>({
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px',
+    threshold: 0.05,
+    rootMargin: '0px 0px -25px 0px',
     triggerOnce: true
   });
+  const cardStagger = Math.min((index % 3) * 110, 220);
   const smokeFloat = Math.cos((scrollY * 0.002) + index) * 10;
 
   return (
@@ -301,12 +302,12 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
         isExpanded ? 'border-[#DAA520] shadow-[0_0_1.5625rem_rgba(218,165,32,0.22)]' : 'border-[#2a2825] hover:border-[#DAA520]/60'
       }`}
       style={{
-        transform: isInView ? 'translateY(0) scale(1)' : 'translateY(36px) scale(0.97)',
+        transform: isInView ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)',
         opacity: isInView ? 1 : 0,
         transitionProperty: 'opacity, transform, background-color, border-color, box-shadow',
-        transitionDuration: '750ms, 750ms, 300ms, 300ms, 300ms',
+        transitionDuration: '700ms, 700ms, 300ms, 300ms, 300ms',
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        transitionDelay: '0ms'
+        transitionDelay: isInView ? `${cardStagger}ms` : '0ms'
       }}
     >
       {/* Dunstwolke implemented directly as background inside each infobox with parallax mist */}
@@ -326,7 +327,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
           style={{
             transform: isInView ? 'scale(1) translate3d(0, 0, 0)' : 'scale(0.95) translate3d(0, 16px, 0)',
             opacity: isInView ? 1 : 0,
-            transitionDelay: '100ms'
+            transitionDelay: isInView ? `${cardStagger + 60}ms` : '0ms'
           }}
         >
           <img
@@ -345,7 +346,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
             style={{
               transform: isInView ? 'translateY(0)' : 'translateY(10px)',
               opacity: isInView ? 1 : 0,
-              transitionDelay: '150ms'
+              transitionDelay: isInView ? `${cardStagger + 100}ms` : '0ms'
             }}
           >
             <span className="inline-block bg-[#CD895B] group-hover:bg-[#DAA520] transition-colors duration-300 text-white font-roboto text-[0.7rem] font-semibold uppercase px-2.5 py-0.5 rounded-[0.2rem] tracking-wide shadow-sm">
@@ -373,7 +374,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
             style={{
               transform: isInView ? 'translateY(0)' : 'translateY(12px)',
               opacity: isInView ? 1 : 0,
-              transitionDelay: '200ms'
+              transitionDelay: isInView ? `${cardStagger + 140}ms` : '0ms'
             }}
           >
             {event.title}
@@ -387,7 +388,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
               style={{
                 transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
                 opacity: isInView ? 1 : 0,
-                transitionDelay: '260ms'
+                transitionDelay: isInView ? `${cardStagger + 180}ms` : '0ms'
               }}
             >
               <span className="group-hover:scale-110 transition-transform duration-200">🗓️</span>
@@ -399,7 +400,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
               style={{
                 transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
                 opacity: isInView ? 1 : 0,
-                transitionDelay: '320ms'
+                transitionDelay: isInView ? `${cardStagger + 220}ms` : '0ms'
               }}
             >
               <span className="group-hover:scale-110 transition-transform duration-200">🕐</span>
@@ -411,7 +412,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
               style={{
                 transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
                 opacity: isInView ? 1 : 0,
-                transitionDelay: '380ms'
+                transitionDelay: isInView ? `${cardStagger + 260}ms` : '0ms'
               }}
             >
               <span className="shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-200">📍</span>
@@ -425,7 +426,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
                 style={{
                   transform: isInView ? 'translateX(0)' : 'translateX(-16px)',
                   opacity: isInView ? 1 : 0,
-                  transitionDelay: '420ms'
+                  transitionDelay: isInView ? `${cardStagger + 300}ms` : '0ms'
                 }}
               >
                 <span className="shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-200">📞</span>
@@ -443,7 +444,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
             style={{
               transform: isInView ? 'translateY(0)' : 'translateY(12px)',
               opacity: isInView ? 1 : 0,
-              transitionDelay: '460ms'
+              transitionDelay: isInView ? `${cardStagger + 340}ms` : '0ms'
             }}
             dangerouslySetInnerHTML={{ __html: event.descriptionHtml }}
           />

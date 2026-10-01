@@ -289,6 +289,12 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
           const resolvedImage = resolveAssetUrl(imageSrc);
           const altText = member?.tooltip || member?.name || figure.defaultAlt;
 
+          const entranceDelay = viewportMode === 'mobile'
+            ? Math.round(60 + (figure.entranceDelay - 100) * 0.35)
+            : viewportMode === 'tablet'
+            ? Math.round(80 + (figure.entranceDelay - 100) * 0.5)
+            : figure.entranceDelay;
+
           return (
             <div
               key={figure.id}
@@ -299,7 +305,7 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
                 width: cfg.width,
                 zIndex: cfg.zIndex,
                 transition: 'transform 850ms cubic-bezier(0.18, 0.89, 0.32, 1), opacity 650ms ease-out',
-                transitionDelay: `${figure.entranceDelay}ms`,
+                transitionDelay: `${entranceDelay}ms`,
                 transform: isLoaded
                   ? `translate3d(${offX}px, ${offY}px, 0)`
                   : `translate3d(${offX}px, ${offY + 68}px, 0)`,

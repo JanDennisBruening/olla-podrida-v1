@@ -173,10 +173,10 @@ export const Header: React.FC<HeaderProps> = ({
             backgroundSize: '100% 100%'
           }}
         >
-          {/* Logo pinned flush against top edge: exactly 24% of total width */}
+          {/* Logo pinned flush against top edge: exactly 24% of total width, enlarged by 2% overall, inner logo by 3% */}
           <button
             onClick={() => scrollToSection('Start')}
-            className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30"
+            className="self-start -mt-0.5 flex items-start transition-transform duration-200 active:scale-95 cursor-pointer z-30 scale-[1.02] origin-top-left"
           >
             <div
               className="w-[24vw] h-[24vw] min-w-[5.6rem] min-h-[5.6rem] flex items-center justify-center p-1.5 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)]"
@@ -190,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
               <img
                 src={assets.navLogo}
                 alt="Ensemble Olla Podrida Logo"
-                className="w-[84%] h-[84%] object-contain drop-shadow-md"
+                className="w-[87%] h-[87%] object-contain drop-shadow-md"
               />
             </div>
           </button>
@@ -252,10 +252,10 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="absolute inset-0 bg-gradient-to-b from-[#070202]/60 via-transparent to-[#070202]/85 pointer-events-none" />
           </div>
 
-          {/* Menu Card Container with antique golden border & unfold animation */}
+          {/* Menu Card Container without yellow border & unfold animation */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210]/95 border-2 border-[#DAA520]/50 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_12px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.2)] overflow-hidden transition-all duration-300 ease-out transform z-10 ${
+            className={`relative w-full max-w-sm mx-auto my-auto bg-[#141210]/95 border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col items-center shadow-[0_16px_50px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-300 ease-out transform z-10 ${
               isMenuVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4'
             }`}
             style={{
@@ -267,16 +267,6 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl opacity-15 mix-blend-screen z-0">
               <img src={assets.smokeAlt} alt="" className="w-full h-full object-cover object-center pointer-events-none" />
             </div>
-            {/* Elegant Close Button inside Modal Card */}
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-[#DAA520]/40 flex items-center justify-center text-[#DAA520] hover:text-[#141210] hover:bg-[#DAA520] transition-all duration-200 active:scale-90 cursor-pointer"
-              aria-label="Menü schließen"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M 2 2 L 12 12 M 12 2 L 2 12" />
-              </svg>
-            </button>
 
             {/* Logo in Mobile Menu - Stagger step 1 */}
             <div
@@ -337,7 +327,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Footer links in mobile menu - Stagger step final */}
             <div
-              className={`flex flex-wrap justify-center gap-3 text-xs font-sans text-[#F5F5DC]/80 transition-all duration-300 ease-out transform ${
+              className={`flex flex-wrap justify-center gap-3.5 text-[0.95rem] font-macondo tracking-wide text-[#F5F5DC]/90 transition-all duration-300 ease-out transform ${
                 isMenuVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
               }`}
               style={{ transitionDelay: isMenuVisible ? '420ms' : '0ms' }}
@@ -347,7 +337,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenTermineArchive();
                 }}
-                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+                className="hover:text-[#DAA520] transition-colors cursor-pointer"
               >
                 Konzertchronik
               </button>
@@ -357,7 +347,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenLegal('impressum');
                 }}
-                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+                className="hover:text-[#DAA520] transition-colors cursor-pointer"
               >
                 Impressum
               </button>
@@ -367,7 +357,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenLegal('datenschutz');
                 }}
-                className="hover:text-[#DAA520] hover:underline transition-colors cursor-pointer"
+                className="hover:text-[#DAA520] transition-colors cursor-pointer"
               >
                 Datenschutz
               </button>

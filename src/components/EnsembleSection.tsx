@@ -46,6 +46,22 @@ export const EnsembleSection: React.FC = () => {
     };
   }, []);
 
+  // Dismiss active figure tooltip when tapping outside on mobile/tablet
+  React.useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && !target.closest('[data-musician="true"]')) {
+        setHoveredMember(null);
+      }
+    };
+    window.addEventListener('click', handleOutsideClick);
+    window.addEventListener('touchstart', handleOutsideClick, { passive: true });
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+      window.removeEventListener('touchstart', handleOutsideClick);
+    };
+  }, []);
+
   const showBanner = isBannerVisible || isInView;
 
   // Tablet split (4 + 3)
@@ -111,7 +127,7 @@ export const EnsembleSection: React.FC = () => {
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-full max-w-[21rem] xl:max-w-[22.2rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-full max-w-[18.9rem] xl:max-w-[20rem] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
@@ -128,15 +144,15 @@ export const EnsembleSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Suppentopf Illustration on Mobile & Tablet: Centered & enlarged by 30% on mobile */}
-            <div className={`lg:hidden w-full flex justify-center my-5 sm:my-7 md:my-8 overflow-visible transition-all duration-700 delay-250 ease-out ${
+            {/* Suppentopf Illustration on Mobile & Tablet: 10% smaller */}
+            <div className={`lg:hidden w-full flex justify-center my-4 sm:my-6 md:my-7 overflow-visible transition-all duration-700 delay-250 ease-out ${
               showBanner ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}>
               <div className="relative flex items-center justify-center p-2 overflow-visible">
                 <img
                   src={ensembleConfig.logo || assets.logo}
                   alt="Olla Podrida Emblem - Brodelnder Eintopf mit Instrumenten"
-                  className="w-[22.6rem] sm:w-[28rem] md:w-[32rem] max-w-[86vw] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
+                  className="w-[20.3rem] sm:w-[25.2rem] md:w-[28.8rem] max-w-[77vw] h-auto object-contain transition-transform duration-500 hover:scale-105 drop-shadow-md select-none pointer-events-none"
                   loading="lazy"
                 />
               </div>
@@ -167,10 +183,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible flex-1"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       {/* Tooltip */}
                       <div
@@ -227,10 +251,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       <div
                         className={`absolute -top-10 px-2 py-0.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-xs whitespace-nowrap shadow-xl transition-all duration-200 pointer-events-none z-30 ${
@@ -284,10 +316,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       <div
                         className={`absolute -top-10 px-2 py-0.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-xs whitespace-nowrap shadow-xl transition-all duration-200 pointer-events-none z-30 ${
@@ -345,10 +385,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       <div
                         className={`absolute -top-8 px-1.5 py-0.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-[11px] whitespace-nowrap shadow-xl transition-all duration-200 pointer-events-none z-30 ${
@@ -397,10 +445,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       <div
                         className={`absolute -top-8 px-1.5 py-0.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-[11px] whitespace-nowrap shadow-xl transition-all duration-200 pointer-events-none z-30 ${
@@ -449,10 +505,18 @@ export const EnsembleSection: React.FC = () => {
                   return (
                     <div
                       key={musician.id}
+                      data-musician="true"
                       className="relative group flex flex-col items-center justify-end cursor-pointer overflow-visible"
-                      onMouseEnter={() => setHoveredMember(musician.id)}
-                      onMouseLeave={() => setHoveredMember(null)}
-                      onClick={() => setHoveredMember(hoveredMember === musician.id ? null : musician.id)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(musician.id);
+                      }}
+                      onPointerLeave={(e) => {
+                        if (e.pointerType !== 'touch') setHoveredMember(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredMember((prev) => (prev === musician.id ? null : musician.id));
+                      }}
                     >
                       <div
                         className={`absolute -top-8 px-1.5 py-0.5 rounded bg-[#070202] border border-[#DAA520] text-[#F5F5DC] font-macondo text-[11px] whitespace-nowrap shadow-xl transition-all duration-200 pointer-events-none z-30 ${
