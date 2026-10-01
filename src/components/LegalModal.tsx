@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Shield, BookOpen, Cookie, ExternalLink } from 'lucide-react';
 import { getLegalConfig } from '../data/siteContent';
 
@@ -12,9 +12,39 @@ interface LegalModalProps {
 
 export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchType, onRevokeConsent, sessionId }) => {
   const legalConfig = getLegalConfig();
+  const [isMounted, setIsMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [displayedType, setDisplayedType] = useState<'impressum' | 'datenschutz' | 'cookies' | null>(type);
+
+  useEffect(() => {
+    if (type) {
+      setDisplayedType(type);
+      setIsClosing(false);
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => {
+          setIsMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf1);
+    } else {
+      setIsMounted(false);
+      setIsClosing(false);
+    }
+  }, [type]);
+
+  const handleClose = () => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsMounted(false);
+      setIsClosing(false);
+    }, 320);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     if (type) {
       window.addEventListener('keydown', handleKeyDown);
@@ -24,39 +54,57 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [type, onClose]);
+  }, [type, isClosing]);
 
-  if (!type) return null;
+  const activeType = type || (isClosing ? displayedType : null);
+  if (!activeType) return null;
 
   return (
     <div 
-      className="fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
-      onClick={onClose}
+      className={`fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 transition-all duration-320 ease-out select-none ${
+        isMounted && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+      style={{
+        backgroundColor: 'rgba(7, 2, 2, 0.88)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
+      }}
+      onClick={handleClose}
     >
       <div
         data-lenis-prevent="true"
-        className="relative w-full max-w-3xl max-h-[75vh] md:max-h-[70vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_12px_45px_rgba(0,0,0,0.92),0_0_30px_rgba(218,165,32,0.2)] flex flex-col text-[#F5F5DC] overflow-hidden my-auto"
+        className={`relative w-full max-w-3xl max-h-[78vh] md:max-h-[72vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.25)] flex flex-col text-[#F5F5DC] overflow-hidden my-auto transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
+          isMounted && !isClosing ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.93] translate-y-5'
+        }`}
         onClick={(e) => e.stopPropagation()}
         style={{
           touchAction: 'pan-y'
         }}
       >
+        {/* Top Gold Corner Accents */}
+        <div className="absolute top-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute top-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+
         {/* Modal Header */}
-        <div className="flex-none flex items-center justify-between px-6 py-4 border-b border-[#DAA520]/30 bg-[#1C120D]">
+        <div className={`flex-none flex items-center justify-between px-6 py-4 border-b border-[#DAA520]/30 bg-[#1C120D] transition-all duration-400 ease-out ${
+          isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
           <div className="flex items-center space-x-3">
-            {type === 'impressum' && <BookOpen className="text-[#DAA520]" size={24} />}
-            {type === 'datenschutz' && <Shield className="text-[#DAA520]" size={24} />}
-            {type === 'cookies' && <Cookie className="text-[#DAA520]" size={24} />}
+            {activeType === 'impressum' && <BookOpen className="text-[#DAA520]" size={24} />}
+            {activeType === 'datenschutz' && <Shield className="text-[#DAA520]" size={24} />}
+            {activeType === 'cookies' && <Cookie className="text-[#DAA520]" size={24} />}
             <h2 className="font-macondo text-2xl sm:text-3xl text-[#DAA520]">
-              {type === 'impressum' && 'Impressum'}
-              {type === 'datenschutz' && 'Datenschutzerklärung'}
-              {type === 'cookies' && 'Cookie & Consent'}
+              {activeType === 'impressum' && 'Impressum'}
+              {activeType === 'datenschutz' && 'Datenschutzerklärung'}
+              {activeType === 'cookies' && 'Cookie & Consent'}
             </h2>
           </div>
 
           <div className="flex items-center space-x-2">
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="p-1.5 rounded-lg text-[#D1C7AC] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Schließen"
             >
@@ -66,11 +114,13 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
         </div>
 
         {/* Tab switch inside modal */}
-        <div className="flex-none flex px-6 pt-3 border-b border-[#DAA520]/20 bg-[#0E0704] text-xs font-macondo text-lg gap-4">
+        <div className={`flex-none flex px-6 pt-3 border-b border-[#DAA520]/20 bg-[#0E0704] text-xs font-macondo text-lg gap-4 transition-all duration-400 delay-75 ease-out ${
+          isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
           <button
             onClick={() => onSwitchType('impressum')}
             className={`pb-2 border-b-2 transition-colors cursor-pointer ${
-              type === 'impressum' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
+              activeType === 'impressum' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
             }`}
           >
             Impressum
@@ -78,7 +128,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           <button
             onClick={() => onSwitchType('datenschutz')}
             className={`pb-2 border-b-2 transition-colors cursor-pointer ${
-              type === 'datenschutz' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
+              activeType === 'datenschutz' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
             }`}
           >
             Datenschutz
@@ -86,7 +136,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
           <button
             onClick={() => onSwitchType('cookies')}
             className={`pb-2 border-b-2 transition-colors cursor-pointer ${
-              type === 'cookies' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
+              activeType === 'cookies' ? 'border-[#DAA520] text-[#DAA520]' : 'border-transparent text-[#D1C7AC] hover:text-[#DAA520]'
             }`}
           >
             Cookie &amp; Consent
@@ -104,24 +154,24 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
         >
           
           {/* IMPRESSUM (Gemäß § 5 DDG) */}
-          {type === 'impressum' && (
+          {activeType === 'impressum' && (
             <div 
-              className="space-y-6 olla-legal-html"
+              className="space-y-6 olla-legal-html transition-opacity duration-300"
               dangerouslySetInnerHTML={{ __html: legalConfig.impressumHtml }}
             />
           )}
 
           {/* DATENSCHUTZERKLÄRUNG (DSGVO / DDG) */}
-          {type === 'datenschutz' && (
+          {activeType === 'datenschutz' && (
             <div 
-              className="space-y-6 olla-legal-html"
+              className="space-y-6 olla-legal-html transition-opacity duration-300"
               dangerouslySetInnerHTML={{ __html: legalConfig.datenschutzHtml }}
             />
           )}
 
           {/* COOKIES INFO & ERKLÄRUNG */}
           {/* COOKIE & CONSENT */}
-          {type === 'cookies' && (
+          {activeType === 'cookies' && (
             <div className="space-y-6 py-2">
               <div className="text-center space-y-3">
                 <div className="inline-flex p-4 rounded-full bg-[#DAA520]/20 text-[#DAA520]">
@@ -278,8 +328,9 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
 
               <div className="text-center pt-2">
                 <button
-                  onClick={onClose}
-                  className="px-8 py-2.5 rounded-xl bg-[#DAA520] text-[#070202] font-macondo text-lg font-bold hover:bg-[#e4b232] cursor-pointer shadow-lg"
+                  type="button"
+                  onClick={handleClose}
+                  className="px-8 py-2.5 rounded-xl bg-[#DAA520] text-[#070202] font-macondo text-lg font-bold hover:bg-[#e4b232] cursor-pointer shadow-lg active:scale-95 transition-all"
                 >
                   Alles klar, verstanden!
                 </button>
@@ -292,7 +343,8 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose, onSwitchT
         {/* Modal Footer */}
         <div className="px-6 py-4 border-t border-[#DAA520]/30 bg-[#1C120D] flex justify-end">
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleClose}
             className="px-6 py-2 rounded-lg bg-[#2A1B14] hover:bg-[#DAA520] hover:text-[#070202] text-[#DAA520] font-macondo text-base transition-colors cursor-pointer"
           >
             Schließen

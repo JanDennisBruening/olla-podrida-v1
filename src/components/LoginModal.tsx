@@ -27,8 +27,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       setIsSuccess(false);
       setLoginProgress(0);
       setErrorMessage(null);
-      const timer = setTimeout(() => setIsMounted(true), 25);
-      return () => clearTimeout(timer);
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => {
+          setIsMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf1);
     } else {
       setIsMounted(false);
       setIsClosing(false);
@@ -37,15 +41,29 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   const handleClose = () => {
-    if (isSuccess) return; // Prevent closing during redirect transition
+    if (isSuccess || isClosing) return; // Prevent closing during redirect transition
     setIsClosing(true);
     setTimeout(() => {
       onClose();
+      setIsMounted(false);
+      setIsClosing(false);
     }, 320);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, isClosing, isSuccess]);
+
+  if (!isOpen && !isClosing) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

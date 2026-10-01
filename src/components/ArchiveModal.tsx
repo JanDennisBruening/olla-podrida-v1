@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getConcertEvents, isEventExpired, ConcertEvent } from '../data/siteContent';
 import { X, Calendar, MapPin, Clock, ExternalLink, Music, Mail } from 'lucide-react';
 
@@ -9,9 +9,37 @@ interface ArchiveModalProps {
 
 export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) => {
   const concertEvents = getConcertEvents();
+  const [isMounted, setIsMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false);
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => {
+          setIsMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf1);
+    } else {
+      setIsMounted(false);
+      setIsClosing(false);
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsMounted(false);
+      setIsClosing(false);
+    }, 320);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
@@ -21,25 +49,42 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, isClosing]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
-      onClick={onClose}
+      className={`fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 transition-all duration-320 ease-out select-none ${
+        isMounted && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+      style={{
+        backgroundColor: 'rgba(7, 2, 2, 0.88)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
+      }}
+      onClick={handleClose}
     >
       <div
         data-lenis-prevent="true"
-        className="relative w-full max-w-5xl max-h-[88vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(218,165,32,0.25)] overflow-hidden flex flex-col text-[#F5F5DC]"
+        className={`relative w-full max-w-5xl max-h-[88vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.25)] overflow-hidden flex flex-col text-[#F5F5DC] transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
+          isMounted && !isClosing ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.93] translate-y-5'
+        }`}
         onClick={(e) => e.stopPropagation()}
         style={{
           touchAction: 'pan-y'
         }}
       >
+        {/* Top Gold Corner Accents */}
+        <div className="absolute top-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute top-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#DAA520]/30 bg-[#1C120D] shrink-0">
+        <div className={`flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#DAA520]/30 bg-[#1C120D] shrink-0 transition-all duration-400 ease-out ${
+          isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
           <div className="flex items-center space-x-2.5 sm:space-x-3">
             <Music className="text-[#DAA520] shrink-0" size={24} />
             <div>
@@ -51,7 +96,8 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
           </div>
 
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleClose}
             className="p-2 rounded-full bg-[#070202] border border-[#DAA520]/50 text-[#F5F5DC] hover:text-[#DAA520] hover:scale-105 active:scale-95 transition-all cursor-pointer"
             aria-label="Schließen"
           >
@@ -69,12 +115,19 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {concertEvents.map((event) => {
+            {concertEvents.map((event, index) => {
               const isPast = !event.isUpcoming || isEventExpired(event.date, event.time);
+              const delay = Math.min(index * 35 + 80, 360);
               return (
               <div
                 key={event.id}
-                className="bg-[#1A100B] border border-[#DAA520]/30 rounded-xl p-5 shadow-lg flex flex-col justify-between hover:border-[#DAA520] transition-colors"
+                style={{
+                  transition: 'transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease-out',
+                  transitionDelay: `${delay}ms`
+                }}
+                className={`bg-[#1A100B] border border-[#DAA520]/30 rounded-xl p-5 shadow-lg flex flex-col justify-between hover:border-[#DAA520] ${
+                  isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -131,7 +184,8 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ isOpen, onClose }) =
         {/* Footer */}
         <div className="px-6 py-4 border-t border-[#DAA520]/30 bg-[#1C120D] flex justify-end">
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleClose}
             className="px-6 py-2 rounded-lg bg-[#2A1B14] hover:bg-[#DAA520] hover:text-[#070202] text-[#DAA520] font-macondo text-base transition-colors cursor-pointer"
           >
             Schließen

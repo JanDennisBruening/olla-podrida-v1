@@ -11,13 +11,40 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
   const pressConfig = getPressConfig();
   const [activeTab, setActiveTab] = useState<'text' | 'logos' | 'photos' | 'contact'>('text');
   const [copied, setCopied] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false);
+      setActiveTab('text');
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => {
+          setIsMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf1);
+    } else {
+      setIsMounted(false);
+      setIsClosing(false);
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsMounted(false);
+      setIsClosing(false);
+    }, 320);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     if (isOpen) {
-      setActiveTab('text');
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
     }
@@ -25,9 +52,9 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, isClosing]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   const handleCopyText = async () => {
     try {
@@ -49,17 +76,34 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
 
   return (
     <div
-      className="fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
-      onClick={onClose}
+      className={`fixed inset-0 z-[100050] flex items-center justify-center p-3 sm:p-6 transition-all duration-320 ease-out select-none ${
+        isMounted && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+      style={{
+        backgroundColor: 'rgba(7, 2, 2, 0.88)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
+      }}
+      onClick={handleClose}
     >
       <div
         data-lenis-prevent="true"
-        className="relative w-full max-w-5xl max-h-[90vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(218,165,32,0.25)] overflow-hidden flex flex-col text-[#F5F5DC]"
+        className={`relative w-full max-w-5xl max-h-[90vh] bg-[#120B08] border-2 border-[#DAA520]/70 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(218,165,32,0.25)] overflow-hidden flex flex-col text-[#F5F5DC] transition-all duration-350 cubic-bezier(0.16, 1, 0.3, 1) ${
+          isMounted && !isClosing ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.93] translate-y-5'
+        }`}
         onClick={(e) => e.stopPropagation()}
         style={{ touchAction: 'pan-y' }}
       >
+        {/* Top Gold Corner Accents */}
+        <div className="absolute top-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute top-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 left-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+        <div className="absolute bottom-2.5 right-2.5 text-[#DAA520]/50 text-xs pointer-events-none">✦</div>
+
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#DAA520]/30 bg-[#1C120D] shrink-0">
+        <div className={`flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#DAA520]/30 bg-[#1C120D] shrink-0 transition-all duration-400 ease-out ${
+          isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
           <div className="flex items-center space-x-2.5 sm:space-x-3">
             <Newspaper className="text-[#DAA520] shrink-0" size={26} />
             <div>
@@ -73,7 +117,8 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
           </div>
 
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleClose}
             className="p-2 rounded-full bg-[#070202] border border-[#DAA520]/50 text-[#F5F5DC] hover:text-[#DAA520] hover:scale-105 active:scale-95 transition-all cursor-pointer"
             aria-label="Schließen"
           >
@@ -82,7 +127,9 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex flex-wrap px-4 sm:px-6 border-b border-[#DAA520]/20 bg-[#170E0A] gap-2 sm:gap-6 text-sm font-macondo">
+        <div className={`flex flex-wrap px-4 sm:px-6 border-b border-[#DAA520]/20 bg-[#170E0A] gap-2 sm:gap-6 text-sm font-macondo transition-all duration-400 delay-75 ease-out ${
+          isMounted && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
           <button
             onClick={() => setActiveTab('text')}
             className={`py-2.5 border-b-2 flex items-center space-x-1.5 transition-colors cursor-pointer ${
@@ -408,8 +455,9 @@ export const PresseModal: React.FC<PresseModalProps> = ({ isOpen, onClose }) => 
             Ensemble Olla Podrida · Presse- &amp; Mediendienst
           </p>
           <button
-            onClick={onClose}
-            className="px-6 py-1.5 rounded-lg bg-[#2A1B14] hover:bg-[#DAA520] hover:text-[#070202] text-[#DAA520] font-macondo text-base transition-colors cursor-pointer ml-auto"
+            type="button"
+            onClick={handleClose}
+            className="px-6 py-1.5 rounded-lg bg-[#2A1B14] hover:bg-[#DAA520] hover:text-[#070202] text-[#DAA520] font-macondo text-base transition-colors cursor-pointer ml-auto active:scale-95"
           >
             Schließen
           </button>
