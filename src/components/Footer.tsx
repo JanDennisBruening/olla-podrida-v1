@@ -30,8 +30,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
     }
   };
 
-  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const openJdbPopup = () => {
     // 1. Trigger the pre-bound hidden anchor hooked to embed.js
     const hiddenTrigger = document.getElementById('jdb-footer-trigger') as HTMLAnchorElement | null;
@@ -49,22 +47,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
     window.open('https://janbruening.de/', '_blank', 'noopener,noreferrer');
   };
 
-  const handleCreditMouseEnter = () => {
-    hoverTimerRef.current = setTimeout(() => {
-      openJdbPopup();
-    }, 150);
-  };
-
-  const handleCreditMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-  };
-
   const handleCreditClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     openJdbPopup();
+  };
+
+  const handleCreditKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openJdbPopup();
+    }
   };
 
   useEffect(() => {
@@ -100,9 +92,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
 
     return () => {
       clearTimeout(t);
-      if (hoverTimerRef.current) {
-        clearTimeout(hoverTimerRef.current);
-      }
     };
   }, []);
 
@@ -233,8 +222,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
                 aria-label="Jan Dennis Brüning – Gestaltung und digitale Begleitung (öffnet Infobox)"
                 className="text-[#DAA520] hover:underline cursor-pointer transition-colors hover:text-[#FFD700]"
                 onClick={handleCreditClick}
-                onMouseEnter={handleCreditMouseEnter}
-                onMouseLeave={handleCreditMouseLeave}
+                onKeyDown={handleCreditKeyDown}
               >
                 Jan Dennis Brüning
               </a>
