@@ -191,7 +191,7 @@ $settings = Olla_Podrida_Settings::get_section('settings');
                 </div>
                 <div class="olla-field-group">
                     <label for="text_footer_dev"><strong>Entwickler- &amp; Design-Credit (Footer):</strong></label>
-                    <input type="text" id="text_footer_dev" name="text_footer_dev" value="<?php echo esc_attr($settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de'); ?>" class="large-text" />
+                    <input type="text" id="text_footer_dev" name="text_footer_dev" value="<?php echo esc_attr($settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · Jan Dennis Brüning'); ?>" class="large-text" />
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getAssets, getSiteTexts } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 import { Lock } from 'lucide-react';
@@ -29,6 +29,82 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
       }
     }
   };
+
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openJdbPopup = () => {
+    // 1. Trigger the pre-bound hidden anchor hooked to embed.js
+    const hiddenTrigger = document.getElementById('jdb-footer-trigger') as HTMLAnchorElement | null;
+    if (hiddenTrigger) {
+      hiddenTrigger.click();
+      return;
+    }
+    // 2. If any other element bound by embed.js exists in the document
+    const anyBound = document.querySelector('a[data-jdb-footer-bound="true"]') as HTMLAnchorElement | null;
+    if (anyBound) {
+      anyBound.click();
+      return;
+    }
+    // 3. Graceful fallback: navigate directly to developer website
+    window.open('https://janbruening.de/', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCreditMouseEnter = () => {
+    hoverTimerRef.current = setTimeout(() => {
+      openJdbPopup();
+    }, 150);
+  };
+
+  const handleCreditMouseLeave = () => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
+  const handleCreditClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    openJdbPopup();
+  };
+
+  useEffect(() => {
+    // 1. Ensure hidden trigger element exists for embed.js to bind
+    let hiddenTrigger = document.getElementById('jdb-footer-trigger') as HTMLAnchorElement | null;
+    if (!hiddenTrigger) {
+      hiddenTrigger = document.createElement('a');
+      hiddenTrigger.id = 'jdb-footer-trigger';
+      hiddenTrigger.href = 'https://janbruening.de/';
+      hiddenTrigger.setAttribute('data-jdb-footer', '');
+      hiddenTrigger.setAttribute('aria-hidden', 'true');
+      hiddenTrigger.tabIndex = -1;
+      hiddenTrigger.style.cssText = 'position:fixed;bottom:0;right:0;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden;border:none;padding:0;margin:0;';
+      document.body.appendChild(hiddenTrigger);
+    }
+
+    // 2. Ensure embed.js script exists in document
+    if (!document.querySelector('script[src*="jdb-footer-banner/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://jandennisbruening.github.io/jdb-footer-banner/embed.js';
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+
+    // 3. Clean up any rogue fallback credit injected by embed.js outside root
+    const cleanupRogues = () => {
+      document.querySelectorAll('.jdb-footer-credit').forEach((el) => {
+        el.remove();
+      });
+    };
+    cleanupRogues();
+    const t = setTimeout(cleanupRogues, 400);
+
+    return () => {
+      clearTimeout(t);
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <footer
@@ -140,16 +216,27 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             {currentYear} © Ensemble Olla Podrida
           </p>
           <div className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
-            <span>{(texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').includes('www.janbruening.de') ? (texts.footerDev || 'Design, Konzept und Webentwicklung · www.janbruening.de').replace(/·?\s*www\.janbruening\.de.*$/, '').trim() : texts.footerDev}</span>
+            <span>
+              {(texts.footerDev || 'Design, Konzept und Webentwicklung · Jan Dennis Brüning')
+                .replace(/·?\s*(www\.janbruening\.de|Jan Dennis Brüning).*$/i, '')
+                .trim() || 'Design, Konzept und Webentwicklung'}
+            </span>
             <span className="hidden sm:inline">·</span>
             <div className="flex items-center justify-center gap-1.5">
               <a
-                href="https://www.janbruening.de"
+                href="https://janbruening.de/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#DAA520] hover:underline"
+                role="button"
+                aria-haspopup="dialog"
+                title="Jan Dennis Brüning – Gestaltung und digitale Begleitung (öffnet Infobox)"
+                aria-label="Jan Dennis Brüning – Gestaltung und digitale Begleitung (öffnet Infobox)"
+                className="text-[#DAA520] hover:underline cursor-pointer transition-colors hover:text-[#FFD700]"
+                onClick={handleCreditClick}
+                onMouseEnter={handleCreditMouseEnter}
+                onMouseLeave={handleCreditMouseLeave}
               >
-                www.janbruening.de
+                Jan Dennis Brüning
               </a>
               <span className="text-[#DAA520]/50 mx-0.5">|</span>
               <button

@@ -29,7 +29,7 @@ class Olla_Podrida_Settings {
                 'text_termine_empty' => 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
                 'text_termine_empty_sub' => 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
                 'text_scroll_top' => 'Nach oben',
-                'text_footer_dev' => 'Design, Konzept und Webentwicklung · www.janbruening.de',
+                'text_footer_dev' => 'Design, Konzept und Webentwicklung · Jan Dennis Brüning',
                 // Wichtige Dokumente & Cloud-Ablage (Google Drive)
                 'drive_folder_url' => '',
                 'drive_folder_title' => 'Gemeinsame Google Drive-Ablage',

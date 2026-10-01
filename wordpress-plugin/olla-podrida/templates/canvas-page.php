@@ -131,5 +131,9 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
     <?php if ($js_file): ?>
         <script type="module" src="<?php echo esc_url($dist_url . $js_file); ?>"></script>
     <?php endif; ?>
+
+    <!-- Jan Dennis Brüning Footer Profile Trigger & Script -->
+    <a href="https://janbruening.de/" data-jdb-footer id="jdb-footer-trigger" aria-hidden="true" tabindex="-1" style="position:fixed;bottom:0;right:0;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden;border:none;padding:0;margin:0;"></a>
+    <script defer src="https://jandennisbruening.github.io/jdb-footer-banner/embed.js"></script>
 </body>
 </html>

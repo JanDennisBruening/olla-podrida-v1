@@ -334,7 +334,7 @@ class Olla_Podrida_Frontend {
                 'termineEmpty' => $settings['text_termine_empty'] ?? 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
                 'termineEmptySub' => $settings['text_termine_empty_sub'] ?? 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
                 'scrollTop' => $settings['text_scroll_top'] ?? 'Nach oben',
-                'footerDev' => $settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · www.janbruening.de',
+                'footerDev' => $settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · Jan Dennis Brüning',
             ],
             'restUrl' => rest_url('olla-podrida/v1/contact'),
             'nonce' => wp_create_nonce('wp_rest'),

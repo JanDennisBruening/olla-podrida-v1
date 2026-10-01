@@ -151,7 +151,7 @@ export const DEFAULT_SITE_TEXTS: SiteTextsConfig = {
   termineEmpty: 'Zurzeit sind keine weiteren Konzerttermine in Planung.',
   termineEmptySub: 'Schauen Sie bald wieder vorbei oder stöbern Sie in unserer Konzertchronik!',
   scrollTop: 'Nach oben',
-  footerDev: 'Design, Konzept und Webentwicklung · www.janbruening.de',
+  footerDev: 'Design, Konzept und Webentwicklung · Jan Dennis Brüning',
 };
 
 // Global WordPress bridge data
