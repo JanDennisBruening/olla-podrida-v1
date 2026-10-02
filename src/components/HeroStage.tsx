@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getAssets, getHeroConfig, getEnsembleMembers, resolveAssetUrl } from '../data/siteContent';
 
 interface HeroStageProps {
@@ -162,6 +162,43 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
     };
   }, []);
 
+  const heroBgRef = useRef<HTMLDivElement>(null);
+  const heroMistRef = useRef<HTMLDivElement>(null);
+
+  // Subtle Header background parallax on scroll
+  useEffect(() => {
+    let ticking = false;
+    let rafId: number;
+
+    const onScroll = () => {
+      if (!ticking) {
+        rafId = requestAnimationFrame(() => {
+          const scrollY = window.scrollY || window.pageYOffset || 0;
+          if (scrollY <= 1200) {
+            // Subtle parallax factor (0.16) for stone hall backdrop
+            if (heroBgRef.current) {
+              const bgOffset = (scrollY * 0.16).toFixed(1);
+              heroBgRef.current.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+            }
+            // Gentle counter-float on floor mist (-0.08)
+            if (heroMistRef.current) {
+              const mistOffset = (scrollY * -0.08).toFixed(1);
+              heroMistRef.current.style.transform = `translate3d(0, ${mistOffset}px, 0)`;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section
       id="Start"
@@ -178,53 +215,59 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       {/* Stone Hall Backdrop strictly for the Hero Stage – Fades in slowly from dark */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div
-          className="hidden md:block absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none"
-          style={{
-            backgroundImage: `url(${heroConfig.bgDesktop || assets.heroBackgroundDesktop})`,
-            backgroundPosition: 'center top',
-            backgroundSize: '100% auto',
-            transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
-            opacity: isLoaded ? 0.98 : 0,
-            transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
-            filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
-          }}
-        />
-        <div
-          className="md:hidden absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat pointer-events-none"
-          style={{
-            backgroundImage: `url(${heroConfig.bgMobile || assets.heroBackgroundMobile})`,
-            backgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
-            opacity: isLoaded ? 0.98 : 0,
-            transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
-            filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
-          }}
-        />
+          ref={heroBgRef}
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ willChange: 'transform' }}
+        >
+          <div
+            className="hidden md:block absolute -top-[16%] inset-x-0 w-full h-[132%] bg-cover bg-top bg-no-repeat pointer-events-none"
+            style={{
+              backgroundImage: `url(${heroConfig.bgDesktop || assets.heroBackgroundDesktop})`,
+              backgroundPosition: 'center top',
+              backgroundSize: '100% auto',
+              transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+              opacity: isLoaded ? 0.98 : 0,
+              transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+              filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
+            }}
+          />
+          <div
+            className="md:hidden absolute -top-[14%] inset-x-0 w-full h-[128%] bg-cover bg-top bg-no-repeat pointer-events-none"
+            style={{
+              backgroundImage: `url(${heroConfig.bgMobile || assets.heroBackgroundMobile})`,
+              backgroundPosition: 'center top',
+              backgroundSize: 'cover',
+              transition: 'opacity 2200ms cubic-bezier(0.16, 1, 0.3, 1), transform 2600ms cubic-bezier(0.16, 1, 0.3, 1), filter 2200ms ease-out',
+              opacity: isLoaded ? 0.98 : 0,
+              transform: isLoaded ? 'scale(1)' : 'scale(1.05)',
+              filter: isLoaded ? 'brightness(100%) contrast(100%)' : 'brightness(30%) contrast(125%)'
+            }}
+          />
 
-        {/* Atmospheric Torch / Candle Glow points – positioned safely inside bounds to avoid cutoff */}
-        <div
-          className={`absolute top-[22%] left-[10%] sm:left-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
-            isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
-          }`}
-          style={{ animationDuration: '3.6s' }}
-        />
-        <div
-          className={`absolute top-[22%] right-[10%] sm:right-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
-            isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
-          }`}
-          style={{ animationDuration: '4.4s', animationDelay: '1.2s' }}
-        />
+          {/* Atmospheric Torch / Candle Glow points – positioned safely inside bounds to avoid cutoff */}
+          <div
+            className={`absolute top-[22%] left-[10%] sm:left-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
+              isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+            }`}
+            style={{ animationDuration: '3.6s' }}
+          />
+          <div
+            className={`absolute top-[22%] right-[10%] sm:right-[12%] w-52 h-52 rounded-full bg-amber-600/18 blur-3xl pointer-events-none transition-opacity duration-1500 ${
+              isLoaded ? 'opacity-80 animate-pulse' : 'opacity-0'
+            }`}
+            style={{ animationDuration: '4.4s', animationDelay: '1.2s' }}
+          />
 
-        {/* Warm Ambient Center Stage Glow illuminating the figures and stone hall from behind */}
-        <div
-          className={`absolute inset-0 pointer-events-none transition-opacity duration-2000 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{
-            background: 'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(218, 165, 32, 0.14) 0%, rgba(184, 115, 51, 0.06) 50%, transparent 80%)'
-          }}
-        />
+          {/* Warm Ambient Center Stage Glow illuminating the figures and stone hall from behind */}
+          <div
+            className={`absolute inset-0 pointer-events-none transition-opacity duration-2000 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              background: 'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(218, 165, 32, 0.14) 0%, rgba(184, 115, 51, 0.06) 50%, transparent 80%)'
+            }}
+          />
+        </div>
       </div>
 
       {/* Top navbar blend gradient so navbar floats smoothly over the stone hall backdrop */}
@@ -233,20 +276,24 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       {/* Drifting Stage Mist / Smoke Layer across the floor – fully feathered with gradient mask to prevent any hard cutoff */}
       {heroConfig.smokeEnabled && (
         <div
+          ref={heroMistRef}
           className={`absolute bottom-0 inset-x-0 h-44 sm:h-56 md:h-72 lg:h-80 pointer-events-none overflow-hidden transition-opacity duration-2000 -z-5 ${
-            isLoaded ? 'opacity-35' : 'opacity-0'
+            isLoaded ? 'opacity-40' : 'opacity-0'
           }`}
           style={{
             maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)'
+            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)',
+            willChange: 'transform'
           }}
         >
-          <img
-            src={assets.smokeAlt}
-            alt=""
-            className="w-full h-full object-cover object-bottom mix-blend-screen scale-105"
-            style={{ filter: 'brightness(105%) contrast(100%)' }}
-          />
+          <div className="w-full h-full animate-fog-drift" style={{ animationDuration: '24s' }}>
+            <img
+              src={assets.smokeAlt}
+              alt=""
+              className="w-full h-full object-cover object-bottom mix-blend-screen scale-105"
+              style={{ filter: 'brightness(105%) contrast(100%)' }}
+            />
+          </div>
         </div>
       )}
 
@@ -348,15 +395,17 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
             WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0) 100%)'
           }}
         >
-          <img
-            src={assets.smokeAlt}
-            alt="Atmosphärischer Rauch"
-            className="w-full h-32 sm:h-44 md:h-56 lg:h-64 object-cover object-bottom mix-blend-screen"
-            style={{
-              opacity: typeof heroConfig.smokeOpacity === 'number' ? heroConfig.smokeOpacity : 0.2,
-              filter: 'brightness(105%) contrast(98%)'
-            }}
-          />
+          <div className="w-full h-full animate-fog-drift-reverse" style={{ animationDuration: '30s' }}>
+            <img
+              src={assets.smokeAlt}
+              alt="Atmosphärischer Rauch"
+              className="w-full h-32 sm:h-44 md:h-56 lg:h-64 object-cover object-bottom mix-blend-screen scale-105"
+              style={{
+                opacity: typeof heroConfig.smokeOpacity === 'number' ? Math.max(heroConfig.smokeOpacity, 0.28) : 0.28,
+                filter: 'brightness(108%) contrast(100%)'
+              }}
+            />
+          </div>
         </div>
       )}
     </section>

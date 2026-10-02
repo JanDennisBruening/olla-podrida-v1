@@ -559,8 +559,20 @@ export const TermineSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="termine"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-hidden pt-16 sm:pt-20 md:pt-28 lg:pt-36 pb-16 select-none"
+      className="relative w-full bg-transparent text-[#F5F5DC] overflow-hidden pt-16 sm:pt-20 md:pt-28 lg:pt-36 pb-16 select-none"
     >
+      {/* Ambient Section Castle Mist behind date cards */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20 mix-blend-screen">
+        <div className="w-full h-full animate-fog-drift" style={{ animationDuration: '32s' }}>
+          <img
+            src={assets.smokeAlt}
+            alt=""
+            className="w-full h-full object-cover scale-110"
+            style={{ filter: 'brightness(110%) contrast(100%)' }}
+          />
+        </div>
+      </div>
+
       <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
         
         {/* Section Heading matching .elementor-element-41d3014 with entrance animation */}

@@ -19,6 +19,7 @@ import { PresseModal } from './components/PresseModal';
 import { Preloader } from './components/Preloader';
 import { CookieBanner } from './components/CookieBanner';
 import { LoginModal } from './components/LoginModal';
+import { ParallaxFog } from './components/ParallaxFog';
 import { ASSETS } from './data/siteContent';
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
@@ -265,18 +266,11 @@ export default function App() {
         onCloseAll={handleCloseAllModals}
       />
 
-      {/* Subtle Global Ambient Mystic Fog Layer - Low opacity to maintain optimal text readability */}
-      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden opacity-[0.12] mix-blend-screen">
-        <img
-          src={ASSETS.smokeAlt}
-          alt=""
-          className="w-full h-full object-cover animate-fog-drift animate-mystic-glow"
-          style={{ animationDuration: '32s' }}
-        />
-      </div>
+      {/* Living Atmospheric Multi-Layer Parallax Fog System (Burgruine & Nebel) */}
+      <ParallaxFog />
 
       {/* Main Content Sections */}
-      <main className="flex-1 w-full flex flex-col bg-[#070202]">
+      <main className="flex-1 w-full flex flex-col bg-transparent relative z-10">
         {/* Clean Theatrical Hero Stage (#Start) */}
         <HeroStage onSelectMember={() => {}} />
 

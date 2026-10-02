@@ -103,8 +103,20 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     <section
       ref={sectionRef}
       id="kontakt"
-      className="relative w-full bg-[#070202] text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none scroll-mt-24 md:scroll-mt-32"
+      className="relative w-full bg-transparent text-[#F5F5DC] overflow-visible pt-8 md:pt-16 lg:pt-20 pb-8 md:pb-12 select-none scroll-mt-24 md:scroll-mt-32"
     >
+      {/* Ambient Section Castle Mist */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-22 mix-blend-screen">
+        <div className="w-full h-full animate-fog-drift-reverse" style={{ animationDuration: '32s' }}>
+          <img
+            src={resolveAssetUrl('/images/Rauch-neu.webp')}
+            alt=""
+            className="w-full h-full object-cover scale-110"
+            style={{ filter: 'brightness(110%) contrast(100%)' }}
+          />
+        </div>
+      </div>
+
       <div className="max-w-[80rem] mx-auto px-[5.5%] relative z-10">
 
         {/* Layout: Single-column on mobile & tablet (<1024px), Two-Column on desktop (>=1024px) to prevent squished fields and overlapping elements */}
