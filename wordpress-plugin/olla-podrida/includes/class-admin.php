@@ -1016,7 +1016,7 @@ class Olla_Podrida_Admin {
     public static function handle_ajax_cockpit_check_update() {
         check_ajax_referer('olla_podrida_admin_nonce', 'nonce');
 
-        if (!current_user_can('update_plugins')) {
+        if (!Olla_Podrida_Roles::can_user_access_menu() && !current_user_can('manage_options')) {
             wp_send_json_error(['message' => 'Keine ausreichenden Berechtigungen zur Prüfung von Updates.']);
         }
 
@@ -1051,8 +1051,8 @@ class Olla_Podrida_Admin {
     public static function handle_ajax_cockpit_run_update() {
         check_ajax_referer('olla_podrida_admin_nonce', 'nonce');
 
-        if (!current_user_can('update_plugins')) {
-            wp_send_json_error(['message' => 'Keine ausreichenden Berechtigungen zur Aktualisierung von Plugins.']);
+        if (!Olla_Podrida_Roles::can_user_access_menu() && !current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Keine ausreichenden Berechtigungen zur Durchführung von Updates.']);
         }
 
         // Force clearing of cached transients
@@ -1442,57 +1442,43 @@ class Olla_Podrida_Admin {
                         <?php endif; ?>
                     </div>
                 </div>
-            </div>
 
-            <!-- 4. Update-Cockpit & Systemverwaltung -->
-            <div id="olla-cockpit-update-box" style="background: linear-gradient(135deg, #fbf7ee 0%, #f7f1e1 100%); border: 1.5px solid #d4a954; border-radius: 10px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 3px 10px rgba(218,165,32,0.12);">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span style="font-size: 28px;">⚡</span>
-                        <div>
-                            <strong style="font-size: 15px; color: #1d2327;">Plugin-Aktualisierung &amp; Systemstatus</strong>
-                            <div style="font-size: 12px; color: #666; margin-top: 2px;">
-                                Aktuell installierte Version: <span style="background: #251810; color: #FFD700; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11.5px; border: 1px solid #DAA520;">v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
-                                · Synchronisation mit zentralem Update-Server &amp; GitHub
+                <!-- Kachel 7: Plugin-Aktualisierung & Systemstatus (neben Google Drive, bis zu 2 Spalten breit) -->
+                <div id="olla-cockpit-update-box" class="olla-cockpit-update-card" style="background: linear-gradient(135deg, #fdfbf7 0%, #f7f0df 100%); border: 1.5px solid #d4a954; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(218,165,32,0.12);">
+                    <div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 20px;">⚡</span>
+                                <strong style="font-size: 14.5px; color: #1d2327;">Plugin-Aktualisierung &amp; Systemstatus</strong>
                             </div>
+                            <span style="background: #251810; color: #FFD700; border: 1px solid #DAA520; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11px;">
+                                v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?>
+                            </span>
                         </div>
+                        <p style="margin: 0 0 10px 0; font-size: 12.5px; color: #555; line-height: 1.45;">
+                            Prüfe das System hier direkt auf neue Versionen. Liegt ein Update vor, verwandelt sich dieser Button automatisch und Du kannst es mit einem Klick sofort installieren.
+                        </p>
+
+                        <!-- Dynamic Notification Message Box -->
+                        <div id="olla-cockpit-update-msg" style="display: none; padding: 10px 14px; border-radius: 6px; font-size: 12.5px; line-height: 1.4; margin-bottom: 12px;"></div>
                     </div>
-                    <?php if ($is_admin): ?>
-                        <div style="display: flex; align-items: center; gap: 10px;">
+
+                    <div style="padding-top: 10px; border-top: 1px solid rgba(218,165,32,0.25); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
                             <span id="olla-cockpit-update-spinner" class="spinner" style="float: none; margin: 0;"></span>
-                            <!-- Kombinierter 1-Klick-Button: Suchen & direkt aktualisieren -->
-                            <button type="button" id="olla-cockpit-quick-update-btn" class="button button-primary" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); border-color: #1b5e20; color: #ffffff; font-weight: 700; padding: 6px 18px; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border-radius: 5px;">
-                                ⚡ Nach Updates suchen &amp; aktualisieren
+                            <!-- Der sich verwandelnde Hauptbutton -->
+                            <button type="button" id="olla-cockpit-transform-btn" class="button button-primary" data-state="check" style="background: linear-gradient(135deg, #e8a825 0%, #cb8b10 100%); border-color: #b77908; color: #070202; font-weight: 700; font-size: 12.5px; padding: 5px 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: all 0.2s ease;">
+                                🔍 Nach neuen Updates suchen
                             </button>
                         </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Update Status Notification Box -->
-                <div id="olla-cockpit-update-msg" style="display: none; padding: 12px 16px; border-radius: 6px; font-size: 13px; line-height: 1.45; margin-bottom: 12px;"></div>
-
-                <?php if ($is_admin): ?>
-                    <!-- Einzelschritt-Buttons: Suchen & Ausführen -->
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid rgba(218,165,32,0.25);">
-                        <span style="font-size: 12px; color: #555; font-weight: 600;">Manuelle Einzelschritte:</span>
-                        <button type="button" id="olla-cockpit-check-btn" class="button" style="border-color: #DAA520; color: #5c3e06; font-weight: 600; font-size: 12px;">
-                            🔍 1. Nach Updates suchen
-                        </button>
-                        <button type="button" id="olla-cockpit-run-update-btn" class="button button-primary" style="display: none; background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700; font-size: 12px;">
-                            🚀 2. Jetzt Aktualisierung installieren
-                        </button>
-                        <a href="<?php echo esc_url(admin_url('plugins.php')); ?>" class="button" style="font-size: 12px; color: #666;">
-                            Zur WordPress Plugins-Verwaltung &rarr;
+                        <a href="<?php echo esc_url(admin_url('plugins.php')); ?>" class="button" style="font-size: 11.5px; color: #666;">
+                            Plugins &rarr;
                         </a>
                     </div>
-                <?php else: ?>
-                    <div style="font-size: 12px; color: #666; font-style: italic; padding-top: 8px; border-top: 1px solid rgba(218,165,32,0.25);">
-                        ℹ️ Plugin-Updates werden zentral und sicher durch Jan Dennis Brüning betreut. Sobald neue Funktionen oder Verbesserungen freigegeben sind, aktualisiert sich Dein System vollautomatisch.
-                    </div>
-                <?php endif; ?>
+                </div>
             </div>
 
-            <!-- 5. Praxistipps & Leitfaden -->
+            <!-- 4. Praxistipps & Leitfaden -->
             <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                     <span style="font-size: 16px;">💡</span>

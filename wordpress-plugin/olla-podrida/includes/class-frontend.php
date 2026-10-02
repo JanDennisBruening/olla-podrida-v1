@@ -336,6 +336,7 @@ class Olla_Podrida_Frontend {
                 'scrollTop' => $settings['text_scroll_top'] ?? 'Nach oben',
                 'footerDev' => $settings['text_footer_dev'] ?? 'Design, Konzept und Webentwicklung · Jan Dennis Brüning',
             ],
+            'version' => OLLA_PODRIDA_VERSION,
             'restUrl' => rest_url('olla-podrida/v1/contact'),
             'nonce' => wp_create_nonce('wp_rest'),
             'ajaxUrl' => admin_url('admin-ajax.php'),

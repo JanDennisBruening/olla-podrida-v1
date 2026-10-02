@@ -170,6 +170,7 @@ declare global {
       legal?: Partial<LegalConfig>;
       press?: Partial<PressConfig>;
       texts?: Partial<SiteTextsConfig>;
+      version?: string;
       restUrl?: string;
       nonce?: string;
     };
@@ -182,6 +183,11 @@ const getWPData = () => {
     return window.OLLA_PODRIDA_DATA;
   }
   return null;
+};
+
+export const getPluginVersion = (): string => {
+  const wp = getWPData();
+  return wp?.version || '1.5.4';
 };
 
 /**

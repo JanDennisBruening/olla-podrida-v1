@@ -1048,5 +1048,11 @@ body.olla-modal-open {
     }
 }
 
+@media (min-width: 900px) {
+    .olla-cockpit-update-card {
+        grid-column: span 2 !important;
+    }
+}
+
 
 
