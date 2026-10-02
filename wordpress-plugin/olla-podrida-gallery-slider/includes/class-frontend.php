@@ -9,6 +9,8 @@ class OP_Gallery_Frontend {
         add_shortcode('olla_podrida_gallery_slider', [__CLASS__, 'render_shortcode']);
         add_shortcode('olla_gallery_slider', [__CLASS__, 'render_shortcode']);
         add_filter('template_include', [__CLASS__, 'intercept_canvas_template'], 99);
+        add_action('wp_enqueue_scripts', [__CLASS__, 'isolate_canvas_styles'], 99999);
+        add_action('wp_print_styles', [__CLASS__, 'isolate_canvas_styles'], 99999);
     }
 
     /**
@@ -89,6 +91,51 @@ class OP_Gallery_Frontend {
             }
         }
         return $template;
+    }
+
+    /**
+     * Completely isolate the fullscreen Canvas mode by dequeuing active theme styles
+     * and scripts that conflict with the React 19 / Tailwind 4 layout.
+     */
+    public static function isolate_canvas_styles() {
+        if (!self::is_gallery_page()) {
+            return;
+        }
+
+        $settings = OP_Gallery_Settings::get_settings();
+        if (empty($settings['display_mode']) || $settings['display_mode'] !== 'canvas') {
+            return;
+        }
+
+        // Dequeue active theme styles that bleed into the gallery canvas
+        $styles_to_dequeue = [
+            'jdb-site-snapshot',
+            'jdb-test-theme',
+            'jdb-notion-blog',
+            'wp-block-library',
+            'wp-block-library-theme',
+            'global-styles',
+            'classic-theme-styles',
+            'ai_summarization',
+            'ai_content_translation',
+        ];
+
+        foreach ($styles_to_dequeue as $handle) {
+            wp_dequeue_style($handle);
+            wp_deregister_style($handle);
+        }
+
+        // Dequeue active theme scripts that inject UI or manipulate DOM
+        $scripts_to_dequeue = [
+            'jdb-consent',
+            'jdb-site-ui',
+            'jdb-test-theme',
+        ];
+
+        foreach ($scripts_to_dequeue as $handle) {
+            wp_dequeue_script($handle);
+            wp_deregister_script($handle);
+        }
     }
 
     /**

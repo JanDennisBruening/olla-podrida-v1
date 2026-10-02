@@ -19,6 +19,7 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
         add_action('admin_bar_menu', [__CLASS__, 'customize_admin_bar_logo'], 11);
         add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
+        add_action('wp_head', [__CLASS__, 'render_admin_bar_frontend_styles']);
         add_filter('admin_body_class', [__CLASS__, 'add_admin_body_classes']);
         add_action('login_enqueue_scripts', [__CLASS__, 'customize_login_page']);
         add_filter('login_headerurl', [__CLASS__, 'customize_login_headerurl']);
@@ -500,6 +501,57 @@ class Olla_Podrida_Admin {
             #olla_podrida_dashboard_welcome .inside {
                 padding: 18px 22px !important;
                 margin: 0 !important;
+            }
+        </style>
+        <?php
+    }
+
+    public static function render_admin_bar_frontend_styles() {
+        if (!is_admin_bar_showing()) {
+            return;
+        }
+        ?>
+        <style id="olla-podrida-admin-bar-frontend-css">
+            #wpadminbar #wp-admin-bar-wp-logo > .ab-item {
+                display: flex !important;
+                align-items: center !important;
+                padding: 0 12px 0 10px !important;
+                height: 32px !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .ab-icon,
+            #wpadminbar #wp-admin-bar-wp-logo .ab-icon:before {
+                display: none !important;
+                content: "" !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-badge {
+                width: 25px !important;
+                height: 25px !important;
+                border-radius: 50% !important;
+                background: radial-gradient(circle, #fffaf0 0%, #faecd0 70%, #dfb547 100%) !important;
+                border: 1.5px solid #FFD700 !important;
+                box-shadow: 0 0 6px rgba(218, 165, 32, 0.7), inset 0 0 3px rgba(0,0,0,0.25) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                overflow: hidden !important;
+                flex-shrink: 0 !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-pot-img {
+                width: 21px !important;
+                height: 21px !important;
+                max-width: 21px !important;
+                max-height: 21px !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+            #wpadminbar #wp-admin-bar-wp-logo .olla-admin-bar-title {
+                color: #FFD700 !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                letter-spacing: 0.04em !important;
+                margin-left: 8px !important;
+                display: inline-block !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
             }
         </style>
         <?php
