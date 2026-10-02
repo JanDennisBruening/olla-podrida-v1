@@ -17,6 +17,8 @@ class Olla_Podrida_Admin {
         add_action('wp_ajax_olla_podrida_delete_event', [__CLASS__, 'handle_ajax_delete_event']);
         add_action('wp_ajax_olla_podrida_toggle_event', [__CLASS__, 'handle_ajax_toggle_event']);
         add_action('wp_ajax_olla_podrida_delete_message', [__CLASS__, 'handle_ajax_delete_message']);
+        add_action('wp_ajax_olla_cockpit_check_update', [__CLASS__, 'handle_ajax_cockpit_check_update']);
+        add_action('wp_ajax_olla_cockpit_run_update', [__CLASS__, 'handle_ajax_cockpit_run_update']);
         add_action('admin_bar_menu', [__CLASS__, 'customize_admin_bar_logo'], 11);
         add_action('admin_head', [__CLASS__, 'render_sidebar_styles']);
         add_action('wp_head', [__CLASS__, 'render_admin_bar_frontend_styles']);
@@ -238,15 +240,17 @@ class Olla_Podrida_Admin {
             /* SUBMENU BEHAVIOR: EMBEDDED ON WIDE DESKTOP, HOVER-ONLY ON FOLDED/TABLET */
             /* ======================================================== */
 
-            /* 1. DESKTOP WIDE MENU (>960px and not folded): Embedded flush in sidebar */
+            /* 1. DESKTOP EXPANDED SIDEBAR (>960px AND not body.folded):
+               Submenu is ALWAYS visible directly beneath the main menu item, flush in the sidebar with NO hover required. */
             @media (min-width: 961px) {
-                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
-                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu,
-                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu,
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu,
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu {
                     display: block !important;
                     position: static !important;
                     top: auto !important;
-                    left: 0 !important;
+                    left: auto !important;
                     right: auto !important;
                     box-shadow: none !important;
                     border: none !important;
@@ -258,16 +262,19 @@ class Olla_Podrida_Admin {
                     width: 100% !important;
                     max-width: 100% !important;
                     box-sizing: border-box !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
                 }
-                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
                     display: block !important;
                     margin: 0 !important;
                     padding: 0 !important;
                     border: none !important;
                 }
-                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
                     display: block !important;
-                    padding: 6px 10px 6px 16px !important;
+                    padding: 7px 10px 7px 16px !important;
                     font-size: 13px !important;
                     line-height: 1.4 !important;
                     color: #cfc4ac !important;
@@ -282,7 +289,7 @@ class Olla_Podrida_Admin {
                 }
             }
 
-            /* 2. FOLDED / TABLET / RESPONSIVE (<=960px or body.folded): HIDDEN by default, ONLY shows on HOVER */
+            /* 2. TABLET / RESPONSIVE (<=960px): Sidebar is collapsed to 36px icon bar; submenu floats on hover */
             @media (max-width: 960px) {
                 #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
                 #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu {
@@ -290,7 +297,7 @@ class Olla_Podrida_Admin {
                     position: absolute !important;
                     top: -1px !important;
                     left: 36px !important;
-                    width: 195px !important;
+                    width: 200px !important;
                     background: #160e0a !important;
                     border: 1px solid #3c2415 !important;
                     border-left: none !important;
@@ -317,14 +324,14 @@ class Olla_Podrida_Admin {
                 }
             }
 
+            /* 3. MANUALLY FOLDED SIDEBAR (Desktop with body.folded): Floating flyout submenu on hover */
             body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
-            body.folded #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu,
-            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu {
+            body.folded #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu {
                 display: none !important;
                 position: absolute !important;
                 top: -1px !important;
                 left: 36px !important;
-                width: 195px !important;
+                width: 200px !important;
                 background: #160e0a !important;
                 border: 1px solid #3c2415 !important;
                 border-left: none !important;
@@ -336,17 +343,13 @@ class Olla_Podrida_Admin {
             }
             body.folded #adminmenu li.toplevel_page_olla-podrida:hover .wp-submenu,
             body.folded #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu,
-            body.folded #adminmenu li.toplevel_page_olla-podrida:focus-within .wp-submenu,
-            body.auto-fold #adminmenu li.toplevel_page_olla-podrida:hover .wp-submenu,
-            body.auto-fold #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
+            body.folded #adminmenu li.toplevel_page_olla-podrida:focus-within .wp-submenu {
                 display: block !important;
             }
-            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head),
-            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
+            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
                 display: block !important;
             }
-            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a,
-            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
                 display: block !important;
                 padding: 8px 14px !important;
                 font-size: 13px !important;
@@ -654,12 +657,14 @@ class Olla_Podrida_Admin {
     }
 
     public static function enqueue_admin_assets($hook) {
-        if (strpos($hook, 'olla-podrida') === false) {
+        if (strpos($hook, 'olla-podrida') === false && $hook !== 'index.php') {
             return;
         }
 
-        // Native WordPress Media Library
-        wp_enqueue_media();
+        // Native WordPress Media Library (only on plugin pages)
+        if (strpos($hook, 'olla-podrida') !== false) {
+            wp_enqueue_media();
+        }
 
         wp_enqueue_style(
             'olla-podrida-admin-style',
@@ -1006,6 +1011,108 @@ class Olla_Podrida_Admin {
     }
 
     /**
+     * AJAX: Check for plugin updates directly from dashboard cockpit
+     */
+    public static function handle_ajax_cockpit_check_update() {
+        check_ajax_referer('olla_podrida_admin_nonce', 'nonce');
+
+        if (!current_user_can('update_plugins')) {
+            wp_send_json_error(['message' => 'Keine ausreichenden Berechtigungen zur Prüfung von Updates.']);
+        }
+
+        // Force fresh check from remote
+        $remote = Olla_Podrida_Updater::get_remote_info(true);
+        if (!$remote || empty($remote['version'])) {
+            wp_send_json_error(['message' => 'Update-Server antwortet derzeit nicht. Bitte prüfe deine Internetverbindung.']);
+        }
+
+        $remote_version = trim($remote['version']);
+        $has_update = version_compare($remote_version, OLLA_PODRIDA_VERSION, '>');
+
+        // Trigger WordPress update transient check
+        if (file_exists(ABSPATH . 'wp-admin/includes/update.php')) {
+            require_once ABSPATH . 'wp-admin/includes/update.php';
+            wp_update_plugins();
+        }
+
+        wp_send_json_success([
+            'has_update'      => $has_update,
+            'current_version' => OLLA_PODRIDA_VERSION,
+            'new_version'     => $remote_version,
+            'message'         => $has_update 
+                ? 'Neue Version v' . $remote_version . ' verfügbar!' 
+                : 'Du nutzt bereits die aktuellste Version v' . OLLA_PODRIDA_VERSION . '.',
+        ]);
+    }
+
+    /**
+     * AJAX: Run plugin update in-place from dashboard cockpit
+     */
+    public static function handle_ajax_cockpit_run_update() {
+        check_ajax_referer('olla_podrida_admin_nonce', 'nonce');
+
+        if (!current_user_can('update_plugins')) {
+            wp_send_json_error(['message' => 'Keine ausreichenden Berechtigungen zur Aktualisierung von Plugins.']);
+        }
+
+        // Force clearing of cached transients
+        delete_site_transient('update_plugins');
+        delete_transient('olla_podrida_remote_version');
+
+        if (file_exists(ABSPATH . 'wp-admin/includes/update.php')) {
+            require_once ABSPATH . 'wp-admin/includes/update.php';
+            wp_update_plugins();
+        }
+
+        if (file_exists(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php')) {
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        }
+        if (file_exists(ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php')) {
+            require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
+        }
+        if (file_exists(ABSPATH . 'wp-admin/includes/plugin.php')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        $skin = class_exists('WP_Ajax_Upgrader_Skin') ? new WP_Ajax_Upgrader_Skin() : null;
+        $upgrader = new Plugin_Upgrader($skin);
+        $plugin_file = 'olla-podrida/olla-podrida.php';
+
+        $result = $upgrader->upgrade($plugin_file);
+
+        if (is_wp_error($result)) {
+            wp_send_json_error(['message' => $result->get_error_message()]);
+        } elseif ($result === false) {
+            $error_msg = 'Aktualisierung fehlgeschlagen. Bitte versuche es über die WordPress Plugins-Seite.';
+            if ($skin && method_exists($skin, 'get_errors')) {
+                $errs = $skin->get_errors();
+                if (is_wp_error($errs) && $errs->has_errors()) {
+                    $error_msg = $errs->get_error_message();
+                }
+            }
+            wp_send_json_error(['message' => $error_msg]);
+        } else {
+            if (function_exists('is_plugin_active') && function_exists('activate_plugin')) {
+                if (!is_plugin_active($plugin_file)) {
+                    activate_plugin($plugin_file);
+                }
+            }
+            $new_ver = '';
+            if (function_exists('get_plugin_data') && defined('WP_PLUGIN_DIR')) {
+                $full_file = WP_PLUGIN_DIR . '/' . $plugin_file;
+                if (file_exists($full_file)) {
+                    $plugin_data = get_plugin_data($full_file, false, false);
+                    $new_ver = !empty($plugin_data['Version']) ? $plugin_data['Version'] : '';
+                }
+            }
+            wp_send_json_success([
+                'new_version' => $new_ver,
+                'message'     => 'Plugin erfolgreich auf Version ' . ($new_ver ? 'v' . $new_ver : '') . ' aktualisiert!',
+            ]);
+        }
+    }
+
+    /**
      * Register WordPress Dashboard Widgets.
      */
     public static function register_dashboard_widgets() {
@@ -1100,11 +1207,17 @@ class Olla_Podrida_Admin {
         <div class="olla-cockpit-wrap" style="color: #2c3338; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;">
             
             <!-- 1. Hero Welcome Header with Atmospheric Medieval Drift Smoke -->
-            <div style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: radial-gradient(circle at 80% 25%, rgba(218, 165, 32, 0.16) 0%, transparent 60%), linear-gradient(135deg, #140d09 0%, #070302 100%); border: 1.5px solid #DAA520; border-radius: 12px; padding: 22px 26px; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,215,0,0.25);">
+            <div style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: radial-gradient(circle at 80% 25%, rgba(218, 165, 32, 0.16) 0%, transparent 60%), linear-gradient(135deg, #140d09 0%, #070302 100%); border: 1.5px solid #DAA520; border-radius: 12px; padding: 38px 24px 20px 24px; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,215,0,0.25);">
                 
                 <!-- Atmospheric Medieval Drifting Smoke Background -->
                 <div style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: 0.28; mix-blend-mode: screen; z-index: 1;">
                     <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/Rauch-neu.webp'); ?>" alt="" style="position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; object-fit: cover; animation: ollaAdminSmoke 20s ease-in-out infinite;" />
+                </div>
+
+                <!-- Top-Left Version Badge (always visible) -->
+                <div class="olla-cockpit-version-tag" style="position: absolute; top: 11px; left: 16px; z-index: 10; display: inline-flex; align-items: center; gap: 6px; background: rgba(22, 14, 10, 0.92); border: 1.2px solid #DAA520; border-radius: 20px; padding: 2px 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                    <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #00e676; box-shadow: 0 0 6px #00e676;"></span>
+                    <span style="font-size: 11px; font-weight: 700; color: #FFD700; letter-spacing: 0.05em; text-transform: uppercase;">Plugin v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
                 </div>
 
                 <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 18px;">
@@ -1133,7 +1246,7 @@ class Olla_Podrida_Admin {
             </div>
 
             <!-- 2. Live System Status Bar -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 22px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 22px;">
                 <!-- Stat 1: Konzerte -->
                 <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
                     <div>
@@ -1180,6 +1293,24 @@ class Olla_Podrida_Admin {
                         <div style="font-size: 11px; color: #888; margin-top: 1px;">Kein Drittanbieter-Tracking</div>
                     </div>
                     <span style="font-size: 26px;">🛡️</span>
+                </div>
+
+                <!-- Stat 5: Plugin-Version & Updates -->
+                <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div style="font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #777; font-weight: 600;">System &amp; Updates</div>
+                        <div style="font-size: 14.5px; font-weight: 700; color: #1d2327; margin-top: 2px;">
+                            v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?> (Aktiv)
+                        </div>
+                        <div style="font-size: 11px; color: #888; margin-top: 1px;">
+                            <?php 
+                            $auto_updates = (array) get_site_option('auto_update_plugins', []);
+                            $is_auto = in_array('olla-podrida/olla-podrida.php', $auto_updates, true);
+                            echo $is_auto ? '⚡ Auto-Updates aktiv' : 'Manuelle Updates';
+                            ?>
+                        </div>
+                    </div>
+                    <span style="font-size: 26px;">🔄</span>
                 </div>
             </div>
 
@@ -1313,7 +1444,55 @@ class Olla_Podrida_Admin {
                 </div>
             </div>
 
-            <!-- 4. Praxistipps & Leitfaden -->
+            <!-- 4. Update-Cockpit & Systemverwaltung -->
+            <div id="olla-cockpit-update-box" style="background: linear-gradient(135deg, #fbf7ee 0%, #f7f1e1 100%); border: 1.5px solid #d4a954; border-radius: 10px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 3px 10px rgba(218,165,32,0.12);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 28px;">⚡</span>
+                        <div>
+                            <strong style="font-size: 15px; color: #1d2327;">Plugin-Aktualisierung &amp; Systemstatus</strong>
+                            <div style="font-size: 12px; color: #666; margin-top: 2px;">
+                                Aktuell installierte Version: <span style="background: #251810; color: #FFD700; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11.5px; border: 1px solid #DAA520;">v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
+                                · Synchronisation mit zentralem Update-Server &amp; GitHub
+                            </div>
+                        </div>
+                    </div>
+                    <?php if ($is_admin): ?>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span id="olla-cockpit-update-spinner" class="spinner" style="float: none; margin: 0;"></span>
+                            <!-- Kombinierter 1-Klick-Button: Suchen & direkt aktualisieren -->
+                            <button type="button" id="olla-cockpit-quick-update-btn" class="button button-primary" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); border-color: #1b5e20; color: #ffffff; font-weight: 700; padding: 6px 18px; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border-radius: 5px;">
+                                ⚡ Nach Updates suchen &amp; aktualisieren
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Update Status Notification Box -->
+                <div id="olla-cockpit-update-msg" style="display: none; padding: 12px 16px; border-radius: 6px; font-size: 13px; line-height: 1.45; margin-bottom: 12px;"></div>
+
+                <?php if ($is_admin): ?>
+                    <!-- Einzelschritt-Buttons: Suchen & Ausführen -->
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid rgba(218,165,32,0.25);">
+                        <span style="font-size: 12px; color: #555; font-weight: 600;">Manuelle Einzelschritte:</span>
+                        <button type="button" id="olla-cockpit-check-btn" class="button" style="border-color: #DAA520; color: #5c3e06; font-weight: 600; font-size: 12px;">
+                            🔍 1. Nach Updates suchen
+                        </button>
+                        <button type="button" id="olla-cockpit-run-update-btn" class="button button-primary" style="display: none; background: #e8a825; border-color: #cb8b10; color: #070202; font-weight: 700; font-size: 12px;">
+                            🚀 2. Jetzt Aktualisierung installieren
+                        </button>
+                        <a href="<?php echo esc_url(admin_url('plugins.php')); ?>" class="button" style="font-size: 12px; color: #666;">
+                            Zur WordPress Plugins-Verwaltung &rarr;
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div style="font-size: 12px; color: #666; font-style: italic; padding-top: 8px; border-top: 1px solid rgba(218,165,32,0.25);">
+                        ℹ️ Plugin-Updates werden zentral und sicher durch Jan Dennis Brüning betreut. Sobald neue Funktionen oder Verbesserungen freigegeben sind, aktualisiert sich Dein System vollautomatisch.
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- 5. Praxistipps & Leitfaden -->
             <div style="background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                     <span style="font-size: 16px;">💡</span>

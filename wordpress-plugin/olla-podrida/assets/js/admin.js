@@ -10,6 +10,7 @@
         initMessageManagement();
         initMusicianManagement();
         initImportManagement();
+        initCockpitUpdates();
     });
 
     /**
@@ -707,5 +708,178 @@
         }
     }
 
+    /**
+     * Dashboard Cockpit Updates (Check & 1-Click Update)
+     */
+    function initCockpitUpdates() {
+        var $box = $('#olla-cockpit-update-box');
+        if (!$box.length) return;
+
+        var $spinner = $('#olla-cockpit-update-spinner');
+        var $msg = $('#olla-cockpit-update-msg');
+        var $checkBtn = $('#olla-cockpit-check-btn');
+        var $runBtn = $('#olla-cockpit-run-update-btn');
+        var $quickBtn = $('#olla-cockpit-quick-update-btn');
+
+        function showMessage(html, type) {
+            var bg = '#f0fdf4';
+            var border = '#22c55e';
+            var color = '#15803d';
+
+            if (type === 'info') {
+                bg = '#fefce8';
+                border = '#eab308';
+                color = '#854d0e';
+            } else if (type === 'error') {
+                bg = '#fef2f2';
+                border = '#ef4444';
+                color = '#b91c1c';
+            } else if (type === 'loading') {
+                bg = '#eff6ff';
+                border = '#3b82f6';
+                color = '#1d4ed8';
+            }
+
+            $msg.stop(true, true).css({
+                background: bg,
+                border: '1px solid ' + border,
+                color: color
+            }).html(html).fadeIn(200);
+        }
+
+        // 1. Check for updates
+        $checkBtn.on('click', function(e) {
+            e.preventDefault();
+            $spinner.addClass('is-active');
+            $checkBtn.prop('disabled', true);
+            $quickBtn.prop('disabled', true);
+            showMessage('⏳ Suche nach neuen Updates auf Server &amp; GitHub...', 'loading');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_cockpit_check_update',
+                nonce: OllaPodridaAdmin.nonce
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                $checkBtn.prop('disabled', false);
+                $quickBtn.prop('disabled', false);
+
+                if (res.success && res.data) {
+                    if (res.data.has_update) {
+                        showMessage('🎉 <strong>Neue Version v' + res.data.new_version + ' verfügbar!</strong> (Installiert: v' + res.data.current_version + ')<br>Klicke unten auf den goldenen Button, um die Aktualisierung jetzt zu starten.', 'info');
+                        $runBtn.text('🚀 Jetzt auf v' + res.data.new_version + ' aktualisieren').show();
+                    } else {
+                        showMessage('✨ <strong>Alles auf dem neuesten Stand!</strong> Du verwendest bereits die aktuellste Version v' + res.data.current_version + '.', 'success');
+                        $runBtn.hide();
+                    }
+                } else {
+                    var err = (res && res.data && res.data.message) ? res.data.message : 'Verbindungsfehler bei der Update-Prüfung.';
+                    showMessage('⚠️ ' + err, 'error');
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $checkBtn.prop('disabled', false);
+                $quickBtn.prop('disabled', false);
+                showMessage('⚠️ Server antwortet nicht. Bitte prüfe deine Internetverbindung.', 'error');
+            });
+        });
+
+        // 2. Run update
+        $runBtn.on('click', function(e) {
+            e.preventDefault();
+            if (!confirm('Möchtest Du das Plugin jetzt auf die neueste Version aktualisieren?')) {
+                return;
+            }
+
+            $spinner.addClass('is-active');
+            $runBtn.prop('disabled', true);
+            $checkBtn.prop('disabled', true);
+            $quickBtn.prop('disabled', true);
+            showMessage('⏳ Plugin-Paket wird heruntergeladen und installiert... Bitte kurz warten.', 'loading');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_cockpit_run_update',
+                nonce: OllaPodridaAdmin.nonce
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                if (res.success) {
+                    var successText = (res.data && res.data.message) ? res.data.message : 'Plugin erfolgreich aktualisiert!';
+                    showMessage('✅ <strong>' + successText + '</strong> Das Cockpit lädt in Kürze neu...', 'success');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1600);
+                } else {
+                    $runBtn.prop('disabled', false);
+                    $checkBtn.prop('disabled', false);
+                    $quickBtn.prop('disabled', false);
+                    var err = (res && res.data && res.data.message) ? res.data.message : 'Aktualisierung fehlgeschlagen.';
+                    showMessage('⚠️ <strong>Aktualisierung fehlgeschlagen:</strong> ' + err, 'error');
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $runBtn.prop('disabled', false);
+                $checkBtn.prop('disabled', false);
+                $quickBtn.prop('disabled', false);
+                showMessage('⚠️ Serverfehler während der Aktualisierung. Bitte versuche es über die Plugins-Verwaltung.', 'error');
+            });
+        });
+
+        // 3. Smart 1-Click: Search & Update Combo Button
+        $quickBtn.on('click', function(e) {
+            e.preventDefault();
+            $spinner.addClass('is-active');
+            $quickBtn.prop('disabled', true);
+            $checkBtn.prop('disabled', true);
+            showMessage('⏳ <strong>Schritt 1/2:</strong> Suche nach verfügbaren Updates...', 'loading');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_cockpit_check_update',
+                nonce: OllaPodridaAdmin.nonce
+            }, function(res) {
+                if (res.success && res.data && res.data.has_update) {
+                    var newVer = res.data.new_version;
+                    showMessage('🚀 <strong>Schritt 2/2:</strong> Version v' + newVer + ' gefunden! Paket wird heruntergeladen und installiert...', 'loading');
+                    
+                    $.post(OllaPodridaAdmin.ajax_url, {
+                        action: 'olla_cockpit_run_update',
+                        nonce: OllaPodridaAdmin.nonce
+                    }, function(upRes) {
+                        $spinner.removeClass('is-active');
+                        if (upRes.success) {
+                            showMessage('✅ <strong>Erfolgreich aktualisiert auf Version v' + newVer + '!</strong> Das Cockpit lädt jetzt automatisch neu...', 'success');
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1600);
+                        } else {
+                            $quickBtn.prop('disabled', false);
+                            $checkBtn.prop('disabled', false);
+                            var err = (upRes && upRes.data && upRes.data.message) ? upRes.data.message : 'Aktualisierung fehlgeschlagen.';
+                            showMessage('⚠️ <strong>Aktualisierung fehlgeschlagen:</strong> ' + err, 'error');
+                        }
+                    }).fail(function() {
+                        $spinner.removeClass('is-active');
+                        $quickBtn.prop('disabled', false);
+                        $checkBtn.prop('disabled', false);
+                        showMessage('⚠️ Serverfehler während der Aktualisierung.', 'error');
+                    });
+                } else if (res.success && res.data) {
+                    $spinner.removeClass('is-active');
+                    $quickBtn.prop('disabled', false);
+                    $checkBtn.prop('disabled', false);
+                    showMessage('✨ <strong>Alles auf dem neuesten Stand!</strong> Du verwendest bereits die aktuellste Version v' + res.data.current_version + '. Es ist kein Update erforderlich.', 'success');
+                } else {
+                    $spinner.removeClass('is-active');
+                    $quickBtn.prop('disabled', false);
+                    $checkBtn.prop('disabled', false);
+                    var err = (res && res.data && res.data.message) ? res.data.message : 'Prüfung fehlgeschlagen.';
+                    showMessage('⚠️ ' + err, 'error');
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $quickBtn.prop('disabled', false);
+                $checkBtn.prop('disabled', false);
+                showMessage('⚠️ Server antwortet nicht. Bitte prüfe deine Internetverbindung.', 'error');
+            });
+        });
+    }
 
 })(jQuery);

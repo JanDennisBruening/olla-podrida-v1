@@ -1025,4 +1025,28 @@ body.olla-modal-open {
     }
 }
 
+/* Dashboard Update Cockpit Enhancements */
+#olla-cockpit-update-box button {
+    transition: all 0.2s ease;
+}
+#olla-cockpit-update-box button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+}
+#olla-cockpit-update-box button:active:not(:disabled) {
+    transform: translateY(0);
+}
+@media (max-width: 600px) {
+    #olla-cockpit-update-box > div:first-child {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    #olla-cockpit-update-box button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+
 
