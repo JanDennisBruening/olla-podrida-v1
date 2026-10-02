@@ -25,7 +25,6 @@ interface PostEvent {
 interface EventCardItemProps {
   event: PostEvent;
   index: number;
-  scrollY: number;
   isExpanded: boolean;
   onToggle: () => void;
   onPrint: () => void;
@@ -280,7 +279,6 @@ const printEventDocument = (event: PostEvent, logoUrl: string) => {
 const EventCardItem: React.FC<EventCardItemProps> = ({
   event,
   index,
-  scrollY,
   isExpanded,
   onToggle,
   onPrint,
@@ -292,7 +290,6 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
     triggerOnce: true
   });
   const cardStagger = Math.min((index % 3) * 110, 220);
-  const smokeFloat = Math.cos((scrollY * 0.002) + index) * 10;
 
   return (
     <div
@@ -310,12 +307,11 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
         transitionDelay: isInView ? `${cardStagger}ms` : '0ms'
       }}
     >
-      {/* Dunstwolke implemented directly as background inside each infobox with parallax mist */}
+      {/* Dunstwolke implemented directly as background inside each infobox */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-50 transition-all duration-700 mix-blend-screen bg-cover bg-bottom bg-no-repeat z-0"
+        className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-50 transition-opacity duration-700 mix-blend-screen bg-cover bg-bottom bg-no-repeat z-0"
         style={{
-          backgroundImage: `url("${smokeAlt}")`,
-          transform: `translate3d(0, ${smokeFloat}px, 0)`
+          backgroundImage: `url("${smokeAlt}")`
         }}
       />
 
@@ -504,7 +500,6 @@ export const TermineSection: React.FC = () => {
   const texts = getSiteTexts();
   const rawEvents = getConcertEvents();
   const { ref: sectionRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
-  const [scrollY, setScrollY] = useState(0);
   const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
 
   // Auto-Archive: Only include upcoming events whose date and time have not expired yet
@@ -540,21 +535,6 @@ export const TermineSection: React.FC = () => {
     printEventDocument(event, assets.logo);
   };
 
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <section
       ref={sectionRef}
@@ -588,7 +568,6 @@ export const TermineSection: React.FC = () => {
                 key={event.id}
                 event={event}
                 index={index}
-                scrollY={scrollY}
                 isExpanded={expandedEventId === event.id}
                 onToggle={() => toggleEvent(event.id)}
                 onPrint={() => handlePrintEvent(event)}

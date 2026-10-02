@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { HeroStage } from './components/HeroStage';
 import { EnsembleSection } from './components/EnsembleSection';
@@ -161,74 +160,16 @@ export default function App() {
     setLoginModalOpen(false);
   };
 
+  // Lock body & html scroll completely while cookie consent banner or any modal is visible
   useEffect(() => {
-    // Disable smooth scrolling on mobile / touch viewports (< 768px), native touch scrolling is used instead
-    const isMobileOrTouch = typeof window !== 'undefined' && (
-      window.innerWidth < 768 ||
-      'ontouchstart' in window ||
-      navigator.maxTouchPoints > 0
-    );
-
-    if (isMobileOrTouch) {
-      // Lenis is deactivated for mobile devices to allow native OS scrolling
-      return;
-    }
-
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      syncTouch: false,
-    });
-
-    (window as any).__lenis = lenis;
-
-    lenis.on('scroll', (e: { scroll: number }) => {
-      window.dispatchEvent(new CustomEvent('olla-scroll', { detail: { scroll: e.scroll } }));
-    });
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      delete (window as any).__lenis;
-    };
-  }, []);
-
-  // Lock body & html scroll completely and pause Lenis while cookie consent banner is visible
-  useEffect(() => {
-    if (!hasConsent) {
+    const isLocked = !hasConsent || !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
+    if (isLocked) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
-      const lenis = (window as any).__lenis;
-      if (lenis) lenis.stop();
       return () => {
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
-        if (lenis) lenis.start();
       };
-    }
-  }, [hasConsent]);
-
-  // Pause Lenis smooth scrolling when any modal is open to ensure 100% native, unblocked inner scrolling
-  useEffect(() => {
-    const isAnyModalOpen = !hasConsent || !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
-    const lenis = (window as any).__lenis;
-    if (lenis) {
-      if (isAnyModalOpen) {
-        lenis.stop();
-      } else {
-        lenis.start();
-      }
     }
   }, [hasConsent, legalModalType, archiveModalOpen, presseModalOpen, loginModalOpen]);
 
@@ -269,15 +210,6 @@ export default function App() {
         onCloseAll={handleCloseAllModals}
       />
 
-      {/* Subtle Global Ambient Mystic Fog Layer - Low opacity to maintain optimal text readability */}
-      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden opacity-[0.12] mix-blend-screen">
-        <img
-          src={ASSETS.smokeAlt}
-          alt=""
-          className="w-full h-full object-cover animate-fog-drift animate-mystic-glow"
-          style={{ animationDuration: '32s' }}
-        />
-      </div>
 
       {/* Main Content Sections */}
       <main className="flex-1 w-full flex flex-col bg-[#070202]">
