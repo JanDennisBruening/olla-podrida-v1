@@ -164,29 +164,38 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
 
   const heroBgRef = useRef<HTMLDivElement>(null);
 
-  // Subtle Header background parallax on scroll - native RAF
+  // Subtle Header background parallax on scroll - synchronized with Lenis RAF and native fallback
   useEffect(() => {
-    let ticking = false;
-    let rafId: number;
+    const updateParallax = (scrollY: number) => {
+      if (scrollY <= 1400 && heroBgRef.current) {
+        const bgOffset = (scrollY * 0.16).toFixed(1);
+        heroBgRef.current.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+      }
+    };
 
-    const onScroll = () => {
+    const handleOllaScroll = (e: Event) => {
+      const scrollY = (e as CustomEvent<{ scroll: number }>).detail?.scroll ?? window.scrollY ?? 0;
+      updateParallax(scrollY);
+    };
+
+    let ticking = false;
+    const handleNativeScroll = () => {
+      if ((window as any).__lenis) return; // Handled synchronously by olla-scroll
       if (!ticking) {
-        rafId = requestAnimationFrame(() => {
-          const scrollY = window.scrollY || window.pageYOffset || 0;
-          if (scrollY <= 1400 && heroBgRef.current) {
-            const bgOffset = (scrollY * 0.16).toFixed(1);
-            heroBgRef.current.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
-          }
+        requestAnimationFrame(() => {
+          updateParallax(window.scrollY || window.pageYOffset || 0);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('olla-scroll', handleOllaScroll as EventListener);
+    window.addEventListener('scroll', handleNativeScroll, { passive: true });
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
+      window.removeEventListener('olla-scroll', handleOllaScroll as EventListener);
+      window.removeEventListener('scroll', handleNativeScroll);
     };
   }, []);
 

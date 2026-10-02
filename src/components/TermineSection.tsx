@@ -294,26 +294,58 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
   return (
     <div
       ref={cardRef}
-      onClick={onToggle}
-      className={`relative flex flex-col items-start bg-[#1A1A18] rounded-[0.625rem] p-5 sm:p-7 lg:p-8 transition-all duration-500 hover:bg-[#1e1c1b] hover:shadow-[0_0.5rem_1.875rem_rgba(218,165,32,0.2)] group overflow-hidden border cursor-pointer w-full ${
-        isExpanded ? 'border-[#DAA520] shadow-[0_0_1.5625rem_rgba(218,165,32,0.22)]' : 'border-[#2a2825] hover:border-[#DAA520]/60'
-      }`}
+      className="relative w-full group select-none"
       style={{
         transform: isInView ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)',
         opacity: isInView ? 1 : 0,
-        transitionProperty: 'opacity, transform, background-color, border-color, box-shadow',
-        transitionDuration: '700ms, 700ms, 300ms, 300ms, 300ms',
+        transitionProperty: 'opacity, transform',
+        transitionDuration: '700ms, 700ms',
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: isInView ? `${cardStagger}ms` : '0ms'
       }}
     >
-      {/* Dunstwolke implemented directly as background inside each infobox */}
+      {/* Radiant Golden Highlight Halo (Atmosphärisches Leuchten hinter den Terminen) */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-50 transition-opacity duration-700 mix-blend-screen bg-cover bg-bottom bg-no-repeat z-0"
+        className="absolute -inset-1 sm:-inset-2 rounded-2xl pointer-events-none transition-all duration-700 ease-out"
         style={{
-          backgroundImage: `url("${smokeAlt}")`
+          background: 'radial-gradient(ellipse 90% 80% at 50% 50%, rgba(218, 165, 32, 0.22) 0%, rgba(184, 115, 51, 0.12) 45%, transparent 78%)',
+          filter: 'blur(18px)',
+          opacity: isExpanded ? 1.0 : 0.72
         }}
       />
+      <div
+        className="absolute -inset-0.5 rounded-xl pointer-events-none transition-all duration-500 ease-out group-hover:opacity-100 opacity-60"
+        style={{
+          background: 'linear-gradient(135deg, rgba(218, 165, 32, 0.25) 0%, rgba(255, 215, 0, 0.12) 50%, rgba(184, 115, 51, 0.22) 100%)',
+          filter: 'blur(9px)'
+        }}
+      />
+
+      {/* Main Card Container */}
+      <div
+        onClick={onToggle}
+        className={`relative flex flex-col items-start bg-[#16120f]/95 rounded-[0.625rem] p-5 sm:p-7 lg:p-8 transition-all duration-500 hover:bg-[#1a1512] cursor-pointer w-full overflow-hidden border ${
+          isExpanded
+            ? 'border-[#FFD700] shadow-[0_6px_36px_rgba(218,165,32,0.38),0_0_24px_rgba(255,215,0,0.24)]'
+            : 'border-[#DAA520]/45 hover:border-[#FFD700] shadow-[0_4px_24px_rgba(218,165,32,0.18),0_0_14px_rgba(218,165,32,0.10)] hover:shadow-[0_8px_36px_rgba(218,165,32,0.32),0_0_22px_rgba(255,215,0,0.20)]'
+        }`}
+      >
+        {/* Subtle Candlelight Corner Warmth inside card */}
+        <div
+          className="absolute -top-16 -right-16 w-56 h-56 rounded-full pointer-events-none transition-all duration-700 ease-out group-hover:opacity-100 opacity-60"
+          style={{
+            background: 'radial-gradient(circle, rgba(218, 165, 32, 0.15) 0%, rgba(184, 115, 51, 0.05) 50%, transparent 75%)',
+            filter: 'blur(22px)'
+          }}
+        />
+
+        {/* Dunstwolke implemented directly as background inside each infobox */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-50 transition-opacity duration-700 mix-blend-screen bg-cover bg-bottom bg-no-repeat z-0"
+          style={{
+            backgroundImage: `url("${smokeAlt}")`
+          }}
+        />
 
       {/* Top Section: Side-by-side on desktop (image right, text left), stacked on mobile/tablet */}
       <div className="w-full flex flex-col lg:flex-row-reverse items-start gap-5 lg:gap-8 relative z-10">
@@ -492,6 +524,7 @@ const EventCardItem: React.FC<EventCardItemProps> = ({
         </span>
       </div>
     </div>
+  </div>
   );
 };
 

@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { HeroStage } from './components/HeroStage';
 import { EnsembleSection } from './components/EnsembleSection';
@@ -160,16 +161,63 @@ export default function App() {
     setLoginModalOpen(false);
   };
 
-  // Lock body & html scroll completely while cookie consent banner or any modal is visible
+  useEffect(() => {
+    // Disable smooth scrolling on mobile / touch viewports (< 768px), native touch scrolling is used instead
+    const isMobileOrTouch = typeof window !== 'undefined' && (
+      window.innerWidth < 768 ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0
+    );
+
+    if (isMobileOrTouch) {
+      return;
+    }
+
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      syncTouch: false,
+    });
+
+    (window as any).__lenis = lenis;
+
+    lenis.on('scroll', (e: { scroll: number }) => {
+      window.dispatchEvent(new CustomEvent('olla-scroll', { detail: { scroll: e.scroll } }));
+    });
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      delete (window as any).__lenis;
+    };
+  }, []);
+
+  // Lock body & html scroll completely and pause Lenis while cookie consent banner or any modal is visible
   useEffect(() => {
     const isLocked = !hasConsent || !!legalModalType || archiveModalOpen || presseModalOpen || loginModalOpen;
+    const lenis = (window as any).__lenis;
     if (isLocked) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      if (lenis) lenis.stop();
       return () => {
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
+        if (lenis) lenis.start();
       };
+    } else {
+      if (lenis) lenis.start();
     }
   }, [hasConsent, legalModalType, archiveModalOpen, presseModalOpen, loginModalOpen]);
 
