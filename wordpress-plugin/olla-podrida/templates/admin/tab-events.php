@@ -16,7 +16,8 @@ $archived_events = array_values(array_filter($events, function($e) { return empt
                 <p>Verwalte aktuelle Konzerte und die historische Konzertchronik.</p>
             </div>
             <button type="button" class="button olla-btn-gold" id="olla-open-add-event-btn">
-                <span class="dashicons dashicons-plus-alt"></span> Neue Veranstaltung hinzufügen
+                <span class="dashicons dashicons-plus-alt"></span>
+                <span class="btn-text">Neue Veranstaltung hinzufügen</span>
             </button>
         </div>
 

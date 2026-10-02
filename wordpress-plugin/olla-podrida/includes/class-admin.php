@@ -234,25 +234,124 @@ class Olla_Podrida_Admin {
                 color: #DAA520 !important;
             }
 
-            /* Submenu inside Olla Podrida: NO extra left border, flush with sidebar */
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
-                display: block !important;
-                position: static !important;
-                top: auto !important;
-                left: 0 !important;
-                right: auto !important;
-                box-shadow: none !important;
-                border: none !important;
-                border-left: none !important;
+            /* ======================================================== */
+            /* SUBMENU BEHAVIOR: EMBEDDED ON WIDE DESKTOP, HOVER-ONLY ON FOLDED/TABLET */
+            /* ======================================================== */
+
+            /* 1. DESKTOP WIDE MENU (>960px and not folded): Embedded flush in sidebar */
+            @media (min-width: 961px) {
+                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida.wp-not-current-submenu .wp-submenu,
+                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
+                    display: block !important;
+                    position: static !important;
+                    top: auto !important;
+                    left: 0 !important;
+                    right: auto !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                    border-left: none !important;
+                    background: #160e0a !important;
+                    margin: 0 !important;
+                    padding: 4px 0 6px 0 !important;
+                    float: none !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
+                    display: block !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    border: none !important;
+                }
+                body:not(.folded):not(.auto-fold) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                    display: block !important;
+                    padding: 6px 10px 6px 16px !important;
+                    font-size: 13px !important;
+                    line-height: 1.4 !important;
+                    color: #cfc4ac !important;
+                    border: none !important;
+                    border-left: none !important;
+                    box-shadow: none !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    box-sizing: border-box !important;
+                    width: 100% !important;
+                }
+            }
+
+            /* 2. FOLDED / TABLET / RESPONSIVE (<=960px or body.folded): HIDDEN by default, ONLY shows on HOVER */
+            @media (max-width: 960px) {
+                #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+                #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu {
+                    display: none !important;
+                    position: absolute !important;
+                    top: -1px !important;
+                    left: 36px !important;
+                    width: 195px !important;
+                    background: #160e0a !important;
+                    border: 1px solid #3c2415 !important;
+                    border-left: none !important;
+                    box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.65) !important;
+                    z-index: 99999 !important;
+                    padding: 4px 0 6px 0 !important;
+                    margin: 0 !important;
+                    border-radius: 0 6px 6px 0 !important;
+                }
+                #adminmenu li.toplevel_page_olla-podrida:hover .wp-submenu,
+                #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu,
+                #adminmenu li.toplevel_page_olla-podrida:focus-within .wp-submenu {
+                    display: block !important;
+                }
+                #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
+                    display: block !important;
+                }
+                #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                    display: block !important;
+                    padding: 8px 14px !important;
+                    font-size: 13px !important;
+                    color: #cfc4ac !important;
+                    white-space: nowrap !important;
+                }
+            }
+
+            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu,
+            body.folded #adminmenu li.toplevel_page_olla-podrida.wp-has-current-submenu .wp-submenu,
+            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu {
+                display: none !important;
+                position: absolute !important;
+                top: -1px !important;
+                left: 36px !important;
+                width: 195px !important;
                 background: #160e0a !important;
-                margin: 0 !important;
+                border: 1px solid #3c2415 !important;
+                border-left: none !important;
+                box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.65) !important;
+                z-index: 99999 !important;
                 padding: 4px 0 6px 0 !important;
-                float: none !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
+                margin: 0 !important;
+                border-radius: 0 6px 6px 0 !important;
+            }
+            body.folded #adminmenu li.toplevel_page_olla-podrida:hover .wp-submenu,
+            body.folded #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu,
+            body.folded #adminmenu li.toplevel_page_olla-podrida:focus-within .wp-submenu,
+            body.auto-fold #adminmenu li.toplevel_page_olla-podrida:hover .wp-submenu,
+            body.auto-fold #adminmenu li.toplevel_page_olla-podrida.opensub .wp-submenu {
+                display: block !important;
+            }
+            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head),
+            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
+                display: block !important;
+            }
+            body.folded #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a,
+            body.auto-fold #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
+                display: block !important;
+                padding: 8px 14px !important;
+                font-size: 13px !important;
+                color: #cfc4ac !important;
+                white-space: nowrap !important;
             }
 
             /* STRICTLY HIDE WordPress auto-generated submenu-head and duplicate Olla Podrida link */
@@ -268,28 +367,6 @@ class Olla_Podrida_Admin {
                 margin: 0 !important;
                 visibility: hidden !important;
                 pointer-events: none !important;
-            }
-
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li:not(.wp-submenu-head) {
-                display: block !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-            }
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a {
-                display: block !important;
-                padding: 6px 10px 6px 16px !important;
-                font-size: 13px !important;
-                line-height: 1.4 !important;
-                color: #cfc4ac !important;
-                border: none !important;
-                border-left: none !important;
-                box-shadow: none !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                box-sizing: border-box !important;
-                width: 100% !important;
             }
 
             /* NO ACCENT LINES ON MENU ITEMS (Selected state indicated solely by background color) */
@@ -346,10 +423,10 @@ class Olla_Podrida_Admin {
             #adminmenu li > a.menu-top:focus,
             #adminmenu .wp-submenu a:hover,
             #adminmenu .wp-submenu a:focus,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:hover,
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li a:focus {
                 background: #20140e !important;
-                color: inherit !important;
+                color: #FFD700 !important;
                 box-shadow: none !important;
                 border: none !important;
                 border-left: none !important;
@@ -359,7 +436,7 @@ class Olla_Podrida_Admin {
             #adminmenu li.current > a.menu-top:hover,
             #adminmenu li.wp-has-current-submenu > a.wp-has-current-submenu:hover,
             #adminmenu .wp-submenu li.current > a:hover,
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current > a:hover {
+            #adminmenu li.toplevel_page_olla-podrida .wp-submenu li.current > a:hover {
                 background: #362217 !important;
                 color: #f7eed8 !important;
                 box-shadow: none !important;
@@ -367,7 +444,7 @@ class Olla_Podrida_Admin {
                 border-left: none !important;
             }
 
-            body:not(.folded) #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
+            #adminmenu li.toplevel_page_olla-podrida .wp-menu-arrow {
                 display: none !important;
             }
 
