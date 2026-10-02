@@ -163,39 +163,39 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
   }, []);
 
   const heroBgRef = useRef<HTMLDivElement>(null);
-  const heroMistRef = useRef<HTMLDivElement>(null);
 
-  // Subtle Header background parallax on scroll
+  // Subtle Header background parallax on scroll - synchronized with Lenis RAF and native fallback
   useEffect(() => {
-    let ticking = false;
-    let rafId: number;
+    const updateParallax = (scrollY: number) => {
+      if (scrollY <= 1400 && heroBgRef.current) {
+        const bgOffset = (scrollY * 0.16).toFixed(1);
+        heroBgRef.current.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+      }
+    };
 
-    const onScroll = () => {
+    const handleOllaScroll = (e: Event) => {
+      const scrollY = (e as CustomEvent<{ scroll: number }>).detail?.scroll ?? window.scrollY ?? 0;
+      updateParallax(scrollY);
+    };
+
+    let ticking = false;
+    const handleNativeScroll = () => {
+      if ((window as any).__lenis) return; // Handled synchronously by olla-scroll
       if (!ticking) {
-        rafId = requestAnimationFrame(() => {
-          const scrollY = window.scrollY || window.pageYOffset || 0;
-          if (scrollY <= 1200) {
-            // Subtle parallax factor (0.16) for stone hall backdrop
-            if (heroBgRef.current) {
-              const bgOffset = (scrollY * 0.16).toFixed(1);
-              heroBgRef.current.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
-            }
-            // Gentle counter-float on floor mist (-0.08)
-            if (heroMistRef.current) {
-              const mistOffset = (scrollY * -0.08).toFixed(1);
-              heroMistRef.current.style.transform = `translate3d(0, ${mistOffset}px, 0)`;
-            }
-          }
+        requestAnimationFrame(() => {
+          updateParallax(window.scrollY || window.pageYOffset || 0);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('olla-scroll', handleOllaScroll as EventListener);
+    window.addEventListener('scroll', handleNativeScroll, { passive: true });
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
+      window.removeEventListener('olla-scroll', handleOllaScroll as EventListener);
+      window.removeEventListener('scroll', handleNativeScroll);
     };
   }, []);
 
@@ -276,14 +276,12 @@ export const HeroStage: React.FC<HeroStageProps> = () => {
       {/* Drifting Stage Mist / Smoke Layer across the floor – fully feathered with gradient mask to prevent any hard cutoff */}
       {heroConfig.smokeEnabled && (
         <div
-          ref={heroMistRef}
           className={`absolute bottom-0 inset-x-0 h-44 sm:h-56 md:h-72 lg:h-80 pointer-events-none overflow-hidden transition-opacity duration-2000 -z-5 ${
             isLoaded ? 'opacity-40' : 'opacity-0'
           }`}
           style={{
             maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)',
-            willChange: 'transform'
+            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%)'
           }}
         >
           <div className="w-full h-full animate-fog-drift" style={{ animationDuration: '24s' }}>

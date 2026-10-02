@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
   return (
     <footer
       ref={footerRef}
-      className="relative w-full bg-transparent pt-12 md:pt-16 pb-8 text-[#F5F5DC] overflow-hidden select-none"
+      className="relative w-full bg-[#070202] pt-12 md:pt-16 pb-8 text-[#F5F5DC] overflow-hidden select-none"
     >
       {/* Smoke & Fog Atmosphere attached to the very bottom with smooth transition into black */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
