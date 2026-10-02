@@ -142,9 +142,16 @@ export const Preloader: React.FC<PreloaderProps> = ({
           Ensemble Olla Podrida
         </h1>
 
-        {/* Subtitle - strictly kept on a single line across all viewports */}
-        <p className="font-serif text-[0.62rem] min-[380px]:text-[0.68rem] sm:text-[0.78rem] md:text-[0.84rem] text-[#DAA520]/85 uppercase tracking-[0.16em] sm:tracking-[0.24em] text-center mb-6 drop-shadow-sm font-medium whitespace-nowrap">
-          {customSubtitle || 'Klangvielfalt aus Mittelalter & Renaissance'}
+        {/* Subtitle - split into 2 lines on mobile, single line on desktop/tablet */}
+        <p className="font-serif text-[0.70rem] min-[380px]:text-[0.76rem] sm:text-[0.78rem] md:text-[0.84rem] text-[#DAA520]/85 uppercase tracking-[0.16em] sm:tracking-[0.24em] text-center mb-6 drop-shadow-sm font-medium leading-relaxed sm:leading-normal sm:whitespace-nowrap">
+          {customSubtitle ? (
+            customSubtitle
+          ) : (
+            <>
+              <span className="block sm:inline">Klangvielfalt aus</span>{' '}
+              <span className="block sm:inline">Mittelalter &amp; Renaissance</span>
+            </>
+          )}
         </p>
 
         {/* Slender Medieval Filigree Progress Bar */}
