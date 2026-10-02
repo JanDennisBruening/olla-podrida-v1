@@ -32,6 +32,7 @@ async function main() {
     'assets/dist/images/favicon.ico',
     'assets/dist/images/Magisches-Musikkessel-Emblem-auf-Pergament.png',
     'includes/class-roles.php',
+    'includes/class-audit.php',
     'includes/class-events.php',
     'includes/class-contact.php',
     'includes/class-import.php',

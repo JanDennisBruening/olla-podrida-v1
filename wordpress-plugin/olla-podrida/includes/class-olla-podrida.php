@@ -35,6 +35,9 @@ class Olla_Podrida {
 
         add_action('admin_init', [$this, 'maybe_run_auto_setup']);
 
+        if (class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::init();
+        }
         if (class_exists('Olla_Podrida_Updater')) {
             Olla_Podrida_Updater::init();
         }

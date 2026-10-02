@@ -685,6 +685,7 @@ class Olla_Podrida_Admin {
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('olla_podrida_admin_nonce'),
             'import_nonce' => wp_create_nonce('olla_podrida_import'),
+            'audit_nonce' => wp_create_nonce('olla_audit_nonce'),
             'choose_image' => 'Bild aus Mediathek wählen',
             'use_image' => 'Dieses Bild verwenden',
             'choose_audio' => 'Audiodatei aus Mediathek wählen',
@@ -936,6 +937,23 @@ class Olla_Podrida_Admin {
                 break;
         }
 
+        if (class_exists('Olla_Podrida_Audit')) {
+            $sections = Olla_Podrida_Roles::get_all_sections();
+            $sec_label = $sections[$section]['label'] ?? ucfirst($section);
+            $act_type = 'settings';
+            $details = "Bereich: {$sec_label}";
+            if ($section === 'audio') {
+                $act_type = 'music';
+                $details = "Titel: " . ($data['title'] ?? 'Standard') . " · Loop: " . (!empty($data['loop']) ? 'Ja' : 'Nein');
+            } elseif ($section === 'roles') {
+                $act_type = 'roles';
+                $details = "Rollen-Berechtigungen wurden aktualisiert.";
+            } elseif ($section === 'hero') {
+                $details = "Slogan: " . ($data['slogan'] ?? '') . " · Untertitel: " . ($data['subtitle'] ?? '');
+            }
+            Olla_Podrida_Audit::log($act_type, "Einstellungen gespeichert ({$sec_label})", $details);
+        }
+
         wp_redirect(add_query_arg([
             'page' => 'olla-podrida',
             'tab' => $section,
@@ -1105,6 +1123,11 @@ class Olla_Podrida_Admin {
                     $new_ver = !empty($plugin_data['Version']) ? $plugin_data['Version'] : '';
                 }
             }
+
+            if (class_exists('Olla_Podrida_Audit')) {
+                Olla_Podrida_Audit::log('update', 'Plugin erfolgreich aktualisiert', "Neue Version: " . ($new_ver ? 'v' . $new_ver : 'aktuellste'));
+            }
+
             wp_send_json_success([
                 'new_version' => $new_ver,
                 'message'     => 'Plugin erfolgreich auf Version ' . ($new_ver ? 'v' . $new_ver : '') . ' aktualisiert!',
@@ -1490,6 +1513,206 @@ class Olla_Podrida_Admin {
                     </div>
                 </div>
             </div>
+
+            <?php if ($is_admin && class_exists('Olla_Podrida_Audit')): 
+                $audit_logs = Olla_Podrida_Audit::get_logs(80);
+                $users_summary = Olla_Podrida_Audit::get_users_login_summary();
+                $latest_login_user = !empty($users_summary[0]['last_login_ts']) ? $users_summary[0] : null;
+            ?>
+            <!-- 5. Administrator-Sicherheit & Audit-Log (Exklusiv für Administratoren) -->
+            <div id="olla-admin-audit-section" style="background: #ffffff; border: 1.5px solid #d4a954; border-radius: 12px; padding: 20px 22px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+                
+                <!-- Header -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1.5px solid #f1ece4;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 8px; background: radial-gradient(circle, #251710 0%, #120b08 100%); border: 1.5px solid #DAA520; color: #FFD700; font-size: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); flex-shrink: 0;">
+                            🛡️
+                        </span>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <strong style="font-size: 16px; color: #1d2327;">Aktivität &amp; Benutzer-Historie</strong>
+                                <span style="background: #231610; color: #FFD700; border: 1px solid #DAA520; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.05em; text-transform: uppercase;">
+                                    Nur Admin
+                                </span>
+                            </div>
+                            <span style="font-size: 12px; color: #666;">
+                                Wer hat sich zuletzt eingeloggt und wer hat was zu welcher Zeit geändert?
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Metrics & Clear Action -->
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: #fdfaf3; border: 1px solid #e2d7c5; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; color: #555;">
+                            👥 <strong><?php echo count($users_summary); ?></strong> Benutzer
+                        </span>
+                        <span style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; color: #166534;">
+                            🟢 Zuletzt aktiv: <strong><?php echo esc_html($latest_login_user ? $latest_login_user['name'] : '—'); ?></strong> (<?php echo esc_html($latest_login_user ? $latest_login_user['human_time'] : '—'); ?>)
+                        </span>
+                        <button type="button" id="olla-audit-clear-btn" class="button" style="font-size: 11.5px; color: #888;">
+                            🗑️ Log leeren
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Two-Column Grid: Zuletzt eingeloggt vs Chronik -->
+                <div style="display: grid; grid-template-columns: minmax(310px, 360px) 1fr; gap: 18px;" class="olla-audit-grid">
+                    
+                    <!-- Linke Spalte: Wer hat sich zuletzt eingeloggt? -->
+                    <div style="background: #faf8f5; border: 1px solid #e8e2d8; border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                            <strong style="font-size: 13.5px; color: #1d2327; display: flex; align-items: center; gap: 6px;">
+                                <span>🔑</span> Zuletzt eingeloggt
+                            </strong>
+                            <span style="font-size: 11px; color: #888;">Benutzer-Status</span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; padding-right: 4px;">
+                            <?php foreach ($users_summary as $u): ?>
+                                <div style="background: #ffffff; border: 1px solid #e5dfd5; border-radius: 8px; padding: 10px 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #251810; border: 1.5px solid #DAA520; color: #FFD700; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">
+                                            <?php echo esc_html(mb_substr($u['name'], 0, 1)); ?>
+                                        </div>
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                                <strong style="font-size: 13px; color: #1d2327;"><?php echo esc_html($u['name']); ?></strong>
+                                                <span style="font-size: 10.5px; color: #777;">(@<?php echo esc_html($u['login']); ?>)</span>
+                                            </div>
+                                            <div style="font-size: 11px; color: #8a6d3b; font-weight: 600; margin-top: 2px;">
+                                                <?php echo esc_html($u['role_label']); ?>
+                                            </div>
+                                            <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                                🕒 <?php echo esc_html($u['date_str']); ?>
+                                            </div>
+                                            <?php if ($u['device'] !== '—'): ?>
+                                                <div style="font-size: 10.5px; color: #888; margin-top: 2px;">
+                                                    <?php echo esc_html($u['device']); ?> · IP: <code><?php echo esc_html($u['ip']); ?></code>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <?php if ($u['last_login_ts'] > 0): ?>
+                                            <span style="display: inline-block; font-size: 10.5px; font-weight: 700; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 12px; white-space: nowrap;">
+                                                <?php echo esc_html($u['human_time']); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span style="display: inline-block; font-size: 10.5px; color: #999; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 2px 7px; border-radius: 12px; white-space: nowrap;">
+                                                Nie
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Rechte Spalte: Live-Aktivitäts-Chronik (Wer hat was wann gemacht?) -->
+                    <div style="background: #ffffff; border: 1px solid #e8e2d8; border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+                            <strong style="font-size: 13.5px; color: #1d2327; display: flex; align-items: center; gap: 6px;">
+                                <span>📜</span> Chronik der Änderungen (Wer hat was getan?)
+                            </strong>
+                            <!-- Filter Buttons -->
+                            <div class="olla-audit-filters" style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                <button type="button" class="button button-small olla-audit-filter-btn active" data-filter="all" style="font-size: 11px; font-weight: 700;">Alle</button>
+                                <button type="button" class="button button-small olla-audit-filter-btn" data-filter="login" style="font-size: 11px;">🔑 Logins</button>
+                                <button type="button" class="button button-small olla-audit-filter-btn" data-filter="event" style="font-size: 11px;">📅 Termine</button>
+                                <button type="button" class="button button-small olla-audit-filter-btn" data-filter="contact" style="font-size: 11px;">📬 Postfach</button>
+                                <button type="button" class="button button-small olla-audit-filter-btn" data-filter="settings" style="font-size: 11px;">⚙️ Einstellungen</button>
+                                <button type="button" class="button button-small olla-audit-filter-btn" data-filter="update" style="font-size: 11px;">🚀 Updates</button>
+                            </div>
+                        </div>
+
+                        <!-- Scrollable Timeline Items -->
+                        <div id="olla-audit-timeline" style="max-height: 480px; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 8px;">
+                            <?php if (empty($audit_logs)): ?>
+                                <div style="text-align: center; padding: 40px 20px; color: #888; font-size: 13px;">
+                                    <span style="font-size: 32px; display: block; margin-bottom: 8px;">✨</span>
+                                    Das Aktivitätsprotokoll ist scharf geschaltet. Zukünftige Logins, Terminänderungen, Postfach-Aktivitäten und Einstellungen werden ab sofort hier chronologisch für Dich erfasst.
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($audit_logs as $entry): 
+                                    $type = $entry['type'] ?? 'info';
+                                    $badge_icon = '📝';
+                                    $badge_color = '#1d2327';
+                                    $badge_bg = '#f3f4f6';
+                                    $badge_border = '#e5e7eb';
+
+                                    if ($type === 'login') {
+                                        $badge_icon = '🔑';
+                                        $badge_color = '#15803d';
+                                        $badge_bg = '#f0fdf4';
+                                        $badge_border = '#bbf7d0';
+                                    } elseif ($type === 'login_failed') {
+                                        $badge_icon = '⚠️';
+                                        $badge_color = '#b91c1c';
+                                        $badge_bg = '#fef2f2';
+                                        $badge_border = '#fecaca';
+                                    } elseif ($type === 'event') {
+                                        $badge_icon = '📅';
+                                        $badge_color = '#92400e';
+                                        $badge_bg = '#fefce8';
+                                        $badge_border = '#fde68a';
+                                    } elseif ($type === 'contact') {
+                                        $badge_icon = '📬';
+                                        $badge_color = '#1e40af';
+                                        $badge_bg = '#eff6ff';
+                                        $badge_border = '#bfdbfe';
+                                    } elseif ($type === 'settings' || $type === 'music' || $type === 'roles') {
+                                        $badge_icon = '⚙️';
+                                        $badge_color = '#6b21a8';
+                                        $badge_bg = '#faf5ff';
+                                        $badge_border = '#e9d5ff';
+                                    } elseif ($type === 'update') {
+                                        $badge_icon = '🚀';
+                                        $badge_color = '#047857';
+                                        $badge_bg = '#ecfdf5';
+                                        $badge_border = '#a7f3d0';
+                                    }
+                                    $time_ago = human_time_diff($entry['timestamp'], current_time('timestamp')) . ' her';
+                                ?>
+                                    <div class="olla-audit-item" data-type="<?php echo esc_attr($type); ?>" style="background: #ffffff; border: 1px solid <?php echo $badge_border; ?>; border-left: 4px solid <?php echo $badge_color; ?>; border-radius: 6px; padding: 9px 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; transition: background 0.15s ease;">
+                                        <div style="display: flex; align-items: flex-start; gap: 9px;">
+                                            <span style="font-size: 15px; margin-top: 1px;"><?php echo $badge_icon; ?></span>
+                                            <div>
+                                                <div style="display: flex; align-items: center; gap: 7px; flex-wrap: wrap;">
+                                                    <strong style="font-size: 13px; color: #1d2327;"><?php echo esc_html($entry['title']); ?></strong>
+                                                    <span style="font-size: 11px; background: <?php echo $badge_bg; ?>; color: <?php echo $badge_color; ?>; font-weight: 700; padding: 1px 7px; border-radius: 4px;">
+                                                        <?php echo esc_html($entry['user_name']); ?> (<?php echo esc_html($entry['user_role']); ?>)
+                                                    </span>
+                                                </div>
+                                                <?php if (!empty($entry['details'])): ?>
+                                                    <div style="font-size: 12px; color: #555; margin-top: 3px; line-height: 1.4;">
+                                                        <?php echo esc_html($entry['details']); ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($entry['device']) || !empty($entry['ip'])): ?>
+                                                    <div style="font-size: 10.5px; color: #888; margin-top: 3px;">
+                                                        <?php echo esc_html($entry['device']); ?> · IP: <code><?php echo esc_html($entry['ip']); ?></code>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right; flex-shrink: 0;">
+                                            <div style="font-size: 11.5px; font-weight: 700; color: #1d2327;">
+                                                <?php echo esc_html($entry['date_formatted']); ?>
+                                            </div>
+                                            <div style="font-size: 10.5px; color: #888; margin-top: 2px;">
+                                                <?php echo esc_html($time_ago); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <?php endif; ?>
 
             <!-- 5. Footer & Support -->
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 12px; border-top: 1px solid #eee;">

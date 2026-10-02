@@ -1054,5 +1054,27 @@ body.olla-modal-open {
     }
 }
 
-
-
+/* Administrator Audit & Activity Feed Styling */
+@media (max-width: 960px) {
+    .olla-audit-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+.olla-audit-filter-btn.active {
+    background: #251810 !important;
+    color: #FFD700 !important;
+    border-color: #DAA520 !important;
+    font-weight: 700 !important;
+}
+.olla-audit-item:hover {
+    background: #faf7f2 !important;
+}
+#olla-audit-timeline::-webkit-scrollbar,
+#olla-admin-audit-section div::-webkit-scrollbar {
+    width: 6px;
+}
+#olla-audit-timeline::-webkit-scrollbar-thumb,
+#olla-admin-audit-section div::-webkit-scrollbar-thumb {
+    background: #d4a954;
+    border-radius: 4px;
+}

@@ -92,6 +92,13 @@ class Olla_Podrida_Events {
         }
 
         self::save_events($events);
+
+        if (class_exists('Olla_Podrida_Audit')) {
+            $act = $found ? 'Konzerttermin aktualisiert' : 'Neuer Konzerttermin erstellt';
+            $details = "Titel: '{$clean_event['title']}' · Datum: {$clean_event['date']} ({$clean_event['time']}) · Ort: {$clean_event['location']}";
+            Olla_Podrida_Audit::log('event', $act, $details);
+        }
+
         return $clean_event;
     }
 
@@ -135,20 +142,41 @@ class Olla_Podrida_Events {
 
     public static function delete_event($id) {
         $events = self::get_all_events();
+        $target_title = $id;
+        foreach ($events as $e) {
+            if ($e['id'] === $id) {
+                $target_title = $e['title'];
+                break;
+            }
+        }
         $filtered = array_values(array_filter($events, function($e) use ($id) {
             return $e['id'] !== $id;
         }));
-        return self::save_events($filtered);
+        $res = self::save_events($filtered);
+
+        if ($res && class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::log('event', 'Konzerttermin gelöscht', "Titel: '{$target_title}' (ID: {$id})");
+        }
+        return $res;
     }
 
     public static function toggle_status($id) {
         $events = self::get_all_events();
+        $target_title = $id;
+        $new_status = false;
         foreach ($events as &$event) {
             if ($event['id'] === $id) {
                 $event['is_upcoming'] = !$event['is_upcoming'];
+                $target_title = $event['title'];
+                $new_status = $event['is_upcoming'];
                 break;
             }
         }
-        return self::save_events($events);
+        $res = self::save_events($events);
+        if ($res && class_exists('Olla_Podrida_Audit')) {
+            $status_str = $new_status ? 'Aktiv (anstehend)' : 'In die Chronik verschoben';
+            Olla_Podrida_Audit::log('event', 'Termin-Status geändert', "Titel: '{$target_title}' · Neuer Status: {$status_str}");
+        }
+        return $res;
     }
 }

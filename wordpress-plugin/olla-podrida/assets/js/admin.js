@@ -11,6 +11,7 @@
         initMusicianManagement();
         initImportManagement();
         initCockpitUpdates();
+        initAuditLog();
     });
 
     /**
@@ -833,6 +834,53 @@
                     showMessage('⚠️ Serverfehler während der Aktualisierung. Bitte versuche es über die Plugins-Verwaltung.', 'error');
                 });
             }
+        });
+    }
+
+    /**
+     * Administrator Audit Log & Activity Feed Handlers
+     */
+    function initAuditLog() {
+        // 1. Filtering by Type
+        $(document).on('click', '.olla-audit-filter-btn', function(e) {
+            e.preventDefault();
+            $('.olla-audit-filter-btn').removeClass('active');
+            $(this).addClass('active');
+
+            var filter = $(this).attr('data-filter') || 'all';
+            if (filter === 'all') {
+                $('.olla-audit-item').show();
+            } else {
+                $('.olla-audit-item').hide();
+                $('.olla-audit-item[data-type="' + filter + '"]').show();
+            }
+        });
+
+        // 2. Clear Audit Log (Admin Only)
+        $('#olla-audit-clear-btn').on('click', function(e) {
+            e.preventDefault();
+            if (!confirm('Möchtest Du das Aktivitätsprotokoll wirklich vollständig leeren? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+                return;
+            }
+
+            var $btn = $(this);
+            $btn.prop('disabled', true).text('⏳ Leere...');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_audit_clear',
+                nonce: OllaPodridaAdmin.audit_nonce || OllaPodridaAdmin.nonce
+            }, function(res) {
+                if (res && res.success) {
+                    window.location.reload();
+                } else {
+                    var err = (res && res.data && res.data.message) ? res.data.message : 'Fehler beim Leeren des Logs.';
+                    alert(err);
+                    $btn.prop('disabled', false).text('🗑️ Log leeren');
+                }
+            }).fail(function() {
+                alert('Serverfehler beim Leeren des Aktivitätsprotokolls.');
+                $btn.prop('disabled', false).text('🗑️ Log leeren');
+            });
         });
     }
 

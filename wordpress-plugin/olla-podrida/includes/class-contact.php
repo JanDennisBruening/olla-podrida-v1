@@ -95,6 +95,10 @@ class Olla_Podrida_Contact {
             'is_read' => 0
         ]);
 
+        if ($inserted && class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::log('contact', 'Neue Kontaktanfrage eingegangen', "Von: {$name} ({$email})", null);
+        }
+
         // Send Email Notification to one or multiple recipients
         $recipient_setting = $contact_settings['recipient_email'] ?: get_option('admin_email');
         $recipients = array_filter(array_map('trim', explode(',', $recipient_setting)), 'is_email');
@@ -141,13 +145,21 @@ class Olla_Podrida_Contact {
     public static function delete_message($id) {
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
-        return $wpdb->delete($table_name, ['id' => intval($id)]);
+        $res = $wpdb->delete($table_name, ['id' => intval($id)]);
+        if ($res && class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::log('contact', 'Kontaktanfrage gelöscht', "Nachrichten-ID: {$id}");
+        }
+        return $res;
     }
 
     public static function mark_as_read($id) {
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
-        return $wpdb->update($table_name, ['is_read' => 1], ['id' => intval($id)]);
+        $res = $wpdb->update($table_name, ['is_read' => 1], ['id' => intval($id)]);
+        if ($res && class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::log('contact', 'Kontaktanfrage als gelesen markiert', "Nachrichten-ID: {$id}");
+        }
+        return $res;
     }
 
     public static function get_message_counts() {
