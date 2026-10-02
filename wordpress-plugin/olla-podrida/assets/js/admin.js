@@ -90,7 +90,10 @@
             $('#event_badge_admission').val('📜 Eintritt frei / Spende erbeten');
             $('#event_description').val('');
 
-            $('#olla-event-modal').fadeIn(200);
+            $('body').addClass('olla-modal-open');
+            $('#olla-event-modal').fadeIn(200, function() {
+                $('#olla-event-modal .olla-modal-body').scrollTop(0);
+            });
         },
 
         openEditModal: function(eventData) {
@@ -127,10 +130,14 @@
 
             $('#event_description').val(eventData.description || '');
 
-            $('#olla-event-modal').fadeIn(200);
+            $('body').addClass('olla-modal-open');
+            $('#olla-event-modal').fadeIn(200, function() {
+                $('#olla-event-modal .olla-modal-body').scrollTop(0);
+            });
         },
 
         closeModal: function() {
+            $('body').removeClass('olla-modal-open');
             $('#olla-event-modal').fadeOut(150);
         },
 
@@ -151,6 +158,22 @@
         $('#olla-open-add-event-btn').on('click', function(e) {
             e.preventDefault();
             OllaAdminEvents.openAddModal();
+        });
+
+        // Close on ESC
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                if ($('#olla-event-modal').is(':visible')) {
+                    OllaAdminEvents.closeModal();
+                }
+            }
+        });
+
+        // Close when clicking modal backdrop
+        $('#olla-event-modal').on('click', function(e) {
+            if ($(e.target).is('#olla-event-modal')) {
+                OllaAdminEvents.closeModal();
+            }
         });
 
         // Edit Button on Row

@@ -182,15 +182,15 @@ $archived_events = array_values(array_filter($events, function($e) { return empt
 <!-- Modal für Veranstaltung hinzufügen/bearbeiten -->
 <div id="olla-event-modal" class="olla-modal" style="display: none;">
     <div class="olla-modal-dialog">
-        <div class="olla-modal-content">
+        <form id="olla-event-form" class="olla-modal-form">
+            <input type="hidden" name="id" id="event_id" value="" />
+
             <div class="olla-modal-header">
                 <h3 id="olla-modal-title">Veranstaltung bearbeiten</h3>
-                <button type="button" class="olla-modal-close" onclick="OllaAdminEvents.closeModal()">&times;</button>
+                <button type="button" class="olla-modal-close" onclick="OllaAdminEvents.closeModal()" title="Schließen">&times;</button>
             </div>
-            <form id="olla-event-form">
-                <input type="hidden" name="id" id="event_id" value="" />
 
-                <div class="olla-modal-body">
+            <div class="olla-modal-body">
                     <div class="olla-field-group">
                         <label for="event_title"><strong>Titel der Veranstaltung *:</strong></label>
                         <input type="text" id="event_title" name="title" required class="large-text" placeholder="z. B. Konzert im Stift Börstel" />
@@ -305,9 +305,10 @@ $archived_events = array_values(array_filter($events, function($e) { return empt
 
                 <div class="olla-modal-footer">
                     <button type="button" class="button button-secondary" onclick="OllaAdminEvents.closeModal()">Abbrechen</button>
-                    <button type="submit" class="button button-primary">Veranstaltung speichern</button>
+                    <button type="submit" class="button button-primary button-large" id="olla-event-save-btn">
+                        <span class="dashicons dashicons-saved" style="margin-top: 3px;"></span> Veranstaltung speichern
+                    </button>
                 </div>
             </form>
-        </div>
     </div>
 </div>
