@@ -461,9 +461,18 @@ class Olla_Podrida_Admin {
             .toplevel_page_olla-podrida #wpbody-content > .wrap,
             body[class*="olla-podrida"] #wpbody-content > .wrap {
                 max-width: 1350px !important;
-                margin-left: auto !important;
+                margin-left: 0 !important;
                 margin-right: auto !important;
                 box-sizing: border-box !important;
+            }
+            @media (min-width: 1600px) {
+                .index-php #dashboard-widgets-wrap,
+                .olla-podrida-admin-wrap,
+                .toplevel_page_olla-podrida #wpbody-content > .wrap,
+                body[class*="olla-podrida"] #wpbody-content > .wrap {
+                    margin-left: auto !important;
+                    margin-right: auto !important;
+                }
             }
             .index-php #dashboard-widgets .postbox-container {
                 width: 100% !important;

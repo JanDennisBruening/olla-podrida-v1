@@ -240,6 +240,9 @@ $settings = Olla_Podrida_Settings::get_section('settings');
                     <div style="font-size: 12px; color: #666; margin-top: 3px;">
                         Quellcode-Repository: <a href="https://github.com/JanDennisBruening/olla-podrida-v1" target="_blank" rel="noopener noreferrer" style="color: #1a73e8; font-weight: 600;">github.com/JanDennisBruening/olla-podrida-v1 ↗</a>
                     </div>
+                    <div style="font-size: 12px; color: #444; margin-top: 6px;">
+                        🛡️ <strong>Automatische Hintergrund-Updates:</strong> Unter <a href="<?php echo esc_url(admin_url('plugins.php')); ?>" style="color: #b48308; font-weight: 600;">Plugins &rarr; Installierte Plugins</a> können Sie mit einem Klick auf <em>„Automatische Aktualisierungen aktivieren“</em> festlegen, dass künftige Updates vollautomatisch installiert werden.
+                    </div>
                 </div>
                 <div>
                     <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=olla_check_updates'), 'olla_check_updates_nonce')); ?>" class="button button-secondary" style="height: 34px; display: inline-flex; align-items: center; gap: 6px;">

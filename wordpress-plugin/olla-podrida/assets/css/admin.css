@@ -4,11 +4,18 @@
 
 .olla-podrida-admin-wrap {
     max-width: 1350px;
-    margin: 20px auto 40px auto;
-    padding-left: 15px;
+    margin: 15px 0 40px 0;
+    padding-left: 10px;
     padding-right: 15px;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+@media (min-width: 1600px) {
+    .olla-podrida-admin-wrap {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .olla-admin-header {
@@ -24,6 +31,24 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(218, 165, 32, 0.2);
     position: relative;
     overflow: hidden;
+}
+
+@media (max-width: 860px) {
+    .olla-admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px 20px;
+    }
+    .olla-header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+    }
+    .olla-header-brand {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
 }
 
 .olla-admin-header::before {
@@ -433,6 +458,109 @@
     font-size: 12px;
     font-weight: 500;
     border: 1px solid #fde68a;
+}
+
+/* Card Header Flex & Gold Medieval Button */
+.olla-card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.olla-btn-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #aa8010 100%) !important;
+    border: 1px solid #997300 !important;
+    color: #140d07 !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    padding: 8px 18px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.olla-btn-gold:hover,
+.olla-btn-gold:focus {
+    background: linear-gradient(135deg, #ffd700 0%, #c49516 100%) !important;
+    color: #070202 !important;
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.5) !important;
+    transform: translateY(-1px);
+}
+
+.olla-btn-gold .dashicons {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+}
+
+/* Responsive Events Table: Never crush columns */
+.olla-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.olla-events-table {
+    min-width: 720px;
+    width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse;
+}
+
+.olla-events-table th,
+.olla-events-table td {
+    vertical-align: middle;
+    padding: 10px 12px;
+}
+
+.olla-events-table .col-image {
+    width: 65px;
+    min-width: 65px;
+}
+
+.olla-events-table .col-date {
+    width: 120px;
+    min-width: 110px;
+    white-space: nowrap;
+}
+
+.olla-events-table .col-title {
+    min-width: 240px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.olla-events-table .col-cat {
+    width: 110px;
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+.olla-events-table .col-status {
+    width: 115px;
+    min-width: 105px;
+    white-space: nowrap;
+}
+
+.olla-events-table .col-actions {
+    width: 155px;
+    min-width: 145px;
+    text-align: right;
+    white-space: nowrap;
 }
 
 /* Modal: Generous width & clean responsive padding */

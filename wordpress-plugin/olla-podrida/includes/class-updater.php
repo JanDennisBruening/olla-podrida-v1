@@ -14,6 +14,7 @@ class Olla_Podrida_Updater {
     const GITHUB_BRANCH = 'main';
     const GITHUB_RAW_PHP = 'https://raw.githubusercontent.com/JanDennisBruening/olla-podrida-v1/main/wordpress-plugin/olla-podrida/olla-podrida.php';
     const GITHUB_ZIP_URL = 'https://raw.githubusercontent.com/JanDennisBruening/olla-podrida-v1/main/wordpress-plugin/olla-podrida.zip';
+    const CENTRAL_ENDPOINT = 'https://cms.janbruening.de/?olla_update_check=1';
     const TRANSIENT_KEY = 'olla_podrida_remote_version';
 
     public static function init() {
@@ -25,10 +26,12 @@ class Olla_Podrida_Updater {
         add_filter('plugins_api', [__CLASS__, 'plugin_popup_info'], 20, 3);
         add_filter('upgrader_post_install', [__CLASS__, 'post_install_cleanup'], 10, 3);
         add_action('admin_post_olla_check_updates', [__CLASS__, 'handle_manual_update_check']);
+        add_filter('auto_update_plugin', [__CLASS__, 'filter_auto_update_plugin'], 10, 2);
+        add_filter('plugin_auto_update_setting_html', [__CLASS__, 'filter_auto_update_setting_html'], 10, 3);
     }
 
     /**
-     * Get remote plugin information from GitHub.
+     * Get remote plugin information from Central CMS or GitHub.
      */
     public static function get_remote_info($force = false) {
         if (!$force) {
@@ -38,7 +41,37 @@ class Olla_Podrida_Updater {
             }
         }
 
-        $response = wp_remote_get(self::GITHUB_RAW_PHP, [
+        // 1. Try Central CMS Endpoint first (instant, direct, zero-delay mirror)
+        $cms_url = self::CENTRAL_ENDPOINT . ($force ? '&force=' . time() : '');
+        $cms_res = wp_remote_get($cms_url, [
+            'timeout' => 5,
+            'sslverify' => true,
+            'headers' => [
+                'User-Agent' => 'WordPress/' . get_bloginfo('version') . '; Olla-Podrida/' . OLLA_PODRIDA_VERSION,
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        if (!is_wp_error($cms_res) && wp_remote_retrieve_response_code($cms_res) === 200) {
+            $data = json_decode(wp_remote_retrieve_body($cms_res), true);
+            if (!empty($data['version'])) {
+                $info = [
+                    'version'      => trim($data['version']),
+                    'description'  => !empty($data['description']) ? trim($data['description']) : 'Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida.',
+                    'requires'     => !empty($data['requires']) ? trim($data['requires']) : '5.8',
+                    'requires_php' => !empty($data['requires_php']) ? trim($data['requires_php']) : '7.4',
+                    'package'      => !empty($data['package']) ? trim($data['package']) : self::GITHUB_ZIP_URL,
+                    'url'          => !empty($data['homepage']) ? trim($data['homepage']) : 'https://github.com/' . self::GITHUB_REPO,
+                    'checked_at'   => time(),
+                ];
+                set_transient(self::TRANSIENT_KEY, $info, 6 * HOUR_IN_SECONDS);
+                return $info;
+            }
+        }
+
+        // 2. Fallback to GitHub Raw (public repository)
+        $github_url = self::GITHUB_RAW_PHP . ($force ? '?t=' . time() : '');
+        $response = wp_remote_get($github_url, [
             'timeout' => 8,
             'sslverify' => true,
             'headers' => [
@@ -68,13 +101,13 @@ class Olla_Podrida_Updater {
         }
 
         $info = [
-            'version' => $remote_version,
-            'description' => !empty($desc_match[1]) ? trim($desc_match[1]) : '',
-            'requires' => !empty($requires_match[1]) ? trim($requires_match[1]) : '5.8',
+            'version'      => $remote_version,
+            'description'  => !empty($desc_match[1]) ? trim($desc_match[1]) : '',
+            'requires'     => !empty($requires_match[1]) ? trim($requires_match[1]) : '5.8',
             'requires_php' => !empty($php_match[1]) ? trim($php_match[1]) : '7.4',
-            'package' => self::GITHUB_ZIP_URL,
-            'url' => 'https://github.com/' . self::GITHUB_REPO,
-            'checked_at' => time(),
+            'package'      => self::GITHUB_ZIP_URL,
+            'url'          => 'https://github.com/' . self::GITHUB_REPO,
+            'checked_at'   => time(),
         ];
 
         set_transient(self::TRANSIENT_KEY, $info, 6 * HOUR_IN_SECONDS);
@@ -89,30 +122,49 @@ class Olla_Podrida_Updater {
             $transient = new stdClass();
         }
 
+        if (!isset($transient->response) || !is_array($transient->response)) {
+            $transient->response = [];
+        }
+        if (!isset($transient->no_update) || !is_array($transient->no_update)) {
+            $transient->no_update = [];
+        }
+
         $plugin_file = 'olla-podrida/olla-podrida.php';
         $force = !empty($_GET['force-check']);
         $remote = self::get_remote_info($force);
 
         if (!$remote || empty($remote['version'])) {
+            // Keep update capability registered even if offline
+            if (empty($transient->response[$plugin_file]) && empty($transient->no_update[$plugin_file])) {
+                $transient->no_update[$plugin_file] = (object) [
+                    'id'            => $plugin_file,
+                    'slug'          => 'olla-podrida',
+                    'plugin'        => $plugin_file,
+                    'new_version'   => OLLA_PODRIDA_VERSION,
+                    'url'           => 'https://github.com/' . self::GITHUB_REPO,
+                    'package'       => '',
+                ];
+            }
             return $transient;
         }
 
         if (version_compare($remote['version'], OLLA_PODRIDA_VERSION, '>')) {
             $item = (object) [
-                'id' => 'olla-podrida',
-                'slug' => 'olla-podrida',
-                'plugin' => $plugin_file,
-                'new_version' => $remote['version'],
-                'url' => $remote['url'],
-                'package' => $remote['package'],
-                'tested' => '6.7',
-                'requires' => $remote['requires'],
+                'id'           => $plugin_file,
+                'slug'         => 'olla-podrida',
+                'plugin'       => $plugin_file,
+                'new_version'  => $remote['version'],
+                'url'          => $remote['url'],
+                'package'      => $remote['package'],
+                'tested'       => '6.7',
+                'requires'     => $remote['requires'],
                 'requires_php' => $remote['requires_php'],
-                'icons' => [
+                'autoupdate'   => true,
+                'icons'        => [
                     'default' => OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png',
-                    '2x' => OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png',
+                    '2x'      => OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png',
                 ],
-                'banners' => [
+                'banners'      => [
                     'default' => OLLA_PODRIDA_URL . 'assets/dist/images/Menu-Background-2048x238.png',
                 ],
             ];
@@ -121,16 +173,72 @@ class Olla_Podrida_Updater {
             unset($transient->no_update[$plugin_file]);
         } else {
             $transient->no_update[$plugin_file] = (object) [
-                'id' => 'olla-podrida',
-                'slug' => 'olla-podrida',
-                'plugin' => $plugin_file,
+                'id'          => $plugin_file,
+                'slug'        => 'olla-podrida',
+                'plugin'      => $plugin_file,
                 'new_version' => OLLA_PODRIDA_VERSION,
-                'url' => $remote['url'],
-                'package' => '',
+                'url'         => $remote['url'],
+                'package'     => '',
             ];
+            unset($transient->response[$plugin_file]);
         }
 
         return $transient;
+    }
+
+    /**
+     * Native WordPress Automatic Updates Filter.
+     */
+    public static function filter_auto_update_plugin($update, $item) {
+        if (!empty($item->plugin) && $item->plugin === 'olla-podrida/olla-podrida.php') {
+            $auto_updates = (array) get_site_option('auto_update_plugins', []);
+            return in_array('olla-podrida/olla-podrida.php', $auto_updates, true);
+        }
+        return $update;
+    }
+
+    /**
+     * Ensure the WordPress "Automatische Aktualisierungen aktivieren/deaktivieren" toggle is always rendered.
+     */
+    public static function filter_auto_update_setting_html($html, $plugin_file, $plugin_data) {
+        if ($plugin_file !== 'olla-podrida/olla-podrida.php') {
+            return $html;
+        }
+
+        $auto_updates = (array) get_site_option('auto_update_plugins', []);
+        $is_enabled   = in_array($plugin_file, $auto_updates, true);
+
+        $action = $is_enabled ? 'disable' : 'enable';
+        $label  = $is_enabled ? __('Automatische Aktualisierungen deaktivieren') : __('Automatische Aktualisierungen aktivieren');
+
+        $query_args = [
+            'action'        => "{$action}-auto-update",
+            'plugin'        => $plugin_file,
+            'paged'         => !empty($_GET['paged']) ? intval($_GET['paged']) : 1,
+            'plugin_status' => !empty($_GET['plugin_status']) ? sanitize_text_field($_GET['plugin_status']) : 'all',
+        ];
+
+        $url = wp_nonce_url(add_query_arg($query_args, 'plugins.php'), 'updates');
+
+        $output  = sprintf(
+            '<a href="%s" class="toggle-auto-update aria-button-if-js" data-wp-action="%s">',
+            esc_url($url),
+            esc_attr($action)
+        );
+        $output .= '<span class="dashicons dashicons-update spin hidden" aria-hidden="true"></span>';
+        $output .= '<span class="label">' . esc_html($label) . '</span>';
+        $output .= '</a>';
+
+        $remote = self::get_remote_info();
+        if ($remote && !empty($remote['version']) && version_compare($remote['version'], OLLA_PODRIDA_VERSION, '>')) {
+            $output .= sprintf(
+                '<div class="auto-update-time%s">%s</div>',
+                $is_enabled ? '' : ' hidden',
+                function_exists('wp_get_auto_update_message') ? wp_get_auto_update_message() : ''
+            );
+        }
+
+        return $output;
     }
 
     /**
@@ -156,9 +264,9 @@ class Olla_Podrida_Updater {
         $res->download_link = self::GITHUB_ZIP_URL;
         $res->last_updated = date('Y-m-d');
         $res->sections = [
-            'description' => 'Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida. Dieses Plugin wird direkt über das offizielle GitHub-Repository gepflegt und aktualisiert.',
+            'description' => 'Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida. Dieses Plugin wird direkt über das offizielle GitHub-Repository und den zentralen Update-Server gepflegt und aktualisiert.',
             'changelog' => 'Aktuelle Version: ' . $version . '<br/><br/>Entwicklung und Quellcode: <a href="https://github.com/' . self::GITHUB_REPO . '" target="_blank">GitHub Repository öffnen &rarr;</a>',
-            'installation' => 'Automatische Aktualisierung über das WordPress-Backend per 1-Klick oder durch Hochladen der ZIP-Datei.',
+            'installation' => 'Automatische Aktualisierung über das WordPress-Backend per 1-Klick oder durch Aktivierung der automatischen Hintergrund-Aktualisierungen.',
         ];
         $res->banners = [
             'low' => OLLA_PODRIDA_URL . 'assets/dist/images/Menu-Background-2048x238.png',

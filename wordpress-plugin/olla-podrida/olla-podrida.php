@@ -3,7 +3,7 @@
  * Plugin Name: Ensemble Olla Podrida
  * Plugin URI: https://olla-podrida.de
  * Description: Eigenständige One-Page-Website & Content-Management-System für das Ensemble Olla Podrida (Klangvielfalt aus Mittelalter und Renaissance). Bietet eine theatralische Hero-Bühne, Pergament-Ensemble-Präsentation, Termine- und Konzertarchiv-Verwaltung, Kontaktformular mit Posteingang, konfigurierbaren Hintergrundmusik-Player und Rollen-Berechtigungssteuerung.
- * Version: 1.5.0
+ * Version: 1.5.1
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: Jan Dennis Brüning
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OLLA_PODRIDA_VERSION', '1.5.0');
+define('OLLA_PODRIDA_VERSION', '1.5.1');
 define('OLLA_PODRIDA_FILE', __FILE__);
 define('OLLA_PODRIDA_PATH', plugin_dir_path(__FILE__));
 define('OLLA_PODRIDA_URL', plugin_dir_url(__FILE__));
@@ -55,3 +55,22 @@ function olla_podrida_init() {
     return Olla_Podrida::get_instance();
 }
 add_action('plugins_loaded', 'olla_podrida_init');
+
+// Central Update Check Endpoint (allows any installation to query version and package)
+add_action('init', function() {
+    if (isset($_GET['olla_update_check'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        header('Access-Control-Allow-Origin: *');
+        echo wp_json_encode([
+            'version'      => OLLA_PODRIDA_VERSION,
+            'name'         => 'Ensemble Olla Podrida',
+            'slug'         => 'olla-podrida',
+            'package'      => 'https://raw.githubusercontent.com/JanDennisBruening/olla-podrida-v1/main/wordpress-plugin/olla-podrida.zip',
+            'requires'     => '5.8',
+            'requires_php' => '7.4',
+            'last_updated' => date('Y-m-d'),
+            'homepage'     => 'https://github.com/JanDennisBruening/olla-podrida-v1',
+        ]);
+        exit;
+    }
+});

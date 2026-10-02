@@ -10,171 +10,173 @@ $archived_events = array_values(array_filter($events, function($e) { return empt
 
 <div class="olla-events-manager">
     <div class="olla-card">
-        <div class="olla-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="olla-card-header olla-card-header-flex">
             <div>
                 <h2>📅 Veranstaltungen &amp; Konzerttermine (#termine)</h2>
                 <p>Verwalte aktuelle Konzerte und die historische Konzertchronik.</p>
             </div>
-            <button type="button" class="button button-primary button-large" id="olla-open-add-event-btn">
-                <span class="dashicons dashicons-plus-alt" style="margin-top: 3px;"></span> Neue Veranstaltung hinzufügen
+            <button type="button" class="button olla-btn-gold" id="olla-open-add-event-btn">
+                <span class="dashicons dashicons-plus-alt"></span> Neue Veranstaltung hinzufügen
             </button>
         </div>
 
         <div class="olla-card-body">
-            <table class="wp-list-table widefat fixed striped olla-events-table">
-                <thead>
-                    <tr>
-                        <th style="width: 70px;">Bild</th>
-                        <th style="width: 110px;">Datum &amp; Zeit</th>
-                        <th>Titel &amp; Ort</th>
-                        <th style="width: 120px;">Kategorie</th>
-                        <th style="width: 130px;">Status</th>
-                        <th style="width: 160px; text-align: right;">Aktionen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 1. ABSCHNITT: AKTIVE & ANSTEHENDE KONZERTE -->
-                    <tr class="olla-events-section-header upcoming-header" style="background: #fdfbf7;">
-                        <td colspan="6" style="border-top: 2px solid #DAA520; border-bottom: 1.5px solid #d4c8b8; padding: 12px 16px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span class="dashicons dashicons-calendar-alt" style="color: #DAA520; font-size: 20px; width: 20px; height: 20px;"></span>
-                                    <strong style="color: #141210; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.04em;">
-                                        Aktuelle &amp; anstehende Konzerttermine
-                                    </strong>
-                                    <span class="olla-status-pill is-upcoming" style="font-size: 11px; margin-left: 6px;">
-                                        ● <?php echo count($upcoming_events); ?> aktiv auf Website
+            <div class="olla-table-responsive">
+                <table class="wp-list-table widefat striped olla-events-table">
+                    <thead>
+                        <tr>
+                            <th class="col-image">Bild</th>
+                            <th class="col-date">Datum &amp; Zeit</th>
+                            <th class="col-title">Titel &amp; Ort</th>
+                            <th class="col-cat">Kategorie</th>
+                            <th class="col-status">Status</th>
+                            <th class="col-actions">Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 1. ABSCHNITT: AKTIVE & ANSTEHENDE KONZERTE -->
+                        <tr class="olla-events-section-header upcoming-header" style="background: #fdfbf7;">
+                            <td colspan="6" style="border-top: 2px solid #DAA520; border-bottom: 1.5px solid #d4c8b8; padding: 12px 16px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="dashicons dashicons-calendar-alt" style="color: #DAA520; font-size: 20px; width: 20px; height: 20px;"></span>
+                                        <strong style="color: #141210; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.04em;">
+                                            Aktuelle &amp; anstehende Konzerttermine
+                                        </strong>
+                                        <span class="olla-status-pill is-upcoming" style="font-size: 11px; margin-left: 6px;">
+                                            ● <?php echo count($upcoming_events); ?> aktiv auf Website
+                                        </span>
+                                    </div>
+                                    <span style="color: #666; font-size: 11.5px; font-style: italic;">
+                                        Diese Termine werden Besuchern direkt auf der Website im Bereich #termine angezeigt.
                                     </span>
                                 </div>
-                                <span style="color: #666; font-size: 11.5px; font-style: italic;">
-                                    Diese Termine werden Besuchern direkt auf der Website im Bereich #termine angezeigt.
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <?php if (empty($upcoming_events)): ?>
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 22px; color: #777; font-style: italic; background: #faf8f5;">
-                                Aktuell sind keine anstehenden Konzerttermine eingetragen. Klicke oben auf &bdquo;Neue Veranstaltung hinzufügen&ldquo;.
                             </td>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($upcoming_events as $event): ?>
-                            <tr id="event-row-<?php echo esc_attr($event['id']); ?>" data-event="<?php echo esc_attr(wp_json_encode($event)); ?>">
-                                <td>
-                                    <?php if (!empty($event['image_url'])): ?>
-                                        <img src="<?php echo esc_url($event['image_url']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
-                                    <?php else: ?>
-                                        <div style="width: 50px; height: 50px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #888;">kein Bild</div>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($event['date']); ?></strong>
-                                    <?php if (!empty($event['time'])): ?>
-                                        <br/><small style="color: #666;"><?php echo esc_html($event['time']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($event['title']); ?></strong>
-                                    <br/>
-                                    <small style="color: #666;">
-                                        📍 <?php echo esc_html($event['location']); ?> (<?php echo esc_html($event['city']); ?>)
-                                    </small>
-                                    <?php if (!empty($event['contact_registration'])): ?>
-                                        <br/><small style="color: #8c6d1f;">✉️ <?php echo esc_html($event['contact_registration']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="olla-badge-category"><?php echo esc_html($event['category'] ?: 'Konzert'); ?></span>
-                                </td>
-                                <td>
-                                    <span class="olla-status-pill is-upcoming" onclick="OllaAdminEvents.toggleStatus('<?php echo esc_js($event['id']); ?>')" title="Klicken, um in das Archiv zu verschieben">
-                                        ● Kommend
-                                    </span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button type="button" class="button button-small olla-edit-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Bearbeiten</button>
-                                    <button type="button" class="button button-small button-link-delete olla-delete-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Löschen</button>
+
+                        <?php if (empty($upcoming_events)): ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 22px; color: #777; font-style: italic; background: #faf8f5;">
+                                    Aktuell sind keine anstehenden Konzerttermine eingetragen. Klicke oben auf &bdquo;Neue Veranstaltung hinzufügen&ldquo;.
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                        <?php else: ?>
+                            <?php foreach ($upcoming_events as $event): ?>
+                                <tr id="event-row-<?php echo esc_attr($event['id']); ?>" data-event="<?php echo esc_attr(wp_json_encode($event)); ?>">
+                                    <td class="col-image">
+                                        <?php if (!empty($event['image_url'])): ?>
+                                            <img src="<?php echo esc_url($event['image_url']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+                                        <?php else: ?>
+                                            <div style="width: 50px; height: 50px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #888;">kein Bild</div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-date">
+                                        <strong><?php echo esc_html($event['date']); ?></strong>
+                                        <?php if (!empty($event['time'])): ?>
+                                            <br/><small style="color: #666;"><?php echo esc_html($event['time']); ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-title">
+                                        <strong><?php echo esc_html($event['title']); ?></strong>
+                                        <br/>
+                                        <small style="color: #666;">
+                                            📍 <?php echo esc_html($event['location']); ?> (<?php echo esc_html($event['city']); ?>)
+                                        </small>
+                                        <?php if (!empty($event['contact_registration'])): ?>
+                                            <br/><small style="color: #8c6d1f;">✉️ <?php echo esc_html($event['contact_registration']); ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-cat">
+                                        <span class="olla-badge-category"><?php echo esc_html($event['category'] ?: 'Konzert'); ?></span>
+                                    </td>
+                                    <td class="col-status">
+                                        <span class="olla-status-pill is-upcoming" onclick="OllaAdminEvents.toggleStatus('<?php echo esc_js($event['id']); ?>')" title="Klicken, um in das Archiv zu verschieben">
+                                            ● Kommend
+                                        </span>
+                                    </td>
+                                    <td class="col-actions">
+                                        <button type="button" class="button button-small olla-edit-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Bearbeiten</button>
+                                        <button type="button" class="button button-small button-link-delete olla-delete-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Löschen</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
 
-                    <!-- TRENNLINIE ZWISCHEN AKTIVEN UND ARCHIVIERTEN VERANSTALTUNGEN -->
-                    <tr class="olla-events-section-divider">
-                        <td colspan="6" style="padding: 0; height: 22px; background: #f0f0f1; border-top: 1.5px solid #dcdcde; border-bottom: 1.5px solid #dcdcde;"></td>
-                    </tr>
+                        <!-- TRENNLINIE ZWISCHEN AKTIVEN UND ARCHIVIERTEN VERANSTALTUNGEN -->
+                        <tr class="olla-events-section-divider">
+                            <td colspan="6" style="padding: 0; height: 22px; background: #f0f0f1; border-top: 1.5px solid #dcdcde; border-bottom: 1.5px solid #dcdcde;"></td>
+                        </tr>
 
-                    <!-- 2. ABSCHNITT: KONZERTCHRONIK / ARCHIVIERTE VERANSTALTUNGEN -->
-                    <tr class="olla-events-section-header archived-header" style="background: #f7f6f4;">
-                        <td colspan="6" style="border-top: 2px solid #8c8273; border-bottom: 1.5px solid #d4c8b8; padding: 12px 16px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span class="dashicons dashicons-archive" style="color: #786d5e; font-size: 20px; width: 20px; height: 20px;"></span>
-                                    <strong style="color: #3d362d; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.04em;">
-                                        Konzertchronik · Archivierte vergangene Veranstaltungen
-                                    </strong>
-                                    <span class="olla-status-pill is-past" style="font-size: 11px; margin-left: 6px;">
-                                        ● <?php echo count($archived_events); ?> im Archiv
+                        <!-- 2. ABSCHNITT: KONZERTCHRONIK / ARCHIVIERTE VERANSTALTUNGEN -->
+                        <tr class="olla-events-section-header archived-header" style="background: #f7f6f4;">
+                            <td colspan="6" style="border-top: 2px solid #8c8273; border-bottom: 1.5px solid #d4c8b8; padding: 12px 16px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="dashicons dashicons-archive" style="color: #786d5e; font-size: 20px; width: 20px; height: 20px;"></span>
+                                        <strong style="color: #3d362d; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.04em;">
+                                            Konzertchronik · Archivierte vergangene Veranstaltungen
+                                        </strong>
+                                        <span class="olla-status-pill is-past" style="font-size: 11px; margin-left: 6px;">
+                                            ● <?php echo count($archived_events); ?> im Archiv
+                                        </span>
+                                    </div>
+                                    <span style="color: #666; font-size: 11.5px; font-style: italic;">
+                                        Vergangene Konzerte sind für Besucher über das Chronik-Modal im Website-Footer einsehbar.
                                     </span>
                                 </div>
-                                <span style="color: #666; font-size: 11.5px; font-style: italic;">
-                                    Vergangene Konzerte sind für Besucher über das Chronik-Modal im Website-Footer einsehbar.
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <?php if (empty($archived_events)): ?>
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 22px; color: #777; font-style: italic; background: #faf8f5;">
-                                Es befinden sich derzeit keine vergangenen Veranstaltungen in der Konzertchronik.
                             </td>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($archived_events as $event): ?>
-                            <tr id="event-row-<?php echo esc_attr($event['id']); ?>" data-event="<?php echo esc_attr(wp_json_encode($event)); ?>" style="opacity: 0.92; background: #faf9f6;">
-                                <td>
-                                    <?php if (!empty($event['image_url'])): ?>
-                                        <img src="<?php echo esc_url($event['image_url']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; filter: grayscale(20%);" />
-                                    <?php else: ?>
-                                        <div style="width: 50px; height: 50px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #888;">kein Bild</div>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($event['date']); ?></strong>
-                                    <?php if (!empty($event['time'])): ?>
-                                        <br/><small style="color: #777;"><?php echo esc_html($event['time']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($event['title']); ?></strong>
-                                    <br/>
-                                    <small style="color: #777;">
-                                        📍 <?php echo esc_html($event['location']); ?> (<?php echo esc_html($event['city']); ?>)
-                                    </small>
-                                    <?php if (!empty($event['contact_registration'])): ?>
-                                        <br/><small style="color: #8c6d1f;">✉️ <?php echo esc_html($event['contact_registration']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="olla-badge-category" style="background: #e5dfd3; color: #4a3e2c;"><?php echo esc_html($event['category'] ?: 'Konzert'); ?></span>
-                                </td>
-                                <td>
-                                    <span class="olla-status-pill is-past" onclick="OllaAdminEvents.toggleStatus('<?php echo esc_js($event['id']); ?>')" title="Klicken, um wieder zu aktivieren">
-                                        ● Archiv
-                                    </span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button type="button" class="button button-small olla-edit-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Bearbeiten</button>
-                                    <button type="button" class="button button-small button-link-delete olla-delete-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Löschen</button>
+
+                        <?php if (empty($archived_events)): ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 22px; color: #777; font-style: italic; background: #faf8f5;">
+                                    Es befinden sich derzeit keine vergangenen Veranstaltungen in der Konzertchronik.
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php else: ?>
+                            <?php foreach ($archived_events as $event): ?>
+                                <tr id="event-row-<?php echo esc_attr($event['id']); ?>" data-event="<?php echo esc_attr(wp_json_encode($event)); ?>" style="opacity: 0.92; background: #faf9f6;">
+                                    <td class="col-image">
+                                        <?php if (!empty($event['image_url'])): ?>
+                                            <img src="<?php echo esc_url($event['image_url']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; filter: grayscale(20%);" />
+                                        <?php else: ?>
+                                            <div style="width: 50px; height: 50px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #888;">kein Bild</div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-date">
+                                        <strong><?php echo esc_html($event['date']); ?></strong>
+                                        <?php if (!empty($event['time'])): ?>
+                                            <br/><small style="color: #777;"><?php echo esc_html($event['time']); ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-title">
+                                        <strong><?php echo esc_html($event['title']); ?></strong>
+                                        <br/>
+                                        <small style="color: #777;">
+                                            📍 <?php echo esc_html($event['location']); ?> (<?php echo esc_html($event['city']); ?>)
+                                        </small>
+                                        <?php if (!empty($event['contact_registration'])): ?>
+                                            <br/><small style="color: #8c6d1f;">✉️ <?php echo esc_html($event['contact_registration']); ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="col-cat">
+                                        <span class="olla-badge-category" style="background: #e5dfd3; color: #4a3e2c;"><?php echo esc_html($event['category'] ?: 'Konzert'); ?></span>
+                                    </td>
+                                    <td class="col-status">
+                                        <span class="olla-status-pill is-past" onclick="OllaAdminEvents.toggleStatus('<?php echo esc_js($event['id']); ?>')" title="Klicken, um wieder zu aktivieren">
+                                            ● Archiv
+                                        </span>
+                                    </td>
+                                    <td class="col-actions">
+                                        <button type="button" class="button button-small olla-edit-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Bearbeiten</button>
+                                        <button type="button" class="button button-small button-link-delete olla-delete-event-btn" data-id="<?php echo esc_attr($event['id']); ?>">Löschen</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
