@@ -1,0 +1,657 @@
+/* ==========================================================================
+   Olla Podrida – Admin Backend Styles
+   ========================================================================== */
+
+.op-admin-wrap {
+  margin: 20px 20px 0 2px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  max-width: 1300px;
+}
+
+.op-admin-header {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.op-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.op-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  width: fit-content;
+}
+
+.op-admin-header h1 {
+  color: #fafafa;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.op-subtitle {
+  color: #a1a1aa;
+  font-size: 13px;
+  margin: 0;
+}
+
+.op-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.op-btn-view {
+  background: #27272a !important;
+  color: #d4d4d8 !important;
+  border-color: #3f3f46 !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  height: 36px;
+  line-height: 34px !important;
+  padding: 0 14px !important;
+}
+
+.op-btn-view:hover {
+  background: #3f3f46 !important;
+  color: #ffffff !important;
+  border-color: #d4af37 !important;
+}
+
+.op-btn-add {
+  background: #d4af37 !important;
+  border-color: #b5952f !important;
+  color: #121215 !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  line-height: 34px !important;
+  padding: 0 16px !important;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.op-btn-add:hover {
+  background: #e5c158 !important;
+  color: #000000 !important;
+}
+
+.op-btn-reset {
+  height: 36px;
+  width: 36px;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #71717a !important;
+}
+
+.op-btn-reset:hover {
+  color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+/* ==========================================================================
+   MUSICIAN CARDS GRID
+   ========================================================================== */
+.op-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.op-musician-card {
+  position: relative;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 200ms ease;
+  cursor: grab;
+}
+
+.op-musician-card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.op-musician-card.ui-sortable-helper {
+  cursor: grabbing;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.op-card-handle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #52525b;
+  cursor: grab;
+  padding: 4px;
+}
+
+.op-card-handle:hover {
+  color: #d4af37;
+}
+
+.op-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #09090b;
+  border: 2px solid #3f3f46;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.op-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.op-media-placeholder {
+  color: #3f3f46;
+  font-size: 40px;
+}
+
+.op-color-pill {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.op-card-info {
+  flex: 1;
+}
+
+.op-card-index {
+  font-size: 10px;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 0.1em;
+}
+
+.op-card-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 2px 0 4px 0;
+}
+
+.op-card-instrument {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e4e4e7;
+  margin: 0;
+}
+
+.op-card-role {
+  font-size: 11px;
+  color: #a1a1aa;
+  margin: 2px 0 8px 0;
+}
+
+.op-card-quote {
+  font-size: 12px;
+  font-style: italic;
+  color: #71717a;
+  border-left: 2px solid rgba(212, 175, 55, 0.4);
+  padding-left: 8px;
+  margin: 8px 0;
+}
+
+.op-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #27272a;
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.op-sound-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #a1a1aa;
+  background: #27272a;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.op-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   MODAL WINDOW (Musiker Bearbeiten / Hinzufügen)
+   ========================================================================== */
+.op-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.op-modal {
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.op-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #27272a;
+  background: #121215;
+}
+
+.op-modal-header h2 {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.op-modal-close {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.op-modal-close:hover {
+  color: #ffffff;
+}
+
+.op-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.op-modal-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .op-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal Left: Media */
+.op-image-preview-box {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 2px dashed #3f3f46;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #09090b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 12px 0;
+}
+
+.op-image-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.op-preview-placeholder {
+  text-align: center;
+  color: #52525b;
+}
+
+.op-preview-placeholder .dashicons {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.op-media-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Modal Right: Fields */
+.op-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a1a1aa;
+  margin-bottom: 4px;
+}
+
+.op-field-group {
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.op-field-group input[type="text"],
+.op-field-group input[type="number"],
+.op-field-group textarea,
+.op-field-group select {
+  width: 100%;
+  background: #09090b;
+  border: 1px solid #3f3f46;
+  color: #f4f4f5;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.op-field-group input:focus,
+.op-field-group textarea:focus,
+.op-field-group select:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 1px #d4af37;
+  outline: none;
+}
+
+.op-field-row {
+  display: flex;
+  gap: 14px;
+}
+
+.op-section-box {
+  background: #121215;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.op-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d4af37;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 14px 0;
+}
+
+.op-lighting-row {
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.op-lighting-row .op-field-group {
+  min-width: 140px;
+}
+
+.op-checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #d4d4d8;
+  font-weight: 500;
+}
+
+.op-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #27272a;
+  background: #121215;
+}
+
+/* ==========================================================================
+   SETTINGS PAGE
+   ========================================================================== */
+.op-settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.op-box {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.op-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #121215;
+  border-bottom: 1px solid #27272a;
+  padding: 14px 20px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.op-box-title .dashicons {
+  color: #d4af37;
+}
+
+.op-box-content {
+  padding: 20px;
+}
+
+.op-page-status-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #121215;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.op-status-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.op-status-icon.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.op-status-icon.missing {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.op-status-details {
+  flex: 1;
+}
+
+.op-status-details h4 {
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.op-status-details p {
+  color: #a1a1aa;
+  margin: 0;
+  font-size: 12px;
+}
+
+.op-status-details code {
+  background: #09090b;
+  border: 1px solid #3f3f46;
+  color: #d4af37;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.op-radio-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .op-radio-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.op-radio-card {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  background: #121215;
+  border: 2px solid #27272a;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.op-radio-card:hover {
+  border-color: #3f3f46;
+}
+
+.op-radio-card.selected {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.op-radio-card input[type="radio"] {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.op-rc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #18181b;
+  color: #d4af37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.op-rc-body strong {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.op-rc-body p {
+  color: #a1a1aa;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.op-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.op-form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #a1a1aa;
+  margin-bottom: 4px;
+}
+
+.op-form-group input[type="text"],
+.op-form-group select {
+  width: 100%;
+  background: #09090b;
+  border: 1px solid #3f3f46;
+  color: #f4f4f5;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.op-settings-submit-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 30px 0;
+}
