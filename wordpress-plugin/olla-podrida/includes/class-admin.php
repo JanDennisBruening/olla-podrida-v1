@@ -721,7 +721,9 @@ class Olla_Podrida_Admin {
     }
 
     public static function handle_save_settings() {
-        if (!isset($_POST['olla_podrida_nonce']) || !wp_verify_nonce($_POST['olla_podrida_nonce'], 'olla_podrida_save_settings')) {
+        $nonce = $_POST['olla_podrida_nonce'] ?? $_POST['_wpnonce'] ?? '';
+        $valid = wp_verify_nonce($nonce, 'olla_podrida_save_settings') || wp_verify_nonce($nonce, 'olla_podrida_save_settings_nonce');
+        if (!$valid) {
             wp_die('Sicherheitsüberprüfung fehlgeschlagen.');
         }
 
@@ -904,6 +906,7 @@ class Olla_Podrida_Admin {
                     'schema_enabled' => !empty($_POST['schema_enabled']),
                     'schema_type' => sanitize_text_field($_POST['schema_type'] ?? 'MusicGroup'),
                     'schema_genre' => sanitize_text_field($_POST['schema_genre'] ?? 'Mittelaltermusik, Renaissancemusik, Alte Musik'),
+                    'google_snippet_icon' => esc_url_raw($_POST['google_snippet_icon'] ?? ''),
                 ];
                 Olla_Podrida_Settings::update_section('seo', $data);
                 break;

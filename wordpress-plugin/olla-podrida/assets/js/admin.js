@@ -372,20 +372,30 @@
                     $('#olla-empty-inbox-row').remove();
 
                     // Prepend new row to table
+                    var snippet = d.message ? (d.message.length > 90 ? d.message.substring(0, 90) + '…' : d.message) : '(Keine Nachricht)';
+                    var dateFormatted = escHtml(d.date_day) + ' ' + escHtml(d.date_time) + ' Uhr';
                     var newRowHtml = '<tr id="message-row-' + d.id + '" style="background: #f0fdf4; transition: background 1s ease;">' +
-                        '<td>' +
+                        '<td class="col-date" style="vertical-align: top; text-align: left;">' +
                             '<strong>' + escHtml(d.date_day) + '</strong><br/>' +
                             '<span style="font-size: 11px; color: #888;">' + escHtml(d.date_time) + ' Uhr</span>' +
                         '</td>' +
-                        '<td>' +
-                            '<strong style="color: #2c1810;">' + escHtml(d.name) + '</strong><br/>' +
-                            (d.email ? '<a href="mailto:' + escHtml(d.email) + '" style="color: #2271b1; text-decoration: none;">' + escHtml(d.email) + '</a><br/>' : '') +
+                        '<td class="col-sender" style="vertical-align: top; text-align: left;">' +
+                            '<strong style="color: #2c1810; display: block;">' + escHtml(d.name) + '</strong>' +
+                            (d.email ? '<a href="mailto:' + escHtml(d.email) + '" style="color: #2271b1; text-decoration: none; font-size: 12px; word-break: break-all;">' + escHtml(d.email) + '</a><br/>' : '') +
                             '<span style="display: inline-block; font-size: 10px; background: #eef2f6; color: #3b5998; border: 1px solid #d0dbe5; padding: 1px 6px; border-radius: 8px; margin-top: 3px;">' + escHtml(source) + '</span>' +
                         '</td>' +
-                        '<td>' +
-                            '<div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap; font-size: 13px;">' + escHtml(d.message) + '</div>' +
+                        '<td class="col-message" style="vertical-align: top; text-align: left;">' +
+                            '<div class="olla-msg-snippet-text" style="font-size: 13px; color: #2c1810; line-height: 1.45; word-break: break-word;">' + escHtml(snippet) + '</div>' +
                         '</td>' +
-                        '<td style="text-align: right;">' +
+                        '<td class="col-actions" style="text-align: right; vertical-align: top; white-space: nowrap;">' +
+                            '<button type="button" class="button button-small button-secondary olla-open-message-modal-btn" ' +
+                                'data-id="' + d.id + '" ' +
+                                'data-name="' + escHtml(d.name) + '" ' +
+                                'data-email="' + escHtml(d.email || '') + '" ' +
+                                'data-date="' + escHtml(dateFormatted) + '" ' +
+                                'data-source="' + escHtml(source) + '" ' +
+                                'data-message="' + escHtml(d.message) + '" ' +
+                                'style="font-weight: 500; margin-right: 4px;">👁️ Anzeigen</button>' +
                             '<button type="button" class="button button-small button-link-delete olla-delete-message-btn" data-id="' + d.id + '">Löschen</button>' +
                         '</td>' +
                     '</tr>';
@@ -422,6 +432,78 @@
                 $spinner.removeClass('is-active');
                 $status.css('color', '#d63638').text('❌ Netzwerkfehler beim Speichern.');
             });
+        });
+
+        // Open Message Details Modal
+        $(document).on('click', '.olla-open-message-modal-btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var id = $btn.data('id');
+            var name = $btn.attr('data-name') || '(Kein Name)';
+            var email = $btn.attr('data-email') || '';
+            var date = $btn.attr('data-date') || '';
+            var source = $btn.attr('data-source') || 'Website Kontaktformular';
+            var message = $btn.attr('data-message') || '';
+
+            $('#olla-modal-msg-name').text(name);
+            if (email) {
+                $('#olla-modal-msg-email').attr('href', 'mailto:' + email).text(email).show();
+                $('#olla-modal-reply-btn').attr('href', 'mailto:' + email + '?subject=' + encodeURIComponent('Re: Kontaktanfrage Ensemble Olla Podrida')).show();
+            } else {
+                $('#olla-modal-msg-email').attr('href', '#').text('Keine E-Mail angegeben');
+                $('#olla-modal-reply-btn').hide();
+            }
+            $('#olla-modal-msg-date').text(date);
+            $('#olla-modal-msg-source').text(source);
+            $('#olla-modal-msg-text').text(message);
+            $('#olla-modal-delete-btn').data('id', id);
+
+            $('#olla-message-modal').css('display', 'flex').hide().fadeIn(150);
+        });
+
+        // Close Message Modal
+        $(document).on('click', '.olla-close-message-modal-btn', function(e) {
+            e.preventDefault();
+            $('#olla-message-modal').fadeOut(150);
+        });
+
+        // Delete from within Modal
+        $(document).on('click', '#olla-modal-delete-btn', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            if (!id) return;
+            if (!confirm('Möchten Sie diese Nachricht wirklich löschen?')) return;
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_delete_message',
+                nonce: OllaPodridaAdmin.nonce,
+                id: id
+            }, function(res) {
+                if (res.success) {
+                    $('#message-row-' + id).fadeOut(300, function() { $(this).remove(); });
+                    $('#olla-message-modal').fadeOut(150);
+                    // Update counter
+                    var $counter = $('#olla-inbox-counter');
+                    if ($counter.length) {
+                        var currentCount = Math.max(0, (parseInt($counter.text(), 10) || 1) - 1);
+                        $counter.text(currentCount + (currentCount === 1 ? ' Anfrage' : ' Anfragen'));
+                    }
+                }
+            });
+        });
+
+        // Close on backdrop click
+        $(document).on('click', '#olla-message-modal', function(e) {
+            if ($(e.target).is('#olla-message-modal')) {
+                $('#olla-message-modal').fadeOut(150);
+            }
+        });
+
+        // Close on Escape key
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && $('#olla-message-modal').is(':visible')) {
+                $('#olla-message-modal').fadeOut(150);
+            }
         });
     }
 

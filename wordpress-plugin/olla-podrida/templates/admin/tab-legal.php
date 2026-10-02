@@ -18,29 +18,6 @@ $legal = Olla_Podrida_Settings::get_section('legal');
         </div>
 
         <div class="olla-card-body">
-            <div class="olla-field-group olla-media-field">
-                <label><strong>Footer-Siegel (Historisches Rundsiegel über dem Footer):</strong></label>
-                <div class="olla-media-row">
-                    <input type="text" name="seal_image" id="seal_image" value="<?php echo esc_url($legal['seal_image'] ?? ''); ?>" class="regular-text olla-media-input" />
-                    <button type="button" class="button olla-media-upload-btn" data-target="#seal_image" data-preview="#seal_image_preview">Aus Mediathek wählen</button>
-                </div>
-                <div class="olla-media-preview" id="seal_image_preview">
-                    <?php if (!empty($legal['seal_image'])): ?>
-                        <img src="<?php echo esc_url($legal['seal_image']); ?>" style="max-height: 80px; margin-top: 6px;" />
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <div class="olla-field-group">
-                <label for="copyright_text"><strong>Copyright-Zeile im Footer:</strong></label>
-                <input type="text" id="copyright_text" name="copyright_text" value="<?php echo esc_attr($legal['copyright_text'] ?? ''); ?>" class="large-text" />
-                <p class="description" style="margin-top: 5px; color: #666;">
-                    💡 <strong>Hinweis:</strong> Die Jahreszahl wird im Frontend automatisch fortlaufend aktuell gehalten (z. B. <code><?php echo date('Y'); ?> © Ensemble Olla Podrida</code>). Angaben zu Design, Webentwicklung und Fotografie werden separat darunter gerendert.
-                </p>
-            </div>
-
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;" />
-
             <?php
             $defaults = Olla_Podrida_Settings::get_defaults();
             $impressum_val = $legal['impressum_html'] ?? '';
@@ -54,8 +31,9 @@ $legal = Olla_Podrida_Settings::get_section('legal');
             }
             ?>
 
+            <!-- 1. Impressum-Text -->
             <div class="olla-field-group">
-                <label for="impressum_html"><strong>Impressum-Text (Modal-Inhalt):</strong></label>
+                <label for="impressum_html"><strong>1. Impressum-Text (Modal-Inhalt):</strong></label>
                 <p class="description" style="margin-bottom: 6px; color: #666;">
                     Wird im modalen Fenster „Impressum“ auf der Website angezeigt.
                 </p>
@@ -68,8 +46,11 @@ $legal = Olla_Podrida_Settings::get_section('legal');
                 ?>
             </div>
 
-            <div class="olla-field-group" style="margin-top: 25px;">
-                <label for="datenschutz_html"><strong>Datenschutzerklärung (Modal-Inhalt):</strong></label>
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;" />
+
+            <!-- 2. Datenschutzerklärung -->
+            <div class="olla-field-group">
+                <label for="datenschutz_html"><strong>2. Datenschutzerklärung (Modal-Inhalt):</strong></label>
                 <p class="description" style="margin-bottom: 6px; color: #666;">
                     Vollständige Datenschutzerklärung (DSGVO / DDG mit 7 Kapiteln, inkl. IONOS AVV Art. 28 DSGVO). Änderungen hier werden 1:1 im modalen Fenster auf der Website übernommen.
                 </p>
@@ -84,7 +65,8 @@ $legal = Olla_Podrida_Settings::get_section('legal');
 
             <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;" />
 
-            <h3>🍪 Cookie-Banner</h3>
+            <!-- 3. Cookie-Banner -->
+            <h3>🍪 3. Cookie-Banner</h3>
             <div class="olla-field-group">
                 <label for="cookie_banner_text"><strong>Banner-Hinweistext:</strong></label>
                 <textarea id="cookie_banner_text" name="cookie_banner_text" rows="3" class="large-text"><?php echo esc_textarea($legal['cookie_banner_text'] ?? ''); ?></textarea>
@@ -98,6 +80,37 @@ $legal = Olla_Podrida_Settings::get_section('legal');
                 <div class="olla-field-group">
                     <label for="cookie_decline_text"><strong>Text Ablehnen-Button:</strong></label>
                     <input type="text" id="cookie_decline_text" name="cookie_decline_text" value="<?php echo esc_attr($legal['cookie_decline_text'] ?? 'Nur Notwendige'); ?>" class="regular-text" />
+                </div>
+            </div>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;" />
+
+            <!-- 4. Copyright-Zeile im Footer -->
+            <div class="olla-field-group">
+                <label for="copyright_text"><strong>4. Copyright-Zeile im Footer:</strong></label>
+                <input type="text" id="copyright_text" name="copyright_text" value="<?php echo esc_attr($legal['copyright_text'] ?? ''); ?>" class="large-text" />
+                <p class="description" style="margin-top: 5px; color: #666;">
+                    💡 <strong>Hinweis:</strong> Die Jahreszahl wird im Frontend automatisch fortlaufend aktuell gehalten (z. B. <code><?php echo date('Y'); ?> © Ensemble Olla Podrida</code>). Angaben zu Design, Webentwicklung und Fotografie werden separat darunter gerendert.
+                </p>
+            </div>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;" />
+
+            <!-- 5. Footersiegel -->
+            <div class="olla-field-group olla-media-field">
+                <label><strong>5. Footer-Siegel (Historisches Rundsiegel über dem Footer):</strong></label>
+                <p class="description" style="margin-bottom: 6px; color: #666;">
+                    Hier kann das historische Wachs- bzw. Rundsiegel aus der WordPress-Mediathek ausgewählt oder ausgetauscht werden.
+                </p>
+                <div class="olla-media-row">
+                    <input type="text" name="seal_image" id="seal_image" value="<?php echo esc_url($legal['seal_image'] ?? ''); ?>" class="regular-text olla-media-input" placeholder="https://..." />
+                    <button type="button" class="button button-secondary olla-media-upload-btn" data-target="#seal_image" data-preview="#seal_image_preview">Aus Mediathek wählen</button>
+                    <button type="button" class="button olla-media-remove-btn" data-target="#seal_image" data-preview="#seal_image_preview" style="<?php echo empty($legal['seal_image']) ? 'display: none;' : ''; ?>">Entfernen</button>
+                </div>
+                <div class="olla-media-preview" id="seal_image_preview">
+                    <?php if (!empty($legal['seal_image'])): ?>
+                        <img src="<?php echo esc_url($legal['seal_image']); ?>" style="max-height: 80px; margin-top: 6px; border-radius: 4px;" />
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

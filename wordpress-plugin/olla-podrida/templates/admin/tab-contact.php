@@ -17,10 +17,21 @@ $total_messages = count($messages);
                 <h2>📥 Posteingang: Eingegangene Anfragen</h2>
                 <p>Hier werden alle Kontaktanfragen aus dem Frontend und importierte Einsendungen dauerhaft archiviert.</p>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <!-- CSV Export -->
+                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=olla_podrida_export_messages_csv'), 'olla_podrida_export_messages')); ?>" class="button button-secondary" title="Alle Anfragen als CSV/Excel-Tabelle herunterladen" style="font-weight: 500; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-media-spreadsheet" style="font-size: 16px; width: 16px; height: 16px; line-height: 16px; color: #10b981;"></span>
+                    CSV-Export
+                </a>
+                <!-- PDF Export -->
+                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=olla_podrida_print_messages_pdf'), 'olla_podrida_print_messages')); ?>" target="_blank" class="button button-secondary" title="Alle Anfragen als druckfertige PDF-Übersicht öffnen" style="font-weight: 500; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-pdf" style="font-size: 16px; width: 16px; height: 16px; line-height: 16px; color: #d63638;"></span>
+                    PDF-Export
+                </a>
+                <!-- Nachricht manuell erfassen (Fix: kein doppeltes Plus) -->
                 <button type="button" id="olla-open-manual-message-btn" class="button button-secondary" style="font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                    <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px; line-height: 16px;"></span>
-                    + Nachricht manuell erfassen
+                    <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px; line-height: 16px; color: #2271b1;"></span>
+                    Nachricht manuell erfassen
                 </button>
                 <span id="olla-inbox-counter" style="background: #e8a825; color: #070202; font-weight: 700; padding: 4px 12px; border-radius: 12px; font-size: 13px;">
                     <?php echo intval($total_messages); ?> <?php echo $total_messages === 1 ? 'Anfrage' : 'Anfragen'; ?>
@@ -74,13 +85,14 @@ $total_messages = count($messages);
                 </div>
             </div>
 
-            <table class="wp-list-table widefat fixed striped">
+            <!-- Nachrichten-Tabelle (Optimiertes Layout mit exakten Spaltenbreiten) -->
+            <table class="wp-list-table widefat striped olla-inbox-table" style="table-layout: auto !important; width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <th style="width: 140px;">Datum &amp; Zeit</th>
-                        <th style="width: 200px;">Absender / E-Mail</th>
-                        <th>Nachricht</th>
-                        <th style="width: 90px; text-align: right;">Aktion</th>
+                        <th class="col-date" style="width: 140px; min-width: 130px; text-align: left;">Datum &amp; Zeit</th>
+                        <th class="col-sender" style="width: 220px; min-width: 200px; text-align: left;">Absender / E-Mail</th>
+                        <th class="col-message" style="text-align: left;">Nachricht</th>
+                        <th class="col-actions" style="width: 155px; min-width: 140px; text-align: right;">Aktion</th>
                     </tr>
                 </thead>
                 <tbody id="olla-inbox-table-body">
@@ -92,17 +104,17 @@ $total_messages = count($messages);
                         </tr>
                     <?php else: ?>
                         <?php foreach ($messages as $idx => $msg): 
-                            $is_hidden = $idx >= 3;
+                            $is_hidden = $idx >= 9;
                         ?>
                             <tr id="message-row-<?php echo esc_attr($msg['id']); ?>" class="<?php echo $is_hidden ? 'olla-hidden-message-row' : ''; ?>" style="<?php echo $is_hidden ? 'display: none;' : ''; ?>">
-                                <td>
+                                <td class="col-date" style="vertical-align: top; text-align: left;">
                                     <strong><?php echo esc_html(date_i18n('d.m.Y', strtotime($msg['created_at']))); ?></strong><br/>
                                     <span style="font-size: 11px; color: #888;"><?php echo esc_html(date_i18n('H:i', strtotime($msg['created_at']))); ?> Uhr</span>
                                 </td>
-                                <td>
-                                    <strong style="color: #2c1810;"><?php echo esc_html($msg['name']); ?></strong><br/>
+                                <td class="col-sender" style="vertical-align: top; text-align: left;">
+                                    <strong style="color: #2c1810; display: block; font-size: 13px;"><?php echo esc_html($msg['name']); ?></strong>
                                     <?php if (!empty($msg['email'])): ?>
-                                        <a href="mailto:<?php echo esc_attr($msg['email']); ?>" style="color: #2271b1; text-decoration: none;">
+                                        <a href="mailto:<?php echo esc_attr($msg['email']); ?>" style="color: #2271b1; text-decoration: none; font-size: 12px; word-break: break-all;">
                                             <?php echo esc_html($msg['email']); ?>
                                         </a><br/>
                                     <?php endif; ?>
@@ -112,12 +124,26 @@ $total_messages = count($messages);
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap; font-size: 13px;">
-                                        <?php echo esc_html($msg['message']); ?>
+                                <td class="col-message" style="vertical-align: top; text-align: left;">
+                                    <div class="olla-msg-snippet-text" style="font-size: 13px; color: #2c1810; line-height: 1.45; word-break: break-word;">
+                                        <?php 
+                                            $raw_msg = $msg['message'];
+                                            $snippet = wp_trim_words($raw_msg, 14, '…');
+                                            echo esc_html($snippet ?: '(Keine Nachricht)');
+                                        ?>
                                     </div>
                                 </td>
-                                <td style="text-align: right;">
+                                <td class="col-actions" style="text-align: right; vertical-align: top; white-space: nowrap;">
+                                    <button type="button" class="button button-small button-secondary olla-open-message-modal-btn" 
+                                        data-id="<?php echo esc_attr($msg['id']); ?>"
+                                        data-name="<?php echo esc_attr($msg['name']); ?>"
+                                        data-email="<?php echo esc_attr($msg['email']); ?>"
+                                        data-date="<?php echo esc_attr(date_i18n('d.m.Y H:i', strtotime($msg['created_at']))); ?> Uhr"
+                                        data-source="<?php echo esc_attr($msg['source'] ?: 'Website Kontaktformular'); ?>"
+                                        data-message="<?php echo esc_attr($msg['message']); ?>"
+                                        style="font-weight: 500; margin-right: 4px;">
+                                        👁️ Anzeigen
+                                    </button>
                                     <button type="button" class="button button-small button-link-delete olla-delete-message-btn" data-id="<?php echo esc_attr($msg['id']); ?>">Löschen</button>
                                 </td>
                             </tr>
@@ -126,17 +152,102 @@ $total_messages = count($messages);
                 </tbody>
             </table>
 
-            <?php if ($total_messages > 3): ?>
+            <!-- Pagination / Mehr laden -->
+            <?php if ($total_messages > 9): ?>
                 <div class="olla-load-more-container" style="text-align: center; padding: 14px 0 4px 0; border-top: 1px solid #f0f0f1; margin-top: 10px;">
                     <button type="button" id="olla-load-more-messages-btn" class="button button-secondary" style="font-weight: 600;">
-                        📥 Mehr laden (<?php echo ($total_messages - 3); ?> weitere Anfragen)
+                        📥 Mehr laden (<?php echo ($total_messages - 9); ?> weitere Anfragen)
                     </button>
                 </div>
             <?php endif; ?>
         </div>
     </div>
 
-    <!-- 2. IMPORT: Kontaktformular-Einträge importieren -->
+    <!-- 2. KONTAKTFORMULAR-EINSTELLUNGEN (#kontakt) -->
+    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="olla-form-box">
+        <input type="hidden" name="action" value="olla_podrida_save_settings" />
+        <input type="hidden" name="section" value="contact" />
+        <?php wp_nonce_field('olla_podrida_save_settings', 'olla_podrida_nonce'); ?>
+
+        <div class="olla-card" style="margin-bottom: 30px;">
+            <div class="olla-card-header">
+                <h2>⚙️ Kontaktformular-Einstellungen (#kontakt)</h2>
+                <p>Konfiguriere den E-Mail-Empfang, die Texte und das Porträt der Ensembleleitung.</p>
+            </div>
+
+            <div class="olla-card-body">
+                <div class="olla-grid-2">
+                    <div class="olla-field-group">
+                        <label for="recipient_email"><strong>Empfänger-E-Mail(s) (an wen gehen Anfragen?) *:</strong></label>
+                        <input type="text" id="recipient_email" name="recipient_email" required value="<?php echo esc_attr($contact['recipient_email']); ?>" class="large-text" placeholder="kontakt@ihre-domain.de" />
+                        <p class="description" style="margin-top: 5px; font-size: 12px; color: #666;">
+                            💡 <strong>Mehrere Empfänger möglich:</strong> Sie können eine oder mehrere E-Mail-Adressen kommagetrennt eingeben. Alle hinterlegten Adressen erhalten eingehende Anfragen zeitgleich als Benachrichtigung.
+                        </p>
+                    </div>
+                    <div class="olla-field-group">
+                        <label for="subject"><strong>E-Mail-Betreffzeile:</strong></label>
+                        <input type="text" id="subject" name="subject" value="<?php echo esc_attr($contact['subject']); ?>" class="large-text" />
+                    </div>
+                </div>
+
+                <div class="olla-grid-2">
+                    <div class="olla-field-group">
+                        <label for="contact_title"><strong>Überschrift der Sektion:</strong></label>
+                        <input type="text" id="contact_title" name="title" value="<?php echo esc_attr($contact['title']); ?>" class="large-text" />
+                    </div>
+                    <div class="olla-field-group">
+                        <label for="email_display"><strong>Sichtbare Kontakt-E-Mail:</strong></label>
+                        <input type="text" id="email_display" name="email_display" value="<?php echo esc_attr($contact['email_display']); ?>" class="large-text" />
+                    </div>
+                </div>
+
+                <div class="olla-field-group">
+                    <label for="intro_paragraph1"><strong>Einleitungstext 1:</strong></label>
+                    <textarea id="intro_paragraph1" name="intro_paragraph1" rows="2" class="large-text"><?php echo esc_textarea($contact['intro_paragraph1']); ?></textarea>
+                </div>
+
+                <div class="olla-field-group">
+                    <label for="intro_paragraph2"><strong>Einleitungstext 2:</strong></label>
+                    <input type="text" id="intro_paragraph2" name="intro_paragraph2" value="<?php echo esc_attr($contact['intro_paragraph2']); ?>" class="large-text" />
+                </div>
+
+                <div class="olla-field-group olla-media-field">
+                    <label><strong>Porträt Ensembleleitung / Ansprechpartner(in) (neben dem Formular):</strong></label>
+                    <div class="olla-media-row">
+                        <input type="text" name="portrait" id="contact_portrait" value="<?php echo esc_url($contact['portrait']); ?>" class="regular-text olla-media-input" />
+                        <button type="button" class="button button-secondary olla-media-upload-btn" data-target="#contact_portrait" data-preview="#contact_portrait_preview">Aus Mediathek wählen</button>
+                    </div>
+                    <div class="olla-media-preview" id="contact_portrait_preview">
+                        <?php if (!empty($contact['portrait'])): ?>
+                            <img src="<?php echo esc_url($contact['portrait']); ?>" style="max-height: 90px; margin-top: 6px; border-radius: 4px;" />
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="olla-field-group">
+                    <label for="consent_text"><strong>Datenschutz-Checkbox Text (DSGVO-Zustimmung) *:</strong></label>
+                    <textarea id="consent_text" name="consent_text" rows="3" class="large-text"><?php echo esc_textarea($contact['consent_text']); ?></textarea>
+                </div>
+
+                <div class="olla-grid-2">
+                    <div class="olla-field-group">
+                        <label for="success_message"><strong>Erfolgsmeldung nach Absenden:</strong></label>
+                        <input type="text" id="success_message" name="success_message" value="<?php echo esc_attr($contact['success_message']); ?>" class="large-text" />
+                    </div>
+                    <div class="olla-field-group">
+                        <label for="error_message"><strong>Fehlermeldung (Pflichtfeld fehlt):</strong></label>
+                        <input type="text" id="error_message" name="error_message" value="<?php echo esc_attr($contact['error_message']); ?>" class="large-text" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="olla-card-footer">
+                <button type="submit" class="button button-primary button-large">Kontaktformular-Einstellungen speichern</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 3. IMPORT (Ganz unten platziert): Kontaktformular-Einträge importieren -->
     <div class="olla-card" style="margin-bottom: 30px;">
         <div class="olla-card-header">
             <h2>📂 Kontaktformular-Einträge importieren</h2>
@@ -218,54 +329,60 @@ $total_messages = count($messages);
 
             <!-- PANEL 2: CSV-Datei Upload -->
             <div id="olla-import-panel-csv-file" class="olla-import-panel" style="display: none; padding: 10px 0;">
-                <p style="font-size: 13px; color: #555; margin-bottom: 14px;">
-                    Lade eine CSV- oder Textdatei hoch (z. B. aus Excel, Google Sheets, einem alten Kontaktformular oder Mail-Export).<br/>
-                    Spalten wie <strong>Name</strong>, <strong>E-Mail</strong>, <strong>Nachricht</strong> und <strong>Datum</strong> werden automatisch erkannt.
+                <p style="font-size: 13px; color: #555; margin-bottom: 16px;">
+                    Lade eine exportierte CSV- oder TXT-Datei (z. B. aus Excel, Google Tabellen, Vorversionen oder anderen Systemen) hoch. Die Spalten (Datum, Name, E-Mail, Nachricht) werden automatisch erkannt.
                 </p>
-                <div style="background: #faf8f5; border: 2px dashed #d5c9b6; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 16px;">
-                    <span class="dashicons dashicons-upload" style="font-size: 36px; width: 36px; height: 36px; color: #b45309; margin-bottom: 8px;"></span><br/>
-                    <label for="olla-csv-file-input" class="button button-secondary" style="font-weight: 600; cursor: pointer;">
-                        📁 CSV-Datei auswählen
-                    </label>
+
+                <div style="background: #faf8f5; border: 2px dashed #c3b499; border-radius: 8px; padding: 25px; text-align: center; margin-bottom: 20px;">
+                    <span class="dashicons dashicons-upload" style="font-size: 40px; width: 40px; height: 40px; color: #daa520; margin-bottom: 10px;"></span>
+                    <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #2c1810;">
+                        CSV-Datei (.csv, .txt) hier auswählen
+                    </p>
                     <input type="file" id="olla-csv-file-input" accept=".csv,.txt" style="display: none;" />
-                    <p id="olla-csv-file-name" style="margin: 10px 0 0 0; font-size: 12px; color: #777;">Unterstützte Formate: .csv, .txt (Trennzeichen: Komma, Semikolon oder Tabulator)</p>
+                    <button type="button" id="olla-csv-file-select-btn" class="button button-secondary button-large" style="font-weight: 600;">
+                        📁 CSV-Datei vom Computer auswählen...
+                    </button>
+                    <div id="olla-csv-file-name" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
                 </div>
 
-                <!-- CSV Preview + Execute -->
                 <div id="olla-csv-file-preview-wrap" style="display: none;">
                     <div id="olla-csv-file-preview-info" style="margin-bottom: 14px; padding: 12px 16px; background: #f0f6fc; border-left: 4px solid #2271b1; border-radius: 4px;"></div>
                     <div id="olla-csv-file-preview-table" style="margin-bottom: 14px; overflow-x: auto;"></div>
                     <div style="display: flex; gap: 12px; align-items: center;">
                         <button type="button" id="olla-csv-file-execute-btn" class="button button-primary" style="font-weight: 600;">
-                            ✅ CSV-Einträge jetzt importieren
+                            ✅ Datensätze jetzt in den Posteingang importieren
                         </button>
                         <span id="olla-csv-file-spinner" class="spinner" style="float: none;"></span>
                     </div>
                 </div>
 
-                <!-- CSV Result -->
+                <!-- File Result -->
                 <div id="olla-csv-file-result-box" style="display: none; margin-top: 14px; padding: 14px 18px; border-radius: 4px; font-size: 13px;"></div>
             </div>
 
-            <!-- PANEL 3: Text / CSV direkt einfügen (Copy & Paste) -->
+            <!-- PANEL 3: Copy & Paste -->
             <div id="olla-import-panel-csv-paste" class="olla-import-panel" style="display: none; padding: 10px 0;">
                 <p style="font-size: 13px; color: #555; margin-bottom: 12px;">
-                    Kopiere Zeilen direkt aus Excel, Google Tabellen oder einer E-Mail und füge sie hier ein:
+                    Kopiere einfach Zeilen direkt aus einer Excel-, LibreOffice- oder Google-Tabelle und füge sie in das Textfeld ein. Die erste Zeile kann optional Spaltenüberschriften enthalten.
                 </p>
-                <div class="olla-field-group" style="margin-bottom: 14px;">
-                    <textarea id="olla-csv-paste-textarea" rows="6" style="width: 100%; font-family: monospace; font-size: 12px; border-radius: 4px; padding: 10px;" placeholder="Name;E-Mail;Nachricht;Datum&#10;Anna Schmidt;anna@example.de;Wir freuen uns auf das Konzert!;2026-05-12&#10;Klaus Meier;klaus@web.de;Gibt es noch Karten für Juni?;2026-05-15"></textarea>
+
+                <div class="olla-field-group" style="margin-bottom: 16px;">
+                    <textarea id="olla-csv-paste-textarea" rows="7" class="large-text code" style="font-size: 12px; font-family: monospace;" placeholder="Beispiel:
+Datum;Name;E-Mail;Nachricht
+2024-05-12;Anna Schmidt;anna@beispiel.de;Sehr geehrte Damen und Herren, wir möchten...
+2024-06-01;Markus Weber;m.weber@kultur.org;Guten Tag, treten Sie auch auf Hochzeiten auf?"></textarea>
                 </div>
+
                 <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
                     <button type="button" id="olla-csv-paste-preview-btn" class="button button-secondary" style="font-weight: 600;">
-                        🔍 Vorschau prüfen
+                        🔍 Text analysieren &amp; Vorschau anzeigen
                     </button>
-                    <button type="button" id="olla-csv-paste-execute-btn" class="button button-primary" style="font-weight: 600; display: none;">
-                        ✅ Eingefügte Einträge importieren
+                    <button type="button" id="olla-csv-paste-execute-btn" class="button button-primary" style="display: none; font-weight: 600;">
+                        ✅ Zeilen jetzt importieren
                     </button>
                     <span id="olla-csv-paste-spinner" class="spinner" style="float: none;"></span>
                 </div>
 
-                <!-- Paste Preview Table -->
                 <div id="olla-csv-paste-preview-wrap" style="display: none;">
                     <div id="olla-csv-paste-preview-info" style="margin-bottom: 14px; padding: 12px 16px; background: #f0f6fc; border-left: 4px solid #2271b1; border-radius: 4px;"></div>
                     <div id="olla-csv-paste-preview-table" style="margin-bottom: 14px; overflow-x: auto;"></div>
@@ -277,88 +394,58 @@ $total_messages = count($messages);
 
         </div>
     </div>
+</div>
 
-    <!-- 3. KONTAKTFORMULAR-EINSTELLUNGEN (Unten platziert) -->
-    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="olla-form-box">
-        <input type="hidden" name="action" value="olla_podrida_save_settings" />
-        <input type="hidden" name="section" value="contact" />
-        <?php wp_nonce_field('olla_podrida_save_settings', 'olla_podrida_nonce'); ?>
-
-        <div class="olla-card">
-            <div class="olla-card-header">
-                <h2>⚙️ Kontaktformular-Einstellungen (#kontakt)</h2>
-                <p>Konfiguriere den E-Mail-Empfang, die Texte und das Porträt der Ensembleleitung.</p>
+<!-- Modal: Vollständige Nachricht im Detail anzeigen -->
+<div id="olla-message-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.65); z-index: 100050; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+    <div style="background: #ffffff; border-radius: 10px; width: 92%; max-width: 650px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #DAA520; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #1b1510 0%, #0d0a08 100%); color: #F5F5DC; padding: 16px 20px; border-bottom: 2px solid #DAA520; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="dashicons dashicons-email-alt" style="color: #DAA520; font-size: 20px; width: 20px; height: 20px; line-height: 20px;"></span>
+                <h3 style="margin: 0; color: #DAA520; font-size: 16px; font-weight: 700;">Kontaktanfrage im Detail</h3>
             </div>
+            <button type="button" class="olla-close-message-modal-btn" style="background: transparent; border: none; color: #F5F5DC; font-size: 22px; cursor: pointer; line-height: 1; padding: 0 4px;" title="Schließen">&times;</button>
+        </div>
 
-            <div class="olla-card-body">
-                <div class="olla-grid-2">
-                    <div class="olla-field-group">
-                        <label for="recipient_email"><strong>Empfänger-E-Mail(s) (an wen gehen Anfragen?) *:</strong></label>
-                        <input type="text" id="recipient_email" name="recipient_email" required value="<?php echo esc_attr($contact['recipient_email']); ?>" class="large-text" placeholder="kontakt@ihre-domain.de" />
-                        <p class="description" style="margin-top: 5px; font-size: 12px; color: #666;">
-                            💡 <strong>Mehrere Empfänger möglich:</strong> Sie können eine oder mehrere E-Mail-Adressen kommagetrennt eingeben. Alle hinterlegten Adressen erhalten eingehende Anfragen zeitgleich als Benachrichtigung.
-                        </p>
-                    </div>
-                    <div class="olla-field-group">
-                        <label for="subject"><strong>E-Mail-Betreffzeile:</strong></label>
-                        <input type="text" id="subject" name="subject" value="<?php echo esc_attr($contact['subject']); ?>" class="large-text" />
-                    </div>
-                </div>
-
-                <div class="olla-grid-2">
-                    <div class="olla-field-group">
-                        <label for="contact_title"><strong>Überschrift der Sektion:</strong></label>
-                        <input type="text" id="contact_title" name="title" value="<?php echo esc_attr($contact['title']); ?>" class="large-text" />
-                    </div>
-                    <div class="olla-field-group">
-                        <label for="email_display"><strong>Sichtbare Kontakt-E-Mail:</strong></label>
-                        <input type="text" id="email_display" name="email_display" value="<?php echo esc_attr($contact['email_display']); ?>" class="large-text" />
-                    </div>
-                </div>
-
-                <div class="olla-field-group">
-                    <label for="intro_paragraph1"><strong>Einleitungstext 1:</strong></label>
-                    <textarea id="intro_paragraph1" name="intro_paragraph1" rows="2" class="large-text"><?php echo esc_textarea($contact['intro_paragraph1']); ?></textarea>
-                </div>
-
-                <div class="olla-field-group">
-                    <label for="intro_paragraph2"><strong>Einleitungstext 2:</strong></label>
-                    <input type="text" id="intro_paragraph2" name="intro_paragraph2" value="<?php echo esc_attr($contact['intro_paragraph2']); ?>" class="large-text" />
-                </div>
-
-                <div class="olla-field-group olla-media-field">
-                    <label><strong>Porträt Ensembleleitung / Ansprechpartner(in) (neben dem Formular):</strong></label>
-                    <div class="olla-media-row">
-                        <input type="text" name="portrait" id="contact_portrait" value="<?php echo esc_url($contact['portrait']); ?>" class="regular-text olla-media-input" />
-                        <button type="button" class="button olla-media-upload-btn" data-target="#contact_portrait" data-preview="#contact_portrait_preview">Aus Mediathek wählen</button>
-                    </div>
-                    <div class="olla-media-preview" id="contact_portrait_preview">
-                        <?php if (!empty($contact['portrait'])): ?>
-                            <img src="<?php echo esc_url($contact['portrait']); ?>" style="max-height: 90px; margin-top: 6px; border-radius: 4px;" />
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="olla-field-group">
-                    <label for="consent_text"><strong>Datenschutz-Checkbox Text (DSGVO-Zustimmung) *:</strong></label>
-                    <textarea id="consent_text" name="consent_text" rows="3" class="large-text"><?php echo esc_textarea($contact['consent_text']); ?></textarea>
-                </div>
-
-                <div class="olla-grid-2">
-                    <div class="olla-field-group">
-                        <label for="success_message"><strong>Erfolgsmeldung nach Absenden:</strong></label>
-                        <input type="text" id="success_message" name="success_message" value="<?php echo esc_attr($contact['success_message']); ?>" class="large-text" />
-                    </div>
-                    <div class="olla-field-group">
-                        <label for="error_message"><strong>Fehlermeldung (Pflichtfeld fehlt):</strong></label>
-                        <input type="text" id="error_message" name="error_message" value="<?php echo esc_attr($contact['error_message']); ?>" class="large-text" />
-                    </div>
-                </div>
+        <!-- Meta Bar -->
+        <div style="background: #faf8f5; border-bottom: 1px solid #e8e0d5; padding: 14px 20px; font-size: 13px; color: #444; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+            <div>
+                <span style="color: #888; font-size: 11px; text-transform: uppercase; font-weight: 600; display: block;">Absender</span>
+                <strong id="olla-modal-msg-name" style="color: #2c1810; font-size: 14px;">-</strong>
             </div>
-
-            <div class="olla-card-footer">
-                <button type="submit" class="button button-primary button-large">Kontaktformular-Einstellungen speichern</button>
+            <div>
+                <span style="color: #888; font-size: 11px; text-transform: uppercase; font-weight: 600; display: block;">E-Mail</span>
+                <a id="olla-modal-msg-email" href="#" style="color: #2271b1; text-decoration: underline; font-weight: 600;">-</a>
+            </div>
+            <div>
+                <span style="color: #888; font-size: 11px; text-transform: uppercase; font-weight: 600; display: block;">Datum &amp; Uhrzeit</span>
+                <span id="olla-modal-msg-date" style="font-weight: 500;">-</span>
+            </div>
+            <div>
+                <span style="color: #888; font-size: 11px; text-transform: uppercase; font-weight: 600; display: block;">Herkunft</span>
+                <span id="olla-modal-msg-source" class="olla-status-pill is-upcoming" style="font-size: 11px;">-</span>
             </div>
         </div>
-    </form>
+
+        <!-- Full Message Body -->
+        <div style="padding: 20px; overflow-y: auto; flex: 1;">
+            <label style="display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; color: #888; margin-bottom: 8px;">Vollständige Nachricht:</label>
+            <div id="olla-modal-msg-text" style="background: #faf8f5; border: 1px solid #e0d8cc; border-radius: 6px; padding: 16px; font-size: 14px; line-height: 1.6; color: #2c1810; white-space: pre-wrap; word-break: break-word; min-height: 120px; user-select: text;">
+                -
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div style="background: #f0f0f1; border-top: 1px solid #ddd; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+            <a id="olla-modal-reply-btn" href="#" class="button button-primary" style="font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span class="dashicons dashicons-email" style="font-size: 16px; width: 16px; height: 16px; line-height: 16px;"></span>
+                Per E-Mail antworten
+            </a>
+            <div style="display: flex; gap: 8px;">
+                <button type="button" id="olla-modal-delete-btn" class="button button-link-delete" style="color: #b32d2e;">Löschen</button>
+                <button type="button" class="button button-secondary olla-close-message-modal-btn">Schließen</button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -369,6 +369,7 @@ Datenschutzerklärung von IONOS: <a href=\"https://www.ionos.de/terms-gtc/terms-
                 'schema_enabled' => true,
                 'schema_type' => 'MusicGroup',
                 'schema_genre' => 'Mittelaltermusik, Renaissancemusik, Alte Musik',
+                'google_snippet_icon' => '',
             ],
             'roles' => [
                 'editor_sections' => ['hero', 'ensemble', 'events', 'contact', 'audio', 'press', 'seo', 'legal'],

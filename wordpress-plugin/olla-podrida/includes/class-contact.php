@@ -219,4 +219,232 @@ class Olla_Podrida_Contact {
 
         return $res ? $wpdb->insert_id : false;
     }
+
+    public static function handle_export_csv() {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
+            wp_die('Keine ausreichenden Berechtigungen.');
+        }
+
+        check_admin_referer('olla_podrida_export_messages');
+
+        self::ensure_table_exists();
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'olla_podrida_messages';
+        $messages = $wpdb->get_results("SELECT * FROM `$table_name` ORDER BY created_at DESC", ARRAY_A);
+
+        $filename = 'olla-podrida-anfragen-' . date('Y-m-d-His') . '.csv';
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        $output = fopen('php://output', 'w');
+
+        // UTF-8 BOM for Excel/Numbers compatibility
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // Header row
+        fputcsv($output, [
+            'ID',
+            'Datum & Uhrzeit',
+            'Absender Name',
+            'E-Mail-Adresse',
+            'Quelle / Herkunft',
+            'Gelesen',
+            'Nachricht'
+        ], ';');
+
+        foreach ($messages as $msg) {
+            fputcsv($output, [
+                $msg['id'],
+                $msg['created_at'],
+                $msg['name'],
+                $msg['email'],
+                !empty($msg['source']) ? $msg['source'] : 'Website-Formular',
+                !empty($msg['is_read']) ? 'Ja' : 'Nein',
+                $msg['message']
+            ], ';');
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    public static function handle_print_report() {
+        if (!Olla_Podrida_Roles::can_user_manage_section('contact')) {
+            wp_die('Keine ausreichenden Berechtigungen.');
+        }
+
+        check_admin_referer('olla_podrida_print_messages');
+
+        self::ensure_table_exists();
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'olla_podrida_messages';
+        $messages = $wpdb->get_results("SELECT * FROM `$table_name` ORDER BY created_at DESC", ARRAY_A);
+        $total = count($messages);
+        ?>
+        <!DOCTYPE html>
+        <html lang="de">
+        <head>
+            <meta charset="UTF-8">
+            <title>Posteingang &amp; Kontaktanfragen – Ensemble Olla Podrida</title>
+            <style>
+                @page {
+                    size: A4 portrait;
+                    margin: 15mm 12mm 15mm 12mm;
+                }
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                    margin: 25px;
+                    color: #1a1a1a;
+                    background: #fff;
+                    font-size: 12px;
+                    line-height: 1.4;
+                }
+                .report-header {
+                    border-bottom: 2px solid #DAA520;
+                    padding-bottom: 14px;
+                    margin-bottom: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                }
+                .report-header h1 {
+                    font-size: 20px;
+                    margin: 0 0 4px 0;
+                    color: #2c1810;
+                }
+                .report-header .sub {
+                    font-size: 13px;
+                    color: #8c6d37;
+                    font-weight: 600;
+                }
+                .report-meta {
+                    text-align: right;
+                    font-size: 11px;
+                    color: #666;
+                }
+                .badge {
+                    display: inline-block;
+                    background: #fdf6e7;
+                    border: 1px solid #daa520;
+                    color: #7a5500;
+                    padding: 3px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    font-weight: bold;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 15px;
+                }
+                th {
+                    background: #2a2018;
+                    color: #F5F5DC;
+                    text-align: left;
+                    padding: 8px 10px;
+                    font-size: 11px;
+                    font-weight: 600;
+                }
+                td {
+                    padding: 9px 10px;
+                    border-bottom: 1px solid #e5e5e5;
+                    vertical-align: top;
+                }
+                tr:nth-child(even) td {
+                    background: #faf9f6;
+                }
+                .source-tag {
+                    font-size: 10px;
+                    color: #4b6584;
+                    background: #edf2f7;
+                    padding: 1px 5px;
+                    border-radius: 3px;
+                    display: inline-block;
+                    margin-top: 3px;
+                }
+                .msg-text {
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                    font-size: 11.5px;
+                    color: #222;
+                }
+                .print-actions {
+                    margin-bottom: 20px;
+                    text-align: right;
+                }
+                .btn-print {
+                    background: #DAA520;
+                    color: #070202;
+                    border: none;
+                    padding: 8px 16px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                @media print {
+                    .print-actions { display: none; }
+                    body { margin: 0; }
+                    tr { page-break-inside: avoid; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="print-actions">
+                <button class="btn-print" onclick="window.print()">🖨️ Drucken / Als PDF speichern</button>
+            </div>
+            <div class="report-header">
+                <div>
+                    <h1>Ensemble Olla Podrida</h1>
+                    <div class="sub">Posteingang – Archiv aller eingegangenen Kontaktanfragen</div>
+                </div>
+                <div class="report-meta">
+                    <div><strong>Stand:</strong> <?php echo esc_html(date_i18n('d.m.Y, H:i')); ?> Uhr</div>
+                    <div><strong>Gesamt:</strong> <span class="badge"><?php echo $total; ?> <?php echo $total === 1 ? 'Anfrage' : 'Anfragen'; ?></span></div>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Datum &amp; Zeit</th>
+                        <th style="width: 25%;">Absender &amp; E-Mail</th>
+                        <th style="width: 48%;">Nachricht</th>
+                        <th style="width: 12%;">Quelle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($messages)): ?>
+                        <tr><td colspan="4" style="text-align: center; padding: 20px; color: #888;">Keine Nachrichten vorhanden.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($messages as $msg): ?>
+                            <tr>
+                                <td>
+                                    <strong><?php echo esc_html(date_i18n('d.m.Y', strtotime($msg['created_at']))); ?></strong><br>
+                                    <span style="color: #666; font-size: 10px;"><?php echo esc_html(date_i18n('H:i', strtotime($msg['created_at']))); ?> Uhr</span>
+                                </td>
+                                <td>
+                                    <strong><?php echo esc_html($msg['name']); ?></strong><br>
+                                    <?php if (!empty($msg['email'])): ?>
+                                        <span style="color: #2271b1;"><?php echo esc_html($msg['email']); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <div class="msg-text"><?php echo esc_html($msg['message']); ?></div>
+                                </td>
+                                <td>
+                                    <span class="source-tag"><?php echo esc_html($msg['source'] ?: 'Formular'); ?></span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
 }

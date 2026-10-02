@@ -4,12 +4,19 @@ if (!defined('ABSPATH')) {
 }
 
 $seo = Olla_Podrida_Settings::get_section('seo');
+$settings_all = Olla_Podrida_Settings::get_section('settings');
+$default_favicon = !empty($settings_all['favicon_url']) ? $settings_all['favicon_url'] : get_site_icon_url(64);
+if (empty($default_favicon)) {
+    $default_favicon = OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png';
+}
+$current_snippet_icon = !empty($seo['google_snippet_icon']) ? $seo['google_snippet_icon'] : '';
+$serp_icon_preview = !empty($current_snippet_icon) ? $current_snippet_icon : $default_favicon;
 ?>
 
 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
     <input type="hidden" name="action" value="olla_podrida_save_settings" />
     <input type="hidden" name="section" value="seo" />
-    <?php wp_nonce_field('olla_podrida_save_settings_nonce'); ?>
+    <?php wp_nonce_field('olla_podrida_save_settings', 'olla_podrida_nonce'); ?>
 
     <!-- 1. Google SERP Snippet Live Preview -->
     <div class="olla-card" style="margin-bottom: 24px; border: 1px solid #d0c29f;">
@@ -20,7 +27,7 @@ $seo = Olla_Podrida_Settings::get_section('seo');
                         <span class="dashicons dashicons-search" style="font-size: 20px; width: 20px; height: 20px; color: #DAA520;"></span>
                         Live Google-Suchergebnis-Vorschau (SERP)
                     </h2>
-                    <p style="color: #d8ceb8; font-size: 13px; margin: 0;">So erscheint die Website bei Google & anderen Suchmaschinen.</p>
+                    <p style="color: #d8ceb8; font-size: 13px; margin: 0;">So erscheint die Website bei Google &amp; anderen Suchmaschinen.</p>
                 </div>
                 <span class="olla-status-pill is-upcoming" style="font-size: 11px;">Echtzeit-Vorschau</span>
             </div>
@@ -28,8 +35,8 @@ $seo = Olla_Podrida_Settings::get_section('seo');
         <div class="olla-card-body" style="background: #faf8f5;">
             <div class="olla-serp-preview-box" style="background: #ffffff; border: 1px solid #dfe1e5; border-radius: 8px; padding: 18px 22px; max-width: 660px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                    <div style="width: 26px; height: 26px; border-radius: 50%; background: #15110e; border: 1px solid #DAA520; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                        <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/logo-pot.png'); ?>" style="width: 18px; height: 18px; object-fit: contain;" alt="Logo" />
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #15110e; border: 1px solid #DAA520; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                        <img id="serp-preview-icon" src="<?php echo esc_url($serp_icon_preview); ?>" style="width: 20px; height: 20px; object-fit: contain;" alt="Favicon" />
                     </div>
                     <div>
                         <div style="font-size: 13px; color: #202124; line-height: 1.3; font-weight: 500;"><?php echo esc_html(get_option('blogname', 'Ensemble Olla Podrida')); ?></div>
@@ -42,6 +49,26 @@ $seo = Olla_Podrida_Settings::get_section('seo');
                 <p id="serp-preview-desc" style="color: #4d5156; font-size: 13.5px; line-height: 1.5; margin: 0;">
                     <?php echo esc_html(!empty($seo['meta_description']) ? $seo['meta_description'] : 'Das Ensemble Olla Podrida erweckt mit Krummhörnern, Harfe, Sackpfeifen, Flöten und Gesang historische Musik aus Mittelalter und Renaissance zu neuem Leben.'); ?>
                 </p>
+            </div>
+
+            <!-- Snippet Icon Selector -->
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #e5dac9; max-width: 660px;">
+                <label for="google_snippet_icon" style="font-weight: 600; color: #2c1810; display: block; margin-bottom: 4px; font-size: 13px;">
+                    🔍 Google-Suchergebnis Favicon / Vorschau-Logo (Optional):
+                </label>
+                <p class="description" style="margin-bottom: 8px; color: #666; font-size: 12px; line-height: 1.4;">
+                    Wird als kleines rundes Website-Icon neben der Domain im Google-Suchergebnis angezeigt. Bleibt dieses Feld leer, nutzt das System automatisch das hinterlegte <strong>Website-Favicon</strong>.
+                </p>
+                <div class="olla-media-row" style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" name="google_snippet_icon" id="google_snippet_icon" value="<?php echo esc_url($current_snippet_icon); ?>" class="regular-text olla-media-input" placeholder="Standard: Website-Favicon verwenden (<?php echo esc_attr(basename($default_favicon)); ?>)" style="flex: 1;" />
+                    <button type="button" class="button button-secondary olla-media-upload-btn" data-target="#google_snippet_icon" data-preview="#google_snippet_icon_preview">Aus Mediathek wählen</button>
+                    <button type="button" class="button olla-media-remove-btn" data-target="#google_snippet_icon" data-preview="#google_snippet_icon_preview" style="<?php echo empty($current_snippet_icon) ? 'display: none;' : ''; ?>">Entfernen</button>
+                </div>
+                <div class="olla-media-preview" id="google_snippet_icon_preview" style="margin-top: 6px;">
+                    <?php if (!empty($current_snippet_icon)): ?>
+                        <img src="<?php echo esc_url($current_snippet_icon); ?>" style="max-height: 36px; border-radius: 4px; border: 1px solid #ddd; padding: 2px;" />
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -254,6 +281,16 @@ $seo = Olla_Podrida_Settings::get_section('seo');
         }
     }
 
+    const iconInput = document.getElementById('google_snippet_icon');
+    const serpIcon = document.getElementById('serp-preview-icon');
+    const defaultIconUrl = <?php echo wp_json_encode($default_favicon); ?>;
+
+    function updateIcon() {
+        if (!serpIcon) return;
+        const val = iconInput ? iconInput.value.trim() : '';
+        serpIcon.src = val || defaultIconUrl;
+    }
+
     if (titleInput) {
         titleInput.addEventListener('input', updateTitle);
         updateTitle();
@@ -261,6 +298,12 @@ $seo = Olla_Podrida_Settings::get_section('seo');
     if (descInput) {
         descInput.addEventListener('input', updateDesc);
         updateDesc();
+    }
+    if (iconInput) {
+        iconInput.addEventListener('input', updateIcon);
+        iconInput.addEventListener('change', updateIcon);
+        // Also observe when media picker sets value
+        jQuery(iconInput).on('change input', updateIcon);
     }
 })();
 </script>

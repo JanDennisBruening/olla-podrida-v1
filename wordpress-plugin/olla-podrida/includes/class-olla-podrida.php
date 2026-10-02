@@ -21,6 +21,8 @@ class Olla_Podrida {
     private function init_hooks() {
         add_action('init', ['Olla_Podrida_Roles', 'register_custom_roles']);
         add_action('rest_api_init', ['Olla_Podrida_Contact', 'register_routes']);
+        add_action('admin_post_olla_podrida_export_messages_csv', ['Olla_Podrida_Contact', 'handle_export_csv']);
+        add_action('admin_post_olla_podrida_print_messages_pdf', ['Olla_Podrida_Contact', 'handle_print_report']);
 
         // Inject favicon site-wide (frontend, admin, login) as long as plugin is active and enabled
         add_action('wp_head', [$this, 'inject_favicon'], 1);
