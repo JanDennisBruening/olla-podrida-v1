@@ -90,8 +90,11 @@ function saveConsent(audio: boolean = true) {
 
   // Log to WordPress REST API
   try {
-    const restBase = (window as unknown as { OLLA_DATA?: { restUrl?: string } }).OLLA_DATA?.restUrl;
-    const endpoint = restBase ? `${restBase}olla-podrida/v1/consent` : '/wp-json/olla-podrida/v1/consent';
+    const w = typeof window !== 'undefined' ? (window as any) : {};
+    const restBase = w.OLLA_PODRIDA_DATA?.restUrl || w.OLLA_DATA?.restUrl;
+    const endpoint = restBase 
+      ? (restBase.includes('olla-podrida/v1/consent') ? restBase : `${restBase.replace(/\/+$/, '')}/olla-podrida/v1/consent`)
+      : '/wp-json/olla-podrida/v1/consent';
     fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -120,8 +123,11 @@ function revokeConsent() {
 
   // Log revocation to WordPress REST API
   try {
-    const restBase = (window as unknown as { OLLA_DATA?: { restUrl?: string } }).OLLA_DATA?.restUrl;
-    const endpoint = restBase ? `${restBase}olla-podrida/v1/consent` : '/wp-json/olla-podrida/v1/consent';
+    const w = typeof window !== 'undefined' ? (window as any) : {};
+    const restBase = w.OLLA_PODRIDA_DATA?.restUrl || w.OLLA_DATA?.restUrl;
+    const endpoint = restBase 
+      ? (restBase.includes('olla-podrida/v1/consent') ? restBase : `${restBase.replace(/\/+$/, '')}/olla-podrida/v1/consent`)
+      : '/wp-json/olla-podrida/v1/consent';
     fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

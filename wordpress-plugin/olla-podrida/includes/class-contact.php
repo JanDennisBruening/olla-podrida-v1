@@ -25,6 +25,20 @@ class Olla_Podrida_Contact {
         dbDelta($sql);
     }
 
+    public static function ensure_table_exists() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'olla_podrida_messages';
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+            self::create_table();
+        } else {
+            // Verify 'source' column exists (added in v1.2.2)
+            $col_source = $wpdb->get_results("SHOW COLUMNS FROM `$table_name` LIKE 'source'");
+            if (empty($col_source)) {
+                $wpdb->query("ALTER TABLE `$table_name` ADD `source` varchar(100) DEFAULT '' NOT NULL AFTER `is_read`");
+            }
+        }
+    }
+
     public static function register_routes() {
         register_rest_route('olla-podrida/v1', '/contact', [
             'methods' => 'POST',
@@ -85,6 +99,7 @@ class Olla_Podrida_Contact {
         }
 
         // Save to Database
+        self::ensure_table_exists();
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
         $inserted = $wpdb->insert($table_name, [
@@ -92,7 +107,8 @@ class Olla_Podrida_Contact {
             'email' => $email,
             'message' => $message,
             'created_at' => current_time('mysql'),
-            'is_read' => 0
+            'is_read' => 0,
+            'source' => 'Website Kontaktformular'
         ]);
 
         if ($inserted && class_exists('Olla_Podrida_Audit')) {
@@ -128,21 +144,18 @@ class Olla_Podrida_Contact {
     }
 
     public static function get_messages($limit = 50) {
+        self::ensure_table_exists();
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
-
-        // Check if table exists
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-            return [];
-        }
 
         return $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM $table_name ORDER BY created_at DESC LIMIT %d", $limit),
             ARRAY_A
-        );
+        ) ?: [];
     }
 
     public static function delete_message($id) {
+        self::ensure_table_exists();
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
         $res = $wpdb->delete($table_name, ['id' => intval($id)]);
@@ -153,6 +166,7 @@ class Olla_Podrida_Contact {
     }
 
     public static function mark_as_read($id) {
+        self::ensure_table_exists();
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
         $res = $wpdb->update($table_name, ['is_read' => 1], ['id' => intval($id)]);
@@ -163,11 +177,9 @@ class Olla_Podrida_Contact {
     }
 
     public static function get_message_counts() {
+        self::ensure_table_exists();
         global $wpdb;
         $table_name = $wpdb->prefix . 'olla_podrida_messages';
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-            return ['total' => 0, 'unread' => 0, 'read' => 0];
-        }
         $total = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
         $unread = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_name WHERE is_read = 0");
         $read = max(0, $total - $unread);
@@ -176,5 +188,35 @@ class Olla_Podrida_Contact {
             'unread' => $unread,
             'read' => $read,
         ];
+    }
+
+    public static function add_manual_message($name, $email, $message, $date = null, $source = 'Manuell erfasst') {
+        self::ensure_table_exists();
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'olla_podrida_messages';
+
+        $name = sanitize_text_field($name);
+        $email = sanitize_email($email);
+        $message = sanitize_textarea_field($message);
+        $created_at = !empty($date) ? sanitize_text_field($date) : current_time('mysql');
+
+        if (empty($name) && empty($email)) {
+            return false;
+        }
+
+        $res = $wpdb->insert($table_name, [
+            'name'       => $name ?: '(Kein Name)',
+            'email'      => $email ?: '',
+            'message'    => $message ?: '(Keine Nachricht)',
+            'created_at' => $created_at,
+            'is_read'    => 1,
+            'source'     => $source ?: 'Manuell erfasst',
+        ], ['%s', '%s', '%s', '%s', '%d', '%s']);
+
+        if ($res && class_exists('Olla_Podrida_Audit')) {
+            Olla_Podrida_Audit::log('contact', 'Nachricht manuell erfasst', "Von: {$name} ({$email})");
+        }
+
+        return $res ? $wpdb->insert_id : false;
     }
 }

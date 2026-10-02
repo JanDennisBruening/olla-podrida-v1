@@ -221,6 +221,7 @@ class Olla_Podrida_Frontend {
             'pluginUrl' => OLLA_PODRIDA_URL,
             'assetsUrl' => OLLA_PODRIDA_URL . 'assets/dist/',
             'imagesUrl' => OLLA_PODRIDA_URL . 'assets/dist/images/',
+            'restUrl'   => esc_url_raw(rest_url()),
             'hero' => [
                 'slogan' => $hero['slogan'] ?? '',
                 'subtitle' => $hero['subtitle'] ?? '',

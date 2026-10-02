@@ -171,6 +171,14 @@ class Olla_Podrida {
      * sets it as the static front page (if not already set), sets permalinks, and flushes rewrite rules.
      */
     public static function run_auto_setup() {
+        // 0. Ensure database tables exist
+        if (class_exists('Olla_Podrida_Contact')) {
+            Olla_Podrida_Contact::ensure_table_exists();
+        }
+        if (class_exists('Olla_Podrida_Consent')) {
+            Olla_Podrida_Consent::create_table();
+        }
+
         // 1. Check or create the Canvas Page ("Ensemble Olla Podrida")
         $page_id = 0;
         $target_page = get_page_by_path('olla-podrida');

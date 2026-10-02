@@ -123,6 +123,7 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
     
     <script>
         window.OLLA_PODRIDA_DATA = <?php echo wp_json_encode($localized_data); ?>;
+        window.OLLA_DATA = window.OLLA_PODRIDA_DATA;
     </script>
 </head>
 <body class="bg-[#070202] text-[#F5F5DC] antialiased selection:bg-[#DAA520] selection:text-[#070202]">

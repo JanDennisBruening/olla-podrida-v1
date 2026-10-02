@@ -46,14 +46,26 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
     setResponseOutput(null);
 
     try {
-      const restBase = (window as unknown as { OLLA_DATA?: { restUrl?: string } }).OLLA_DATA?.restUrl;
-      const endpoint = restBase ? `${restBase}olla-podrida/v1/contact` : '/wp-json/olla-podrida/v1/contact';
+      const w = typeof window !== 'undefined' ? (window as any) : {};
+      const restBase = w.OLLA_PODRIDA_DATA?.contact?.restUrl 
+        || w.OLLA_PODRIDA_DATA?.restUrl 
+        || w.OLLA_DATA?.contact?.restUrl
+        || w.OLLA_DATA?.restUrl;
+      const endpoint = restBase 
+        ? (restBase.includes('olla-podrida/v1/contact') ? restBase : `${restBase.replace(/\/+$/, '')}/olla-podrida/v1/contact`) 
+        : '/wp-json/olla-podrida/v1/contact';
+
+      const nonce = w.OLLA_PODRIDA_DATA?.contact?.nonce || w.OLLA_DATA?.contact?.nonce || '';
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (nonce) {
+        headers['X-WP-Nonce'] = nonce;
+      }
 
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -83,16 +95,9 @@ export const KontaktSection: React.FC<KontaktSectionProps> = ({ onOpenPrivacy })
         });
       }
     } catch {
-      // In offline / standalone preview mode: fallback to success message
       setResponseOutput({
-        text: 'Vielen Dank für Ihre Nachricht. Sie wurde erfolgreich übermittelt.',
-        isError: false
-      });
-      setFormData({
-        name: '',
-        email: '',
-        message: '',
-        acceptance: false
+        text: 'Beim Versenden ist ein Netzwerkfehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt per E-Mail.',
+        isError: true
       });
     } finally {
       setIsSubmitting(false);

@@ -303,6 +303,126 @@
             $('.olla-hidden-message-row').fadeIn(250);
             $(this).closest('.olla-load-more-container').slideUp(200);
         });
+
+        // Toggle Manual Message Box
+        $(document).on('click', '#olla-open-manual-message-btn', function(e) {
+            e.preventDefault();
+            var $box = $('#olla-manual-message-box');
+            if ($box.is(':visible')) {
+                $box.slideUp(200);
+            } else {
+                $box.slideDown(250, function() {
+                    $('#olla-manual-name').focus();
+                });
+            }
+        });
+
+        $(document).on('click', '#olla-close-manual-message-btn', function(e) {
+            e.preventDefault();
+            $('#olla-manual-message-box').slideUp(200);
+        });
+
+        // Save Manual Message
+        $(document).on('click', '#olla-save-manual-message-btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $spinner = $('#olla-manual-message-spinner');
+            var $status = $('#olla-manual-message-status');
+
+            var name    = $.trim($('#olla-manual-name').val());
+            var email   = $.trim($('#olla-manual-email').val());
+            var message = $.trim($('#olla-manual-message').val());
+            var date    = $.trim($('#olla-manual-date').val());
+            var source  = $.trim($('#olla-manual-source').val()) || 'Manuell erfasst';
+
+            if (!name && !email) {
+                alert('Bitte geben Sie mindestens einen Namen oder eine E-Mail-Adresse an.');
+                $('#olla-manual-name').focus();
+                return;
+            }
+            if (!message) {
+                alert('Bitte geben Sie einen Nachrichtentext ein.');
+                $('#olla-manual-message').focus();
+                return;
+            }
+
+            $btn.prop('disabled', true);
+            $spinner.addClass('is-active');
+            $status.text('').css('color', '');
+
+            var importNonce = OllaPodridaAdmin.import_nonce || '';
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_add_manual_message',
+                _nonce: importNonce,
+                name: name,
+                email: email,
+                message: message,
+                date: date,
+                source: source
+            }, function(res) {
+                $btn.prop('disabled', false);
+                $spinner.removeClass('is-active');
+
+                if (res.success && res.data) {
+                    var d = res.data;
+                    $status.css('color', '#10b981').text('✅ Gespeichert!');
+
+                    // Remove empty placeholder row if present
+                    $('#olla-empty-inbox-row').remove();
+
+                    // Prepend new row to table
+                    var newRowHtml = '<tr id="message-row-' + d.id + '" style="background: #f0fdf4; transition: background 1s ease;">' +
+                        '<td>' +
+                            '<strong>' + escHtml(d.date_day) + '</strong><br/>' +
+                            '<span style="font-size: 11px; color: #888;">' + escHtml(d.date_time) + ' Uhr</span>' +
+                        '</td>' +
+                        '<td>' +
+                            '<strong style="color: #2c1810;">' + escHtml(d.name) + '</strong><br/>' +
+                            (d.email ? '<a href="mailto:' + escHtml(d.email) + '" style="color: #2271b1; text-decoration: none;">' + escHtml(d.email) + '</a><br/>' : '') +
+                            '<span style="display: inline-block; font-size: 10px; background: #eef2f6; color: #3b5998; border: 1px solid #d0dbe5; padding: 1px 6px; border-radius: 8px; margin-top: 3px;">' + escHtml(source) + '</span>' +
+                        '</td>' +
+                        '<td>' +
+                            '<div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap; font-size: 13px;">' + escHtml(d.message) + '</div>' +
+                        '</td>' +
+                        '<td style="text-align: right;">' +
+                            '<button type="button" class="button button-small button-link-delete olla-delete-message-btn" data-id="' + d.id + '">Löschen</button>' +
+                        '</td>' +
+                    '</tr>';
+
+                    $('#olla-inbox-table-body').prepend(newRowHtml);
+
+                    // Fade back to normal background after 2s
+                    setTimeout(function() {
+                        $('#message-row-' + d.id).css('background', '');
+                    }, 2000);
+
+                    // Update counter
+                    var $counter = $('#olla-inbox-counter');
+                    if ($counter.length) {
+                        var currentCount = parseInt($counter.text(), 10) || 0;
+                        currentCount++;
+                        $counter.text(currentCount + (currentCount === 1 ? ' Anfrage' : ' Anfragen'));
+                    }
+
+                    // Reset fields
+                    $('#olla-manual-name').val('');
+                    $('#olla-manual-email').val('');
+                    $('#olla-manual-message').val('');
+
+                    setTimeout(function() {
+                        $('#olla-manual-message-box').slideUp(300);
+                        $status.text('');
+                    }, 1200);
+                } else {
+                    $status.css('color', '#d63638').text('❌ ' + (res.data || 'Fehler beim Speichern.'));
+                }
+            }).fail(function() {
+                $btn.prop('disabled', false);
+                $spinner.removeClass('is-active');
+                $status.css('color', '#d63638').text('❌ Netzwerkfehler beim Speichern.');
+            });
+        });
     }
 
     /**
@@ -502,6 +622,28 @@
         var currentSource = '';
         var currentFormId = '';
 
+        // Subtab Switcher (Plugin vs CSV-Datei vs Copy & Paste)
+        $('.olla-subtab-btn').on('click', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var tab = $btn.data('tab');
+            $('.olla-subtab-btn').removeClass('active').css({
+                'background': '#f4efe6',
+                'border-bottom': 'none',
+                'color': '#666',
+                'font-weight': '600'
+            });
+            $btn.addClass('active').css({
+                'background': '#fff',
+                'border-bottom': '2px solid #fff',
+                'color': '#2c1810',
+                'font-weight': '700'
+            });
+
+            $('.olla-import-panel').hide();
+            $('#olla-import-panel-' + tab).fadeIn(200);
+        });
+
         // Step 1: Detect Sources
         $detectBtn.on('click', function(e) {
             e.preventDefault();
@@ -698,6 +840,220 @@
                 $spinner.removeClass('is-active');
                 $btn.prop('disabled', false);
                 alert('Import fehlgeschlagen. Bitte versuchen Sie es erneut.');
+            });
+        });
+
+        // ──────────────── PANEL 2: CSV File Upload ────────────────
+        var uploadedCsvData = '';
+        $('#olla-csv-file-input').on('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+
+            $('#olla-csv-file-name').html('<strong>Ausgewählte Datei:</strong> ' + escHtml(file.name) + ' (' + Math.round(file.size / 1024) + ' KB)');
+            $('#olla-csv-file-preview-wrap').hide();
+            $('#olla-csv-file-result-box').hide();
+
+            var reader = new FileReader();
+            reader.onload = function(evt) {
+                uploadedCsvData = evt.target.result;
+                var $spinner = $('#olla-csv-file-spinner');
+                $spinner.addClass('is-active');
+
+                $.post(OllaPodridaAdmin.ajax_url, {
+                    action: 'olla_podrida_import_csv_preview',
+                    _nonce: importNonce,
+                    csv_data: uploadedCsvData
+                }, function(res) {
+                    $spinner.removeClass('is-active');
+                    if (res.success && res.data) {
+                        var d = res.data;
+                        $('#olla-csv-file-preview-info').html(
+                            '<strong>📊 ' + d.count + ' Datensätze in der Datei erkannt.</strong> ' +
+                            (d.count > 0 ? 'Vorschau der ersten ' + Math.min(d.count, d.sample.length) + ' Zeilen:' : 'Keine gültigen Datensätze gefunden.')
+                        );
+
+                        if (d.sample && d.sample.length > 0) {
+                            var tHtml = '<table class="wp-list-table widefat fixed striped" style="margin-top: 8px;">' +
+                                '<thead><tr><th style="width:130px;">Datum</th><th style="width:160px;">Name</th><th style="width:180px;">E-Mail</th><th>Nachricht</th></tr></thead><tbody>';
+                            $.each(d.sample, function(i, row) {
+                                var msgPreview = (row.message || '').substring(0, 80);
+                                if ((row.message || '').length > 80) msgPreview += '…';
+                                tHtml += '<tr>' +
+                                    '<td>' + escHtml(row.date || '—') + '</td>' +
+                                    '<td>' + escHtml(row.name || '—') + '</td>' +
+                                    '<td>' + escHtml(row.email || '—') + '</td>' +
+                                    '<td style="font-size:12px; color:#555;">' + escHtml(msgPreview || '—') + '</td>' +
+                                    '</tr>';
+                            });
+                            tHtml += '</tbody></table>';
+                            $('#olla-csv-file-preview-table').html(tHtml);
+                        }
+
+                        if (d.count > 0) {
+                            $('#olla-csv-file-execute-btn').prop('disabled', false).text('✅ ' + d.count + ' CSV-Einträge jetzt importieren');
+                        } else {
+                            $('#olla-csv-file-execute-btn').prop('disabled', true);
+                        }
+
+                        $('#olla-csv-file-preview-wrap').fadeIn(200);
+                    } else {
+                        alert('Fehler beim Lesen der CSV-Datei.');
+                    }
+                }).fail(function() {
+                    $spinner.removeClass('is-active');
+                    alert('Netzwerkfehler beim Verarbeiten der CSV-Datei.');
+                });
+            };
+            reader.readAsText(file);
+        });
+
+        $('#olla-csv-file-execute-btn').on('click', function(e) {
+            e.preventDefault();
+            if (!uploadedCsvData) return;
+            if (!confirm('Möchten Sie die erkannten CSV-Einträge jetzt ins Postfach importieren?')) return;
+
+            var $btn = $(this);
+            var $spinner = $('#olla-csv-file-spinner');
+            $btn.prop('disabled', true);
+            $spinner.addClass('is-active');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_csv_execute',
+                _nonce: importNonce,
+                csv_data: uploadedCsvData
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+
+                var $result = $('#olla-csv-file-result-box');
+                if (res.success && res.data) {
+                    var d = res.data;
+                    var bgColor = d.imported > 0 ? '#ecfdf5' : '#fef9e7';
+                    var borderColor = d.imported > 0 ? '#10b981' : '#daa520';
+                    $result.css({
+                        'background': bgColor,
+                        'border-left': '4px solid ' + borderColor
+                    }).html(
+                        '<strong>CSV-Import abgeschlossen!</strong><br>' +
+                        '✅ <strong>' + d.imported + '</strong> Einträge erfolgreich importiert' +
+                        (d.skipped > 0 ? '<br>⏭️ <strong>' + d.skipped + '</strong> Einträge übersprungen (Duplikate)' : '') +
+                        '<br><br><a href="' + window.location.href + '" class="button button-secondary" style="font-weight:600;">🔄 Seite neu laden &amp; Postfach anzeigen</a>'
+                    ).fadeIn(200);
+                } else {
+                    $result.css({
+                        'background': '#fef2f2',
+                        'border-left': '4px solid #d63638'
+                    }).html('<strong style="color:#d63638;">Fehler beim Import.</strong> Bitte versuchen Sie es erneut.').fadeIn(200);
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+                alert('Netzwerkfehler beim CSV-Import.');
+            });
+        });
+
+        // ──────────────── PANEL 3: Copy & Paste ────────────────
+        $('#olla-csv-paste-preview-btn').on('click', function(e) {
+            e.preventDefault();
+            var text = $.trim($('#olla-csv-paste-textarea').val());
+            if (!text) {
+                alert('Bitte fügen Sie zuerst Text oder Tabellenzeilen in das Textfeld ein.');
+                $('#olla-csv-paste-textarea').focus();
+                return;
+            }
+
+            var $spinner = $('#olla-csv-paste-spinner');
+            $spinner.addClass('is-active');
+            $('#olla-csv-paste-preview-wrap').hide();
+            $('#olla-csv-paste-result-box').hide();
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_csv_preview',
+                _nonce: importNonce,
+                csv_data: text
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                if (res.success && res.data) {
+                    var d = res.data;
+                    $('#olla-csv-paste-preview-info').html(
+                        '<strong>📊 ' + d.count + ' Datensätze erkannt.</strong> ' +
+                        (d.count > 0 ? 'Vorschau der ersten ' + Math.min(d.count, d.sample.length) + ' Zeilen:' : 'Keine gültigen Zeilen erkannt.')
+                    );
+
+                    if (d.sample && d.sample.length > 0) {
+                        var tHtml = '<table class="wp-list-table widefat fixed striped" style="margin-top: 8px;">' +
+                            '<thead><tr><th style="width:130px;">Datum</th><th style="width:160px;">Name</th><th style="width:180px;">E-Mail</th><th>Nachricht</th></tr></thead><tbody>';
+                        $.each(d.sample, function(i, row) {
+                            var msgPreview = (row.message || '').substring(0, 80);
+                            if ((row.message || '').length > 80) msgPreview += '…';
+                            tHtml += '<tr>' +
+                                '<td>' + escHtml(row.date || '—') + '</td>' +
+                                '<td>' + escHtml(row.name || '—') + '</td>' +
+                                '<td>' + escHtml(row.email || '—') + '</td>' +
+                                '<td style="font-size:12px; color:#555;">' + escHtml(msgPreview || '—') + '</td>' +
+                                '</tr>';
+                        });
+                        tHtml += '</tbody></table>';
+                        $('#olla-csv-paste-preview-table').html(tHtml);
+                    }
+
+                    if (d.count > 0) {
+                        $('#olla-csv-paste-execute-btn').show().text('✅ ' + d.count + ' Einträge jetzt importieren');
+                    } else {
+                        $('#olla-csv-paste-execute-btn').hide();
+                    }
+
+                    $('#olla-csv-paste-preview-wrap').fadeIn(200);
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                alert('Netzwerkfehler bei der Vorschau.');
+            });
+        });
+
+        $('#olla-csv-paste-execute-btn').on('click', function(e) {
+            e.preventDefault();
+            var text = $.trim($('#olla-csv-paste-textarea').val());
+            if (!text) return;
+            if (!confirm('Möchten Sie die erkannten Einträge jetzt importieren?')) return;
+
+            var $btn = $(this);
+            var $spinner = $('#olla-csv-paste-spinner');
+            $btn.prop('disabled', true);
+            $spinner.addClass('is-active');
+
+            $.post(OllaPodridaAdmin.ajax_url, {
+                action: 'olla_podrida_import_csv_execute',
+                _nonce: importNonce,
+                csv_data: text
+            }, function(res) {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+
+                var $result = $('#olla-csv-paste-result-box');
+                if (res.success && res.data) {
+                    var d = res.data;
+                    var bgColor = d.imported > 0 ? '#ecfdf5' : '#fef9e7';
+                    var borderColor = d.imported > 0 ? '#10b981' : '#daa520';
+                    $result.css({
+                        'background': bgColor,
+                        'border-left': '4px solid ' + borderColor
+                    }).html(
+                        '<strong>Import abgeschlossen!</strong><br>' +
+                        '✅ <strong>' + d.imported + '</strong> Einträge erfolgreich importiert' +
+                        (d.skipped > 0 ? '<br>⏭️ <strong>' + d.skipped + '</strong> Einträge übersprungen (Duplikate)' : '') +
+                        '<br><br><a href="' + window.location.href + '" class="button button-secondary" style="font-weight:600;">🔄 Seite neu laden &amp; Postfach anzeigen</a>'
+                    ).fadeIn(200);
+                } else {
+                    $result.css({
+                        'background': '#fef2f2',
+                        'border-left': '4px solid #d63638'
+                    }).html('<strong style="color:#d63638;">Fehler beim Import.</strong> Bitte versuchen Sie es erneut.').fadeIn(200);
+                }
+            }).fail(function() {
+                $spinner.removeClass('is-active');
+                $btn.prop('disabled', false);
+                alert('Netzwerkfehler beim Import.');
             });
         });
 
