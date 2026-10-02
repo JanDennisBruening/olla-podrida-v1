@@ -1207,17 +1207,11 @@ class Olla_Podrida_Admin {
         <div class="olla-cockpit-wrap" style="color: #2c3338; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;">
             
             <!-- 1. Hero Welcome Header with Atmospheric Medieval Drift Smoke -->
-            <div style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: radial-gradient(circle at 80% 25%, rgba(218, 165, 32, 0.16) 0%, transparent 60%), linear-gradient(135deg, #140d09 0%, #070302 100%); border: 1.5px solid #DAA520; border-radius: 12px; padding: 38px 24px 20px 24px; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,215,0,0.25);">
+            <div style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: radial-gradient(circle at 80% 25%, rgba(218, 165, 32, 0.16) 0%, transparent 60%), linear-gradient(135deg, #140d09 0%, #070302 100%); border: 1.5px solid #DAA520; border-radius: 12px; padding: 24px; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,215,0,0.25);">
                 
                 <!-- Atmospheric Medieval Drifting Smoke Background -->
                 <div style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: 0.28; mix-blend-mode: screen; z-index: 1;">
                     <img src="<?php echo esc_url(OLLA_PODRIDA_URL . 'assets/dist/images/Rauch-neu.webp'); ?>" alt="" style="position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; object-fit: cover; animation: ollaAdminSmoke 20s ease-in-out infinite;" />
-                </div>
-
-                <!-- Top-Left Version Badge (always visible) -->
-                <div class="olla-cockpit-version-tag" style="position: absolute; top: 11px; left: 16px; z-index: 10; display: inline-flex; align-items: center; gap: 6px; background: rgba(22, 14, 10, 0.92); border: 1.2px solid #DAA520; border-radius: 20px; padding: 2px 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
-                    <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #00e676; box-shadow: 0 0 6px #00e676;"></span>
-                    <span style="font-size: 11px; font-weight: 700; color: #FFD700; letter-spacing: 0.05em; text-transform: uppercase;">Plugin v<?php echo esc_html(OLLA_PODRIDA_VERSION); ?></span>
                 </div>
 
                 <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 18px;">

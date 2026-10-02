@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getAssets, getSiteTexts, getPluginVersion } from '../data/siteContent';
+import { getAssets, getSiteTexts } from '../data/siteContent';
 import { useInView } from '../hooks/useInView';
 import { Lock } from 'lucide-react';
 
@@ -14,7 +14,6 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOpenTermineArchive, onOpenPresse, onOpenLogin }) => {
   const assets = getAssets();
   const texts = getSiteTexts();
-  const pluginVersion = getPluginVersion();
   const currentYear = new Date().getFullYear();
   const [cookieTooltip, setCookieTooltip] = useState(false);
   const { ref: footerRef, isInView } = useInView<HTMLElement>({ threshold: 0.05, rootMargin: '0px 0px -40px 0px', triggerOnce: true });
@@ -66,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
   };
 
   useEffect(() => {
-    // Clean up any rogue fallback credit injected by embed.js outside root
+    // 1. Clean up any rogue fallback credit injected by embed.js outside root
     const cleanupRogues = () => {
       document.querySelectorAll('.jdb-footer-credit').forEach((el) => {
         el.remove();
@@ -75,8 +74,31 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
     cleanupRogues();
     const t = setTimeout(cleanupRogues, 400);
 
+    // 2. Prevent the jarring white loading box flash from embed.js Shadow DOM
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        m.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement && node.shadowRoot) {
+            const style = document.createElement('style');
+            style.textContent = `
+              .status {
+                opacity: 0 !important;
+                animation: jdbStatusDelayedFade 0.25s ease 0.6s forwards !important;
+              }
+              @keyframes jdbStatusDelayedFade {
+                to { opacity: 1 !important; }
+              }
+            `;
+            node.shadowRoot.appendChild(style);
+          }
+        });
+      });
+    });
+    observer.observe(document.body, { childList: true });
+
     return () => {
       clearTimeout(t);
+      observer.disconnect();
     };
   }, []);
 
@@ -192,10 +214,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenCookies, onOp
             {currentYear} © Ensemble Olla Podrida
           </p>
           <div className="text-xs sm:text-sm text-[#F5F5DC]/70 font-dosis tracking-wider font-light flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
-            <span className="text-[#DAA520]/60 text-[11.5px] font-mono tracking-tight mr-0.5">
-              v{pluginVersion}
-            </span>
-            <span className="hidden sm:inline text-[#DAA520]/40">·</span>
             <span>
               {(texts.footerDev || 'Design, Konzept und Webentwicklung · Jan Dennis Brüning')
                 .replace(/·?\s*(www\.janbruening\.de|Jan Dennis Brüning).*$/i, '')

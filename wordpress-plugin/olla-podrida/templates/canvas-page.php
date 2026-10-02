@@ -136,6 +136,21 @@ $localized_data = Olla_Podrida_Frontend::get_localized_data();
     <button type="button" id="jdb-footer-trigger" data-jdb-footer aria-hidden="true" tabindex="-1" style="position:fixed;bottom:0;right:0;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden;border:none;padding:0;margin:0;"></button>
     <script>
       window.jdbFooterLocalURL = '<?php echo esc_url(home_url('/?jdb_footer_popup=1')); ?>';
+      (function() {
+        var obs = new MutationObserver(function(muts) {
+          muts.forEach(function(m) {
+            m.addedNodes.forEach(function(n) {
+              if (n.nodeType === 1 && n.shadowRoot) {
+                var s = document.createElement('style');
+                s.textContent = '.status { opacity: 0 !important; animation: jdbStatusDelayedFade 0.25s ease 0.6s forwards !important; } @keyframes jdbStatusDelayedFade { to { opacity: 1 !important; } }';
+                n.shadowRoot.appendChild(s);
+              }
+            });
+          });
+        });
+        if (document.body) { obs.observe(document.body, { childList: true }); }
+        else { document.addEventListener('DOMContentLoaded', function() { obs.observe(document.body, { childList: true }); }); }
+      })();
     </script>
     <script defer src="<?php echo esc_url(content_url('/plugins/jdb-footer-local/assets/embed.js')); ?>"></script>
 </body>
